@@ -1,5 +1,8 @@
 package ggc;
 
+import java.io.*;
+import ggc.exceptions.*;
+
 //FIXME import classes (cannot import from pt.tecnico or ggc.app)
 
 /** Façade for access. */
