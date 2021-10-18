@@ -2,6 +2,9 @@ package ggc.app.main;
 
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
+
+import java.io.BufferedWriter;
+
 import ggc.WarehouseManager;
 
 /**

@@ -18,6 +18,10 @@ public class WarehouseManager {
   //FIXME define constructor(s)
   //FIXME define other methods
 
+  public void updateDate(int date){
+    _warehouse.updateDate(date);
+  }
+
   /**
    * @@throws IOException
    * @@throws FileNotFoundException
