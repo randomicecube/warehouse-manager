@@ -13,6 +13,8 @@ public class Warehouse implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202109192006L;
 
+  private int _date;
+
   // FIXME define attributes
   // FIXME define contructor(s)
   // FIXME define methods
@@ -22,6 +24,15 @@ public class Warehouse implements Serializable {
    * @throws IOException
    * @throws BadEntryException
    */
+
+  public int getDate(){
+    return _date;
+  }
+
+  public void updateDate(int date){
+    _date += date;
+  }
+   
   void importFile(String txtfile) throws IOException, BadEntryException /* FIXME maybe other exceptions */ {
     //FIXME implement method
   }
