@@ -4,7 +4,7 @@ A funcionalidade necessária para a entrega intermédia, além da abertura de to
 - Leitura, interpretação e representação em memória do ficheiro textual indicado pela propriedade import (implica implementar algumas classes do "core")
 - Menu principal: Salvaguarda do estado actual da aplicação: "Abrir" e "Guardar" -- implementação completa
 - Menu principal: Gestão e consulta de dados da aplicação: abertura dos vários submenus (comandos fornecidos já implementados).
-- Menu principal: Mostrar data actual e Avançar data actual.
+    - [DONE] Menu principal: Mostrar data actual e Avançar data actual.
 - Menu de Gestão de Produtos -- implementar as operações "Visualizar todos os produtos” e "Visualizar todos os lotes"". .
 - Menu de Gestão de Parceiros -- implementar as operações "Mostrar parceiro", "Mostrar todos os parceiros" e "Registar parceiro".
 
