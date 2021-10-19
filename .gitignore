@@ -26,3 +26,6 @@
 *.zip
 *.tar.gz
 *.rar
+
+# diff files
+*.diff
