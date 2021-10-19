@@ -25,11 +25,14 @@ public class Warehouse implements Serializable {
    * @throws BadEntryException
    */
 
-  public int getDate(){
+  public int getDate() {
     return _date;
   }
 
-  public void updateDate(int date){
+  public void updateDate(int date) throws NoSuchDateException {
+    if (date <= 0) {
+      throw new NoSuchDateException(date);
+    }
     _date += date;
   }
    

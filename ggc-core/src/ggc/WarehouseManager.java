@@ -18,7 +18,11 @@ public class WarehouseManager {
   //FIXME define constructor(s)
   //FIXME define other methods
 
-  public void updateDate(int date){
+  public int getDate() {
+    return _warehouse.getDate();
+  }
+
+  public void updateDate(int date) throws NoSuchDateException {
     _warehouse.updateDate(date);
   }
 
