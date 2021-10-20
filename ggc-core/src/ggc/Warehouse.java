@@ -24,6 +24,10 @@ public class Warehouse implements Serializable {
    * @throws IOException
    * @throws BadEntryException
    */
+   
+  void importFile(String txtfile) throws IOException, BadEntryException /* FIXME maybe other exceptions */ {
+    //FIXME implement method
+  }
 
   public int getDate() {
     return _date;
@@ -34,10 +38,6 @@ public class Warehouse implements Serializable {
       throw new NoSuchDateException(date);
     }
     _date += date;
-  }
-   
-  void importFile(String txtfile) throws IOException, BadEntryException /* FIXME maybe other exceptions */ {
-    //FIXME implement method
   }
 
 }
