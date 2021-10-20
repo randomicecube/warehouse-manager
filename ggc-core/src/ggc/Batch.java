@@ -22,12 +22,12 @@ public class Batch{
         _amount =  amount;
     }
 
-    public void setPartner(Partner partner){
-        _partner = partner;
-    }
-
     public void setPrice(double price){
         _price = price;
+    }
+
+    public void updatePartner(Partner p){
+        _partner = p;
     }
 
     public Product getProductType(){
@@ -44,9 +44,5 @@ public class Batch{
 
     public double getPrice(){
         return _price;
-    }
-
-    public void updatePartner(Partner p){
-        _partner = p;
     }
 }

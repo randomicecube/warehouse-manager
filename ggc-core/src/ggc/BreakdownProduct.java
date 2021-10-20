@@ -3,20 +3,20 @@ package ggc;
 public class BreakdownProduct extends Product{
 
     private Recipe _recipe;
-    private Double _aggravationfactor;
+    private Double _aggravationFactor;
 
-    public BreakdownProduct(Recipe recipe, Double aggravationfactor, String productkey){
+    public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey){
         super(productkey);
         _recipe = recipe;
-        _aggravationfactor = aggravationfactor;
+        _aggravationFactor = aggravationFactor;
     }
 
     public void setRecipe(Recipe recipe){
         _recipe = recipe;
     }
 
-    public void setAggravationFactor(Double aggravationfactor){
-        _aggravationfactor = aggravationfactor;
+    public void setAggravationFactor(Double aggravationFactor){
+        _aggravationFactor = aggravationFactor;
     }
 
     public Recipe getRecipe(){
@@ -24,6 +24,6 @@ public class BreakdownProduct extends Product{
     }
 
     public Double getAggravationFactor(){
-        return _aggravationfactor;
+        return _aggravationFactor;
     }
 }

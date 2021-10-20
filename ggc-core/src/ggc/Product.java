@@ -2,17 +2,17 @@ package ggc;
 
 public class Product{
 
-    private String _productkey;
+    private String _productKey;
 
-    public Product(String productkey){
-        _productkey = productkey;
+    public Product(String productKey){
+        _productKey = productKey;
     }
 
-    public void setProductKey(String productkey){
-        _productkey = productkey;
+    public void setProductKey(String productKey){
+        _productKey = productKey;
     }
 
     public String getProductKey(){
-        return _productkey;
+        return _productKey;
     }
 }
