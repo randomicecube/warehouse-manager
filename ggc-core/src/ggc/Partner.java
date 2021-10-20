@@ -143,6 +143,8 @@ public class Partner {
     /** Read the partner's unread notifications (and clear them) */
     public void readNotifications() {
         // TODO implement
+
+        // don't forget to clear notifications in the end
     }
 
     @Override

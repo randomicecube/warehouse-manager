@@ -3,6 +3,7 @@ package ggc;
 public class BreakdownProduct extends Product{
 
     private Recipe _recipe;
+    
     private Double _aggravationFactor;
 
     public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey){

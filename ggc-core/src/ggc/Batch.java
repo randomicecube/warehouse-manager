@@ -3,8 +3,11 @@ package ggc;
 public class Batch{
 
     private Product _productType;
+
     private int _amount;
+    
     private Partner _partner;
+    
     private double _price;
 
     public Batch(Product productType, int amount, Partner partner, double price){
