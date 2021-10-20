@@ -18,14 +18,6 @@ public class WarehouseManager {
   //FIXME define constructor(s)
   //FIXME define other methods
 
-  public int getDate() {
-    return _warehouse.getDate();
-  }
-
-  public void updateDate(int date) throws NoSuchDateException {
-    _warehouse.updateDate(date);
-  }
-
   /**
    * @@throws IOException
    * @@throws FileNotFoundException
@@ -64,6 +56,14 @@ public class WarehouseManager {
     } catch (IOException | BadEntryException /* FIXME maybe other exceptions */ e) {
 	    throw new ImportFileException(textfile);
     }
+  }
+
+  public int getDate() {
+    return _warehouse.getDate();
+  }
+
+  public void updateDate(int date) throws NoSuchDateException {
+    _warehouse.updateDate(date);
   }
 
 }
