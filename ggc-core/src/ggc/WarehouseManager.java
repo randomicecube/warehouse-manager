@@ -74,4 +74,9 @@ public class WarehouseManager {
     return _warehouse.getAccountingBalance();
   }
 
+  public void registerPartner(String key, String name, String address) 
+    throws PartnerKeyAlreadyUsedException {
+      _warehouse.registerPartner(key, name, address);
+  }
+
 }

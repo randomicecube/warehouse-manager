@@ -23,12 +23,9 @@ class DoAdvanceDate extends Command<WarehouseManager> {
 
   @Override
   public final void execute() throws CommandException {
-    try{
+    try {
       _receiver.updateDate(integerField("date"));
-      // _display.popup(Message.currentDate(date));
-    }
-
-    catch (NoSuchDateException e) {
+    } catch (NoSuchDateException e) {
       throw new InvalidDateException(e.getDate());
     }
 
