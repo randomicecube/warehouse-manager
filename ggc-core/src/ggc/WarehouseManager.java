@@ -66,4 +66,12 @@ public class WarehouseManager {
     _warehouse.updateDate(date);
   }
 
+  public double getAvailableBalance() {
+    return _warehouse.getAvailableBalance();
+  }
+
+  public double getAccountingBalance() {
+    return _warehouse.getAccountingBalance();
+  }
+
 }

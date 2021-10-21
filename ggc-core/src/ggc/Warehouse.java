@@ -15,6 +15,10 @@ public class Warehouse implements Serializable {
 
   private int _date;
 
+  private double _availableBalance = 0;
+
+  private double _accountingBalance = 0;
+
   // FIXME define attributes
   // FIXME define contructor(s)
   // FIXME define methods
@@ -38,6 +42,14 @@ public class Warehouse implements Serializable {
       throw new NoSuchDateException(date);
     }
     _date += date;
+  }
+
+  public double getAvailableBalance() {
+    return _availableBalance;
+  }
+
+  public double getAccountingBalance() {
+    return _accountingBalance;
   }
 
 }
