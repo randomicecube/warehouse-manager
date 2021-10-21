@@ -1,17 +1,17 @@
 package ggc;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Recipe implements Comparable<Recipe> {
     
-    private List<Product> _ingredients = new ArrayList<Product>();
+    private Map<Product, Integer> _ingredients = new HashMap<Product, Integer>();
 
-    public void addIngredient(Product p) {
-        _ingredients.add(p);
+    public void addIngredient(Product p, Integer amount) {
+        _ingredients.put(p, amount);
     }
 
-    public List<Product> getIngredients() {
+    public Map<Product, Integer> getIngredients() {
         return _ingredients;
     }
 
