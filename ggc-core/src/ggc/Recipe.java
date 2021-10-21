@@ -3,7 +3,7 @@ package ggc;
 import java.util.Map;
 import java.util.HashMap;
 
-public class Recipe implements Comparable<Recipe> {
+public class Recipe {
     
     private Map<Product, Integer> _ingredients = new HashMap<Product, Integer>();
 
@@ -16,8 +16,13 @@ public class Recipe implements Comparable<Recipe> {
     }
 
     @Override
-    public int compareTo(Recipe other) {
-        return getIngredients().equals(other.getIngredients());
+    public boolean equals(Object other) {
+        if (other instanceof Recipe recipe) {
+            if (getIngredients().equals(recipe.getIngredients())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

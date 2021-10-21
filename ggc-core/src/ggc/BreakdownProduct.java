@@ -1,13 +1,13 @@
 package ggc;
 
-public class BreakdownProduct extends Product{
+public class BreakdownProduct extends Product {
 
     private Recipe _recipe;
     
     private Double _aggravationFactor;
 
     public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey){
-        super(productkey);
+        super(productKey);
         _recipe = recipe;
         _aggravationFactor = aggravationFactor;
     }

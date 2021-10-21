@@ -155,11 +155,11 @@ public class Partner {
             getPartnerKey(),
             getPartnerName(),
             getPartnerAddress(),
-            getPartnerStatus(),
-            getPartnerStatus().getPoints(),
-            getAcquisitionPrices(),
-            getOverallSalePrices(),
-            getPaidSalePrices()
+            getPartnerStatus().toString(),
+            String.valueOf(getPartnerStatus().getPoints()),
+            String.valueOf(getAcquisitionPrices()),
+            String.valueOf(getOverallSalePrices()),
+            String.valueOf(getPaidSalePrices())
         );
     }
 

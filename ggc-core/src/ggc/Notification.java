@@ -44,7 +44,7 @@ public abstract class Notification {
             "|",
             getNotificationType(),
             getProductKey(),
-            getProductPrice()
+            String.valueOf(getProductPrice())
         );
     }
 
