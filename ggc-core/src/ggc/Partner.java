@@ -100,6 +100,10 @@ public class Partner {
         return _paidSalePrices;
     }
 
+    public List<Notification> getNotifications() {
+        return _unreadNotifications;
+    }
+
     /** Update the partner's status, according to their current point score */
     public void updateStatus() {
         // TODO implement
@@ -140,16 +144,13 @@ public class Partner {
         _paidSalePrices += amount;
     }
 
-    /** Read the partner's unread notifications (and clear them) */
-    public void readNotifications() {
-        // TODO implement
-
-        // don't forget to clear notifications in the end
+    /** Clear the partner's unread notifications array */
+    public void clearNotifications() {
+        _unreadNotifications.clear();
     }
 
     @Override
     public String toString() {
-        // TODO implement toString() in Status (and Status itself)
         return String.join(
             "|",
             getPartnerKey(),

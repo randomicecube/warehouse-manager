@@ -2,7 +2,14 @@ package ggc.app.partners;
 
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
+import ggc.Partner;
 import ggc.WarehouseManager;
+
+// still not sure if I can do this, should confirm later
+import ggc.Notification;
+
+import ggc.app.exceptions.UnknownPartnerKeyException;
+import ggc.exceptions.NoSuchPartnerKeyException;
 //FIXME import classes
 
 /**
@@ -12,12 +19,22 @@ class DoShowPartner extends Command<WarehouseManager> {
 
   DoShowPartner(WarehouseManager receiver) {
     super(Label.SHOW_PARTNER, receiver);
-    //FIXME add command fields
+    addStringField("key", Prompt.partnerKey());
   }
 
   @Override
   public void execute() throws CommandException {
-    //FIXME implement command
+    try {
+      Partner partner = _receiver.getPartner(stringField("key"));
+      _display.popup(partner);
+      for (Notification n: partner.getNotifications()) {
+        _display.popup(n);
+      }
+      partner.clearNotifications();
+    } catch (NoSuchPartnerKeyException e) {
+      throw new UnknownPartnerKeyException(e.getKey());
+    }
+
   }
 
 }

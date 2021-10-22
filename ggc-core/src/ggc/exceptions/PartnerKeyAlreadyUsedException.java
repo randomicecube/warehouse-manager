@@ -1,13 +1,9 @@
 package ggc.exceptions;
 
-public class PartnerKeyAlreadyUsedException extends Exception {
-    private final String _key;
+public class PartnerKeyAlreadyUsedException extends PartnerKeyException {
 
     public PartnerKeyAlreadyUsedException(String key) {
-        _key = key;
+        super(key);
     }
 
-    public String getKey() {
-        return _key;
-    }
 }
