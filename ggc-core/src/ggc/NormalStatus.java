@@ -5,6 +5,6 @@ public class NormalStatus extends Status {
 
     @Override
     public String toString() {
-        return "New";
+        return "Normal";
     }
 }

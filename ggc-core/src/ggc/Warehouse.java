@@ -65,4 +65,12 @@ public class Warehouse implements Serializable {
       _partners.put(key, new Partner(key, name, address));
   }
 
+  public Partner getPartner(String key) throws NoSuchPartnerKeyException {
+    Partner partner = _partners.get(key);
+    if (partner == null) {
+      throw new NoSuchPartnerKeyException(key);
+    }
+    return partner;
+  }
+
 }

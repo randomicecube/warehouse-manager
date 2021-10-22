@@ -79,4 +79,8 @@ public class WarehouseManager {
       _warehouse.registerPartner(key, name, address);
   }
 
+  public Partner getPartner(String key) throws NoSuchPartnerKeyException {
+    return _warehouse.getPartner(key);
+  }
+
 }
