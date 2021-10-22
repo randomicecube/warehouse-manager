@@ -5,7 +5,8 @@ import ggc.exceptions.*;
 
 import java.util.Map;
 import java.util.HashMap;
-
+import java.util.Collection;
+import java.util.stream.Collectors;
 // FIXME import classes (cannot import from pt.tecnico or ggc.app)
 
 /**
@@ -75,6 +76,17 @@ public class Warehouse implements Serializable {
 
   public Map<String, Partner> getPartners() {
     return _partners;
+  }
+  public Collection<String> getPartnersCollection() {
+    return getPartners()
+      .values()
+      .stream()
+      .map(partner -> partner.toString())
+      .collect(Collectors.toList());
+  }
+
+  public void clearNotifications(String key) {
+    _partners.get(key).getNotifications().clear();
   }
 
 }

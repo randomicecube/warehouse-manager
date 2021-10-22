@@ -4,6 +4,7 @@ import java.io.*;
 import ggc.exceptions.*;
 
 import java.util.Map;
+import java.util.Collection;
 
 //FIXME import classes (cannot import from pt.tecnico or ggc.app)
 
@@ -23,6 +24,8 @@ public class WarehouseManager {
   /**
    * @@throws IOException
    * @@throws FileNotFoundException
+        
+    System.out.println("Sorted Values: " + sortedValueList);
    * @@throws MissingFileAssociationException
    */
   public void save() throws IOException, FileNotFoundException, MissingFileAssociationException {
@@ -87,6 +90,14 @@ public class WarehouseManager {
 
   public Map<String, Partner> getPartners() {
     return _warehouse.getPartners();
+  }
+
+  public Collection<String> getPartnersCollection() {
+    return _warehouse.getPartnersCollection();
+  }
+
+  public void clearNotifications(String key) {
+    _warehouse.clearNotifications(key);
   }
 
 }
