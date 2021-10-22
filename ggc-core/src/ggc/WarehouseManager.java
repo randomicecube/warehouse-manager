@@ -3,6 +3,8 @@ package ggc;
 import java.io.*;
 import ggc.exceptions.*;
 
+import java.util.Map;
+
 //FIXME import classes (cannot import from pt.tecnico or ggc.app)
 
 /** Façade for access. */
@@ -81,6 +83,10 @@ public class WarehouseManager {
 
   public Partner getPartner(String key) throws NoSuchPartnerKeyException {
     return _warehouse.getPartner(key);
+  }
+
+  public Map<String, Partner> getPartners() {
+    return _warehouse.getPartners();
   }
 
 }
