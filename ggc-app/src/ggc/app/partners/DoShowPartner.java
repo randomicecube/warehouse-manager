@@ -2,9 +2,7 @@ package ggc.app.partners;
 
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
-import ggc.Partner;
 import ggc.WarehouseManager;
-import ggc.Notification;
 
 import ggc.app.exceptions.UnknownPartnerKeyException;
 import ggc.exceptions.NoSuchPartnerKeyException;
@@ -22,12 +20,14 @@ class DoShowPartner extends Command<WarehouseManager> {
   @Override
   public void execute() throws CommandException {
     try {
-      Partner partner = _receiver.getPartner(stringField("key"));
-      _display.popup(partner);
-      for (Notification n: partner.getNotifications()) {
-        _display.popup(n);
-      }
-      partner.clearNotifications();
+      _display.popup(_receiver.getPartner(stringField("key")));
+      _display.popup(
+        _receiver
+        .getPartner(stringField("key"))
+        .getNotifications()
+      );
+      
+      _receiver.clearNotifications(stringField("key"));
     } catch (NoSuchPartnerKeyException e) {
       throw new UnknownPartnerKeyException(e.getKey());
     }
