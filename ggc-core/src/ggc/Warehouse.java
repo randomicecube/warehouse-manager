@@ -73,4 +73,8 @@ public class Warehouse implements Serializable {
     return partner;
   }
 
+  public Map<String, Partner> getPartners() {
+    return _partners;
+  }
+
 }

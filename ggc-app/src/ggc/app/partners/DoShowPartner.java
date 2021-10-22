@@ -4,13 +4,10 @@ import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 import ggc.Partner;
 import ggc.WarehouseManager;
-
-// still not sure if I can do this, should confirm later
 import ggc.Notification;
 
 import ggc.app.exceptions.UnknownPartnerKeyException;
 import ggc.exceptions.NoSuchPartnerKeyException;
-//FIXME import classes
 
 /**
  * Show partner.
