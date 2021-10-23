@@ -1,15 +1,19 @@
 package ggc;
 
-public class Status {
-    // TODO - implement Status (and its subclasses)
+public abstract class Status {
 
-    private int _points = 0;
+    private final static int SELECTION_LIMIT = 2000;
+    
+    private final static int ELITE_LIMIT = 25000;
 
-    public void updatePoints(int points) {
-        _points += points;
+    public double getModifierP1() {
+        return 0.9;
     }
 
-    public int getPoints() {
-        return _points;
-    }
+    public abstract double getModifierP2(int currentDate, int limitDate);
+
+    public abstract double getModifierP3(int currentDate, int limitDate);
+
+    public abstract double getModifierP4(int currentDate, int limitDate);
+
 }
