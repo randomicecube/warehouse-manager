@@ -5,6 +5,8 @@
 #*.prefs 
 #.*
 
+*.dat
+
 # ---> Java
 # Compiled class file
 *.class

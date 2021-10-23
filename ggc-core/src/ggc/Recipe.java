@@ -1,9 +1,11 @@
 package ggc;
 
+import java.io.Serializable;
+
 import java.util.Map;
 import java.util.HashMap;
 
-public class Recipe {
+public class Recipe implements Serializable {
     
     private Map<Product, Integer> _ingredients = new HashMap<Product, Integer>();
 

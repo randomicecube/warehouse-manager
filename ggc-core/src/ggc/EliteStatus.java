@@ -1,6 +1,8 @@
 package ggc;
 
-public class EliteStatus extends Status {
+import java.io.Serializable;
+
+public class EliteStatus extends Status implements Serializable {
     
     public double getModifierP2(int currentDate, int limitDate) {
         return 0.9;

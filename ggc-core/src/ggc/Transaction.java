@@ -1,5 +1,7 @@
 package ggc;
 
-public class Transaction {
+import java.io.Serializable;
+
+public class Transaction implements Serializable {
     // TODO - implement Transaction (and its subclasses)
 }

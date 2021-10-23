@@ -1,6 +1,8 @@
 package ggc;
 
-public abstract class Status {
+import java.io.Serializable;
+
+public abstract class Status implements Serializable {
 
     private final static int SELECTION_LIMIT = 2000;
     

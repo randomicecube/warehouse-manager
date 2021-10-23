@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Collection;
 import java.util.stream.Collectors;
-// FIXME import classes (cannot import from pt.tecnico or ggc.app)
+import java.util.Collections;
 
 /**
  * Class Warehouse implements a warehouse.
@@ -24,10 +24,6 @@ public class Warehouse implements Serializable {
   private double _accountingBalance = 0;
 
   private Map<String, Partner> _partners = new HashMap<String, Partner>();
-
-  // FIXME define attributes
-  // FIXME define contructor(s)
-  // FIXME define methods
 
   /**
    * @param txtfile filename to be loaded.
@@ -82,7 +78,7 @@ public class Warehouse implements Serializable {
       .values()
       .stream()
       .map(partner -> partner.toString())
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet()); //  a set because the order is relevant
   }
 
   public void clearNotifications(String key) {

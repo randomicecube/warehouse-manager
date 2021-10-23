@@ -1,6 +1,8 @@
 package ggc;
 
-public class Batch{
+import java.io.Serializable;
+
+public class Batch implements Serializable {
 
     private Product _productType;
 

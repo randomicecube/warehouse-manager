@@ -3,7 +3,9 @@ package ggc;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Partner {
+import java.io.Serializable;
+
+public class Partner implements Serializable {
 
     /** Default notification is, by omission, an app notification */
     private static final String DEFAULT_NOTIFICATION_METHOD = "";

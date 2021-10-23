@@ -1,6 +1,8 @@
 package ggc;
 
-public class SelectionStatus extends Status{
+import java.io.Serializable;
+
+public class SelectionStatus extends Status implements Serializable {
     
     public double getModifierP2(int currentDate, int limitDate) {
         return limitDate - currentDate >= 2 ? 0.95 : 1.0;
