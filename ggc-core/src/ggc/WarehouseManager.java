@@ -48,7 +48,25 @@ public class WarehouseManager {
    * @@throws UnavailableFileException
    */
   public void load(String filename) throws UnavailableFileException {
-    //FIXME implement serialization method
+    
+    try {
+
+      ObjectInputStream ois = 
+        new ObjectInputStream(
+          new BufferedInputStream(
+            new FileInputStream(
+              filename
+            )
+          )
+        );
+      
+      _warehouse = (Warehouse)ois.readObject();
+      ois.close();
+      _filename = filename;
+      
+    } catch(IOException | ClassNotFoundException e) {
+      throw new UnavailableFileException(filename);
+    }
   }
 
   /**
