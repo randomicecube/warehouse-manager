@@ -3,9 +3,6 @@ package ggc.app.main;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
-import java.io.StringReader;
-import java.util.Scanner;
-
 import ggc.WarehouseManager;
 
 import ggc.app.exceptions.InvalidDateException;
