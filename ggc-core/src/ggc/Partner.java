@@ -20,6 +20,9 @@ public class Partner {
     /** Partner's address */
     private String _partnerAddress;
 
+    /** Partner's current point score */
+    private int _partnerPoints = 0;
+
     /** Value representing the price of acquisitions warehouse-partner */
     private int _acquisitionPrices = 0;
 
@@ -85,6 +88,10 @@ public class Partner {
         return _partnerStatus;
     }
 
+    public int getPartnerPoints() {
+        return _partnerPoints;
+    }
+
     /** @return partner's acquisition prices */
     public int getAcquisitionPrices() {
         return _acquisitionPrices;
@@ -107,6 +114,10 @@ public class Partner {
     /** Update the partner's status, according to their current point score */
     public void updateStatus() {
         // TODO implement
+    }
+
+    public void updatePartnerPoints(int points) {
+        _partnerPoints += points;
     }
 
     /** Update the partner's desired notification delivery method */
@@ -157,7 +168,7 @@ public class Partner {
             getPartnerName(),
             getPartnerAddress(),
             getPartnerStatus().toString(),
-            String.valueOf(getPartnerStatus().getPoints()),
+            String.valueOf(getPartnerPoints()),
             String.valueOf(getAcquisitionPrices()),
             String.valueOf(getOverallSalePrices()),
             String.valueOf(getPaidSalePrices())
