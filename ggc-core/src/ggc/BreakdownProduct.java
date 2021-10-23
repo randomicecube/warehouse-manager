@@ -1,6 +1,8 @@
 package ggc;
 
-public class BreakdownProduct extends Product {
+import java.io.Serializable;
+
+public class BreakdownProduct extends Product implements Serializable {
 
     private Recipe _recipe;
     

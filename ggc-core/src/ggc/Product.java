@@ -1,6 +1,8 @@
 package ggc;
 
-public class Product{
+import java.io.Serializable;
+
+public class Product implements Serializable {
 
     // TODO - Add Product Stock, either in a map (?) in the warehouse or associated with each product 
 

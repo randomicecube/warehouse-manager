@@ -6,30 +6,39 @@ import ggc.exceptions.*;
 import java.util.Map;
 import java.util.Collection;
 
-//FIXME import classes (cannot import from pt.tecnico or ggc.app)
-
 /** Façade for access. */
 public class WarehouseManager {
 
   /** Name of file storing current store. */
   private String _filename = "";
 
+  private boolean _saveFlag = true;
+
   /** The warehouse itself. */
   private Warehouse _warehouse = new Warehouse();
-
-  //FIXME define other attributes
-  //FIXME define constructor(s)
-  //FIXME define other methods
 
   /**
    * @@throws IOException
    * @@throws FileNotFoundException
-        
-    System.out.println("Sorted Values: " + sortedValueList);
    * @@throws MissingFileAssociationException
    */
   public void save() throws IOException, FileNotFoundException, MissingFileAssociationException {
-    //FIXME implement serialization method
+    
+     if (_saveFlag) {
+       return;
+     }
+
+     _saveFlag = true;
+     ObjectOutputStream oos = new ObjectOutputStream(
+       new BufferedOutputStream(
+         new FileOutputStream(
+           getFilename()
+         )
+       )
+     );
+     oos.writeObject(_warehouse);
+     oos.close();
+    
   }
 
   /**
@@ -39,7 +48,7 @@ public class WarehouseManager {
    * @@throws FileNotFoundException
    */
   public void saveAs(String filename) throws MissingFileAssociationException, FileNotFoundException, IOException {
-    _filename = filename;
+    setFilename(filename);
     save();
   }
 
@@ -62,7 +71,8 @@ public class WarehouseManager {
       
       _warehouse = (Warehouse)ois.readObject();
       ois.close();
-      _filename = filename;
+
+      setFilename(filename);
       
     } catch(IOException | ClassNotFoundException e) {
       throw new UnavailableFileException(filename);
@@ -81,11 +91,24 @@ public class WarehouseManager {
     }
   }
 
+  public String getFilename() {
+    return _filename;
+  }
+
+  public void setFilename(String filename) {
+    _filename = filename;
+  }
+
+  public boolean hasFileAssociated() {
+    return !_filename.equals("");
+  }
+
   public int getDate() {
     return _warehouse.getDate();
   }
 
   public void updateDate(int date) throws NoSuchDateException {
+    _saveFlag = false;
     _warehouse.updateDate(date);
   }
 
@@ -99,6 +122,7 @@ public class WarehouseManager {
 
   public void registerPartner(String key, String name, String address) 
     throws PartnerKeyAlreadyUsedException {
+      _saveFlag = false;
       _warehouse.registerPartner(key, name, address);
   }
 
@@ -115,6 +139,7 @@ public class WarehouseManager {
   }
 
   public void clearNotifications(String key) {
+    _saveFlag = false;
     _warehouse.clearNotifications(key);
   }
 

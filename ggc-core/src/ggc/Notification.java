@@ -1,6 +1,8 @@
 package ggc;
 
-public abstract class Notification {
+import java.io.Serializable;
+
+public abstract class Notification implements Serializable {
     
     private String _productKey;
 
