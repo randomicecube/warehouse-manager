@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-//FIXME import classes (cannot import from pt.tecnico or ggc.app)
-
 /** Façade for access. */
 public class WarehouseManager {
 
