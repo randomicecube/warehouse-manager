@@ -5,6 +5,9 @@ import ggc.exceptions.*;
 
 import java.util.Map;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 //FIXME import classes (cannot import from pt.tecnico or ggc.app)
 
 /** Façade for access. */
@@ -89,4 +92,19 @@ public class WarehouseManager {
     return _warehouse.getPartners();
   }
 
+  public Map<String, Product> getProducts(){
+    return _warehouse.getProducts();
+  }
+
+  public Map<String, Batch> getBatches(){
+    return _warehouse.getBatches();
+  }
+
+  public Collection<String> getProductsCollection(){
+    return _warehouse.getProductsCollection();
+  }
+
+  public Collection<String> getBatchesCollection(){
+    return _warehouse.getBatchesCollection();
+  }
 }

@@ -6,8 +6,8 @@ public class BreakdownProduct extends Product {
     
     private Double _aggravationFactor;
 
-    public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey){
-        super(productKey);
+    public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey, Integer stock, int productPrice){
+        super(productKey, productPrice, stock);
         _recipe = recipe;
         _aggravationFactor = aggravationFactor;
     }
@@ -26,5 +26,17 @@ public class BreakdownProduct extends Product {
 
     public Double getAggravationFactor(){
         return _aggravationFactor;
+    }
+
+    @Override
+    public String toString() {
+        return String.join(
+            "|",
+            String.valueOf(getProductKey()),
+            String.valueOf(getProductPrice()),
+            String.valueOf(getProductStock()),
+            String.valueOf(getAggravationFactor()),
+            String.valueOf(getRecipe())
+            );
     }
 }
