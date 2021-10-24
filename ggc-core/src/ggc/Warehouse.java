@@ -4,6 +4,15 @@ import java.io.*;
 import ggc.exceptions.*;
 
 import java.util.Map;
+
+import javax.lang.model.element.UnknownAnnotationValueException;
+
+import java.util.HashMap;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+// FIXME import classes (cannot import from pt.tecnico or ggc.app)
 import java.util.TreeMap;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -29,6 +38,15 @@ public class Warehouse implements Serializable {
   /** Warehouse's current accounting balance */
   private double _accountingBalance = 0;
 
+  private Map<String, Partner> _partners = new HashMap<String, Partner>();
+
+  private Map<String, Product> _products = new HashMap<String, Product>();
+
+  private Map<String, Batch> _batches = new HashMap<String, Batch>();
+
+  // FIXME define attributes
+  // FIXME define contructor(s)
+  // FIXME define methods
   /** All partners associated with the warehouse */
   private Map<String, Partner> _partners = new TreeMap<String, Partner>();
 
@@ -146,6 +164,22 @@ public class Warehouse implements Serializable {
    */
   public void clearNotifications(String key) {
     _partners.get(key).getNotifications().clear();
+  }
+
+  public Map<String, Product> getProducts(){
+    return _products;
+  }
+
+  public Map<String, Batch> getBatches(){
+    return _batches;
+  }
+
+  public Collection<String> getProductsCollection(){
+    return getProducts().values().stream().map(product -> product.toString()).collect(Collectors.toList());
+  }
+
+  public Collection<String> getBatchesCollection(){
+    return getBatches().values().stream().map(batch -> batch.toString()).collect(Collectors.toList());
   }
 
 }

@@ -27,4 +27,16 @@ public class Recipe implements Serializable {
         return false;
     }
 
+    @Override
+    public String toString(){
+        String recipe = "";
+        for (Product p : _ingredients.keySet()){
+            String key = p.toString();
+            String value = _ingredients.get(p).toString();
+            recipe += key + ":" + value;
+        }
+        //TODO MAKE ORDER CORRECT
+        return recipe;
+    }
+
 }

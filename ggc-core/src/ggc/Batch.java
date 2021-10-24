@@ -51,5 +51,15 @@ public class Batch implements Serializable {
     public double getPrice(){
         return _price;
     }
-    
+
+    @Override
+    public String toString(){
+        return String.join(
+            "|",
+            String.valueOf(getProductType()),
+            String.valueOf(getPartner()),
+            String.valueOf(getPrice()),
+            String.valueOf(getAmount())
+        );
+    }
 }
