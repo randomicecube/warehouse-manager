@@ -1,5 +1,6 @@
 package ggc.exceptions;
 
+/** Exception for invalid (<= 0) given dates */
 public class NoSuchDateException extends Exception{
     private final int _date;
 

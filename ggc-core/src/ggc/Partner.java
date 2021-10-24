@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import java.io.Serializable;
 
+/**
+ * Class representing a Partner in the system
+ */
 public class Partner implements Serializable {
 
     /** Default notification is, by omission, an app notification */
@@ -90,6 +93,7 @@ public class Partner implements Serializable {
         return _partnerStatus;
     }
 
+    /** @return partner's points (related to Status) */
     public int getPartnerPoints() {
         return _partnerPoints;
     }
@@ -109,6 +113,7 @@ public class Partner implements Serializable {
         return _paidSalePrices;
     }
 
+    /** @return partner's unread notifications */
     public List<Notification> getNotifications() {
         return _unreadNotifications;
     }
@@ -118,6 +123,7 @@ public class Partner implements Serializable {
         // TODO implement
     }
 
+    /** Update partner's point total */
     public void updatePartnerPoints(int points) {
         _partnerPoints += points;
     }

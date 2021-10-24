@@ -1,5 +1,6 @@
 package ggc.exceptions;
 
+/** Exceptions related to the Partner's keys */
 public abstract class PartnerKeyException extends Exception {
     private final String _key;
 
