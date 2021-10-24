@@ -37,9 +37,7 @@ public class Batch implements Serializable {
         _amount += amount;
     }
 
-    /**
-     * @return batch's associated product type
-     */
+    /** @return batch's associated product type */
     public Product getProductType(){
         return _productType;
     }
