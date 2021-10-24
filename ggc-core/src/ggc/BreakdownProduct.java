@@ -1,9 +1,17 @@
 package ggc;
 
-public class BreakdownProduct extends Product {
+import java.io.Serializable;
 
+/**
+ * Class representing a breakdown product, 
+ * which is a Product consisting of other Products
+ */
+public class BreakdownProduct extends Product implements Serializable {
+
+    /** Product's associated recipe */
     private Recipe _recipe;
     
+    /** Product's associated aggravation factor */
     private Double _aggravationFactor;
 
     public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey, Integer stock, int productPrice){
@@ -12,18 +20,12 @@ public class BreakdownProduct extends Product {
         _aggravationFactor = aggravationFactor;
     }
 
-    public void setRecipe(Recipe recipe){
-        _recipe = recipe;
-    }
-
-    public void setAggravationFactor(Double aggravationFactor){
-        _aggravationFactor = aggravationFactor;
-    }
-
+    /** @return product's recipe */
     public Recipe getRecipe(){
         return _recipe;
     }
 
+    /** @return product's aggravation factor */
     public Double getAggravationFactor(){
         return _aggravationFactor;
     }

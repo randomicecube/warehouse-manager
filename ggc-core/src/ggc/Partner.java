@@ -3,7 +3,12 @@ package ggc;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Partner {
+import java.io.Serializable;
+
+/**
+ * Class representing a Partner in the system
+ */
+public class Partner implements Serializable {
 
     /** Default notification is, by omission, an app notification */
     private static final String DEFAULT_NOTIFICATION_METHOD = "";
@@ -19,6 +24,9 @@ public class Partner {
 
     /** Partner's address */
     private String _partnerAddress;
+
+    /** Partner's current point score */
+    private int _partnerPoints = 0;
 
     /** Value representing the price of acquisitions warehouse-partner */
     private int _acquisitionPrices = 0;
@@ -85,6 +93,11 @@ public class Partner {
         return _partnerStatus;
     }
 
+    /** @return partner's points (related to Status) */
+    public int getPartnerPoints() {
+        return _partnerPoints;
+    }
+
     /** @return partner's acquisition prices */
     public int getAcquisitionPrices() {
         return _acquisitionPrices;
@@ -100,6 +113,7 @@ public class Partner {
         return _paidSalePrices;
     }
 
+    /** @return partner's unread notifications */
     public List<Notification> getNotifications() {
         return _unreadNotifications;
     }
@@ -107,6 +121,11 @@ public class Partner {
     /** Update the partner's status, according to their current point score */
     public void updateStatus() {
         // TODO implement
+    }
+
+    /** Update partner's point total */
+    public void updatePartnerPoints(int points) {
+        _partnerPoints += points;
     }
 
     /** Update the partner's desired notification delivery method */
@@ -157,7 +176,7 @@ public class Partner {
             getPartnerName(),
             getPartnerAddress(),
             getPartnerStatus().toString(),
-            String.valueOf(getPartnerStatus().getPoints()),
+            String.valueOf(getPartnerPoints()),
             String.valueOf(getAcquisitionPrices()),
             String.valueOf(getOverallSalePrices()),
             String.valueOf(getPaidSalePrices())
