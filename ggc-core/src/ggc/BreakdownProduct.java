@@ -14,8 +14,8 @@ public class BreakdownProduct extends Product implements Serializable {
     /** Product's associated aggravation factor */
     private Double _aggravationFactor;
 
-    public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey, Integer stock, int productPrice){
-        super(productKey, productPrice, stock);
+    public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey, Integer stock, Integer price){
+        super(productKey, stock, price);
         _recipe = recipe;
         _aggravationFactor = aggravationFactor;
     }
@@ -34,9 +34,7 @@ public class BreakdownProduct extends Product implements Serializable {
     public String toString() {
         return String.join(
             "|",
-            String.valueOf(getProductKey()),
-            String.valueOf(getProductPrice()),
-            String.valueOf(getProductStock()),
+            super.toString(),
             String.valueOf(getAggravationFactor()),
             String.valueOf(getRecipe())
             );

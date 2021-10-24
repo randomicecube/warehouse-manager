@@ -91,7 +91,7 @@ public class WarehouseManager {
   public void importFile(String textfile) throws ImportFileException {
     try {
 	    _warehouse.importFile(textfile);
-    } catch (IOException | BadEntryException /* FIXME maybe other exceptions */ e) {
+    } catch (IOException | BadEntryException | NoSuchPartnerKeyException | NoSuchProductKeyException e) {
 	    throw new ImportFileException(textfile);
     }
   }
@@ -169,10 +169,6 @@ public class WarehouseManager {
 
   public Map<String, Product> getProducts(){
     return _warehouse.getProducts();
-  }
-
-  public Map<String, Batch> getBatches(){
-    return _warehouse.getBatches();
   }
 
   public Collection<String> getProductsCollection(){

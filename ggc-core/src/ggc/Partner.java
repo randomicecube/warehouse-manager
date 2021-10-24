@@ -14,8 +14,8 @@ public class Partner implements Serializable {
     private static final String DEFAULT_NOTIFICATION_METHOD = "";
 
     /** Partner's status - partners always start with the "Normal" status */
-    private Status _partnerStatus = new NormalStatus(); // TODO implement status (and its subclasses); STATUS STORES THE POINTS -> updatePoints() should be there too
-                                                        // Points should be in the Status superclass, not in the sublcasses
+    private Status _partnerStatus = new NormalStatus();
+
     /** Partner's identification key */
     private String _partnerKey;
 
@@ -38,13 +38,13 @@ public class Partner implements Serializable {
     private double _paidSalePrices = 0;
 
     /** Partner's transaction history */
-    private List<Transaction>  _transactionHistory  = new ArrayList<Transaction>(); // TODO implement Transaction
+    private List<Transaction>  _transactionHistory  = new ArrayList<Transaction>();
 
     /** Partner's unread notifications */
-    private List<Notification> _unreadNotifications = new ArrayList<Notification>(); // TODO implement Notification
+    private List<Notification> _unreadNotifications = new ArrayList<Notification>();
 
     /** Partner's in-stock batches */
-    private List<Batch> _partnerBatches = new ArrayList<Batch>(); // TODO implement Batch (and therefore Product)
+    private List<Batch> _partnerBatches = new ArrayList<Batch>();
 
     /** Partner's desired notification method */
     private String _notificationMethod;
@@ -111,6 +111,10 @@ public class Partner implements Serializable {
     /** @return partner's total price of paid sales */
     public double getPaidSalePrices() {
         return _paidSalePrices;
+    }
+
+    public List<Batch> getPartnerBatches() {
+        return _partnerBatches;
     }
 
     /** @return partner's unread notifications */

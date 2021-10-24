@@ -3,17 +3,20 @@ package ggc;
 import java.io.Serializable;
 
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.List;
+
+import java.util.stream.Collectors;
 
 public class Recipe implements Serializable {
     
-    private Map<Product, Integer> _ingredients = new HashMap<Product, Integer>();
+    private Map<String, Integer> _ingredients = new TreeMap<String, Integer>();
 
     public void addIngredient(Product p, Integer amount) {
-        _ingredients.put(p, amount);
+        _ingredients.put(p.getProductKey(), amount);
     }
 
-    public Map<Product, Integer> getIngredients() {
+    public Map<String, Integer> getIngredients() {
         return _ingredients;
     }
 
@@ -29,14 +32,14 @@ public class Recipe implements Serializable {
 
     @Override
     public String toString(){
-        String recipe = "";
-        for (Product p : _ingredients.keySet()){
-            String key = p.toString();
-            String value = _ingredients.get(p).toString();
-            recipe += key + ":" + value;
-        }
+
+        return getIngredients()
+            .entrySet()
+            .stream()
+            .map(entry -> entry.getKey() + ":" + entry.getValue())
+            .collect(Collectors.joining("#"));
         //TODO MAKE ORDER CORRECT
-        return recipe;
+
     }
 
 }
