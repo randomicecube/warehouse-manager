@@ -4,7 +4,7 @@ import java.io.*;
 import ggc.exceptions.*;
 
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -12,8 +12,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
+import java.text.Collator;
+import java.util.Locale;
+
+// import java.text.Normalizer;
+// import java.text.Normalizer.Form;
 
 /**
  * Class Warehouse implements a warehouse.
@@ -33,10 +36,10 @@ public class Warehouse implements Serializable {
   private double _accountingBalance = 0;
 
     /** All products associated with the warehouse */
-  private Map<String, Product> _products = new TreeMap<String, Product>();
+  private Map<String, Product> _products = new HashMap<String, Product>();
   
   /** All partners associated with the warehouse */
-  private Map<String, Partner> _partners = new TreeMap<String, Partner>();
+  private Map<String, Partner> _partners = new HashMap<String, Partner>();
 
   /**
    * @param txtfile filename to be loaded.
@@ -93,19 +96,6 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * Aux function that returns a version of a key in all caps, without the special characters 
-   * for example: água -> AGUA
-   * @param key
-   * @return
-   */
-  public String normalizeKeys(String key) {
-    String processedKey = Normalizer.normalize(key, Form.NFD);
-    processedKey = processedKey.replaceAll("\\p{M}", "");
-    processedKey = processedKey.toUpperCase();
-    return processedKey;
-  }
-
-  /**
    * clear a partner's given unread notifications
    * @param key partner's key
    */
@@ -153,11 +143,10 @@ public class Warehouse implements Serializable {
    */
   public void registerPartner(String key, String name, String address)
     throws PartnerKeyAlreadyUsedException {
-      String processedPartnerKey = normalizeKeys(key);
-      if (_products.get(processedPartnerKey) != null) {
+      if (_products.get(key) != null) {
         throw new PartnerKeyAlreadyUsedException(key);
       }
-      _partners.put(processedPartnerKey, new Partner(key, name, address));
+      _partners.put(key, new Partner(key, name, address));
   }
 
 
@@ -177,24 +166,20 @@ public class Warehouse implements Serializable {
 
     Product product;
 
-    String processedProductKey = normalizeKeys(productKey);
-
     try {
-      product = getProduct(processedProductKey);
+      product = getProduct(productKey);
       product.updateStock(parsedStock);
     } catch (NoSuchProductKeyException e) {
       product = new Product(productKey, parsedStock, parsedPrice);
-      _products.put(processedProductKey, product);
+      _products.put(productKey, product);
 
       if (parsedPrice > product.getProductPrice()) {
         product.updatePrice(parsedPrice);
       }
     }
 
-    String processedPartnerKey = normalizeKeys(partnerKey);
-
     try {
-      Partner partner = getPartner(processedPartnerKey);
+      Partner partner = getPartner(partnerKey);
       partner.addBatch(new Batch(product, parsedStock, parsedPrice, partner));
     } catch (NoSuchPartnerKeyException e) {
       throw new NoSuchPartnerKeyException(e.getKey());
@@ -228,10 +213,10 @@ public class Warehouse implements Serializable {
     for (String i: ingredients) {
       String[] ingredientFactors = i.split(":");
 
-      String processedIngredientKey = normalizeKeys(ingredientFactors[0]);
+      // String processedIngredientKey = normalizeKeys(ingredientFactors[0]);
 
       try {
-        Product ingredient = getProduct(processedIngredientKey);
+        Product ingredient = getProduct(ingredientFactors[0]);
         productRecipe.addIngredient(ingredient, Integer.parseInt(ingredientFactors[1]));
       } catch (NoSuchProductKeyException e) {
         throw new NoSuchProductKeyException(ingredientFactors[0]);
@@ -240,20 +225,20 @@ public class Warehouse implements Serializable {
 
     Product batchProduct;
 
-    String processedProductKey = normalizeKeys(productKey);
+    // String processedProductKey = normalizeKeys(productKey);
 
     try {
-      batchProduct = getProduct(processedProductKey);
+      batchProduct = getProduct(productKey);
       batchProduct.updateStock(parsedStock);
     } catch (NoSuchProductKeyException e) {
       batchProduct = new BreakdownProduct(productRecipe, parsedAggravationFactor, productKey, parsedStock, parsedPrice);
-      _products.put(processedProductKey, batchProduct);
+      _products.put(productKey, batchProduct);
     }
 
-    String processedPartnerKey = normalizeKeys(partnerKey);
+    // String processedPartnerKey = normalizeKeys(partnerKey);
 
     try {
-      Partner partner = getPartner(processedPartnerKey);
+      Partner partner = getPartner(partnerKey);
       partner.addBatch(new Batch(batchProduct, parsedStock, parsedPrice, partner));
     } catch (NoSuchPartnerKeyException e) {
       throw new NoSuchPartnerKeyException(e.getKey());
@@ -303,11 +288,17 @@ public class Warehouse implements Serializable {
 
   /** @return a Collection with all the products associated with the warehouse */
   public Collection<String> getProductsCollection(){
-    return getProducts()
+    List<String> products = 
+      getProducts()
       .values()
       .stream()
       .map(product -> product.toString())
       .collect(Collectors.toList());
+    
+    Collections.sort(products, Collator.getInstance(Locale.getDefault()));
+
+    return products;
+
   }
 
   /** @return a Collection with all the batches with partners associated with the warehouse */
@@ -325,18 +316,22 @@ public class Warehouse implements Serializable {
       }
     }
 
-    batchCollection.sort(null);
+    Collections.sort(batchCollection, Collator.getInstance(Locale.getDefault()));
 
     return batchCollection;
   }
 
   /** @return a Collection with all partners associated with the warehouse */
   public Collection<String> getPartnersCollection() {
-    return getPartners()
+    List<String> partners = getPartners()
       .values()
       .stream()
       .map(partner -> partner.toString())
       .collect(Collectors.toList());
+    
+    Collections.sort(partners, Collator.getInstance(Locale.getDefault()));
+
+    return partners;
   }
   
   /** @return all products associated with the warehouse */

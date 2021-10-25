@@ -28,7 +28,8 @@ class DoSaveFile extends Command<WarehouseManager> {
       try {
         _receiver.saveAs(Form.requestString(Prompt.saveAs()));
       } catch (MissingFileAssociationException | IOException e) { 
-        // NOT SUPPOSED TO HAPPEN ??
+        // happens when the user clicks "Enter" before writing anything
+        // TODO - add logic (probably some sort of recursion)
       }
     } catch (IOException e) {
       e.printStackTrace();
