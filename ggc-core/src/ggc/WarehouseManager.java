@@ -179,14 +179,17 @@ public class WarehouseManager {
     return _warehouse.getPartners();
   }
 
+  /** @return all products associated with the warehouse */
   public Map<String, Product> getProducts(){
     return _warehouse.getProducts();
   }
 
+  /** @return a Collection with all the products associated with the warehouse */
   public Collection<String> getProductsCollection(){
     return _warehouse.getProductsCollection();
   }
 
+  /** @return a Collection with all the batches with partners associated with the warehouse */
   public Collection<String> getBatchesCollection(){
     return _warehouse.getBatchesCollection();
   }

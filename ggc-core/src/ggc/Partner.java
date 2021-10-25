@@ -113,6 +113,7 @@ public class Partner implements Serializable {
         return _paidSalePrices;
     }
 
+    /** @return partner's batches */
     public List<Batch> getPartnerBatches() {
         return _partnerBatches;
     }
@@ -127,42 +128,58 @@ public class Partner implements Serializable {
         // TODO implement
     }
 
-    /** Update partner's point total */
+    /** Update partner's point total 
+     * @param points
+    */
     public void updatePartnerPoints(int points) {
         _partnerPoints += points;
     }
 
-    /** Update the partner's desired notification delivery method */
+    /** Update the partner's desired notification delivery method 
+     * @param method
+    */
     public void updateNotificationMethod(String method) {
         _notificationMethod = method;
     }
 
-    /** Add a transaction to the partner's transaction history collection */
-    public void addTransaction(Transaction t) {
-        _transactionHistory.add(t);
+    /** Add a transaction to the partner's transaction history collection 
+     * @param transaction
+    */
+    public void addTransaction(Transaction transaction) {
+        _transactionHistory.add(transaction);
     }
 
-    /** Add a notification to the partner's to-be-read notification collection */
-    public void addToBeReadNotification(Notification n) {
-        _unreadNotifications.add(n);
+    /** Add a notification to the partner's to-be-read notification collection 
+     * @param notification
+    */
+    public void addToBeReadNotification(Notification notification) {
+        _unreadNotifications.add(notification);
     }
 
-    /** Add a batch to the partner's in-stock batch collection */
-    public void addBatch(Batch b) {
-        _partnerBatches.add(b);
+    /** Add a batch to the partner's in-stock batch collection 
+     * @param batch
+    */
+    public void addBatch(Batch batch) {
+        _partnerBatches.add(batch);
     }
 
-    /** Update the partner's total acquisition prices */
+    /** Update the partner's total acquisition prices 
+     * @param amount
+    */
     public void updateAcquisitionPrices(int amount) {
         _acquisitionPrices += amount;
     }
 
-    /** Update the partner's total price of sales (paid or not) */
+    /** Update the partner's total price of sales (paid or not) 
+     * @param amount
+    */
     public void updateOverallSalePrices(double amount) {
         _overallSalePrices += amount;
     }
 
-    /** Update the partner's total price of paid sales */
+    /** Update the partner's total price of paid sales 
+     * @param amount
+    */
     public void updatePaidSalePrices(double amount) {
         _paidSalePrices += amount;
     }
