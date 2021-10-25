@@ -15,7 +15,7 @@ public class WarehouseManager {
   private String _filename = "";
 
   /** If true, the program hasn't been changed since the last save() call */
-  private boolean _saveFlag = true;
+  private boolean _saveFlag = false;
 
   /** The warehouse itself. */
   private Warehouse _warehouse = new Warehouse();
@@ -26,26 +26,20 @@ public class WarehouseManager {
    * @@throws MissingFileAssociationException
    */
   public void save() throws IOException, FileNotFoundException, MissingFileAssociationException {
-    
-     if (_saveFlag) {
-       return;
-     }
 
-     if (!hasFileAssociated()) {
-       throw new MissingFileAssociationException();
-     }
+    if (_saveFlag) {
+      return;
+    }
 
-     _saveFlag = true;
-     ObjectOutputStream oos = new ObjectOutputStream(
-       new BufferedOutputStream(
-         new FileOutputStream(
-           getFilename()
-         )
-       )
-     );
-     oos.writeObject(_warehouse);
-     oos.close();
-    
+    if (!hasFileAssociated()) {
+      throw new MissingFileAssociationException();
+    }
+
+    _saveFlag = true;
+    ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getFilename())));
+    oos.writeObject(_warehouse);
+    oos.close();
+
   }
 
   /**
@@ -64,24 +58,17 @@ public class WarehouseManager {
    * @@throws UnavailableFileException
    */
   public void load(String filename) throws UnavailableFileException {
-    
+
     try {
 
-      ObjectInputStream ois = 
-        new ObjectInputStream(
-          new BufferedInputStream(
-            new FileInputStream(
-              filename
-            )
-          )
-        );
-      
-      _warehouse = (Warehouse)ois.readObject();
+      ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
+
+      _warehouse = (Warehouse) ois.readObject();
       ois.close();
 
       setFilename(filename);
-      
-    } catch(IOException | ClassNotFoundException e) {
+
+    } catch (IOException | ClassNotFoundException e) {
       throw new UnavailableFileException(filename);
     }
   }
@@ -92,10 +79,10 @@ public class WarehouseManager {
    */
   public void importFile(String textfile) throws ImportFileException {
     try {
-	    _warehouse.importFile(textfile);
+      _warehouse.importFile(textfile);
       _saveFlag = false;
     } catch (IOException | BadEntryException | NoSuchPartnerKeyException | NoSuchProductKeyException e) {
-	    throw new ImportFileException(textfile);
+      throw new ImportFileException(textfile);
     }
   }
 
@@ -106,6 +93,7 @@ public class WarehouseManager {
 
   /**
    * set the manager's associated filename (for future save() calls)
+   * 
    * @param filename
    */
   public void setFilename(String filename) {
@@ -119,6 +107,7 @@ public class WarehouseManager {
 
   /**
    * clear a partner's given unread notifications
+   * 
    * @param key partner's key
    */
   public void clearNotifications(String key) throws NoSuchPartnerKeyException {
@@ -133,6 +122,7 @@ public class WarehouseManager {
 
   /**
    * update current warehouse date
+   * 
    * @param days
    * @throws NoSuchDateException
    */
@@ -153,19 +143,20 @@ public class WarehouseManager {
 
   /**
    * register a partner to be associated with the warehouse
-   * @param key partner's key
-   * @param name partner's name
+   * 
+   * @param key     partner's key
+   * @param name    partner's name
    * @param address partner's address
    * @throws PartnerKeyAlreadyUsedException
    */
-  public void registerPartner(String key, String name, String address) 
-    throws PartnerKeyAlreadyUsedException {
-      _saveFlag = false;
-      _warehouse.registerPartner(key, name, address);
+  public void registerPartner(String key, String name, String address) throws PartnerKeyAlreadyUsedException {
+    _saveFlag = false;
+    _warehouse.registerPartner(key, name, address);
   }
 
   /**
    * get a partner, given their key
+   * 
    * @param key
    * @return desired partner
    * @throws NoSuchPartnerKeyException
@@ -180,19 +171,23 @@ public class WarehouseManager {
   }
 
   /** @return all products associated with the warehouse */
-  public Map<String, Product> getProducts(){
+  public Map<String, Product> getProducts() {
     return _warehouse.getProducts();
   }
 
   /** @return a Collection with all the products associated with the warehouse */
-  public Collection<String> getProductsCollection(){
+  public Collection<String> getProductsCollection() {
     return _warehouse.getProductsCollection();
   }
 
-  /** @return a Collection with all the batches with partners associated with the warehouse */
-  public Collection<String> getBatchesCollection(){
+  /**
+   * @return a Collection with all the batches with partners associated with the
+   *         warehouse
+   */
+  public Collection<String> getBatchesCollection() {
     return _warehouse.getBatchesCollection();
   }
+
   /** @return a Collection with all partners associated with the warehouse */
   public Collection<String> getPartnersCollection() {
     return _warehouse.getPartnersCollection();
