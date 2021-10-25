@@ -89,6 +89,7 @@ public class WarehouseManager {
   public void importFile(String textfile) throws ImportFileException {
     try {
 	    _warehouse.importFile(textfile);
+      _saveFlag = false;
     } catch (IOException | BadEntryException | NoSuchPartnerKeyException | NoSuchProductKeyException e) {
 	    throw new ImportFileException(textfile);
     }
@@ -110,6 +111,15 @@ public class WarehouseManager {
   /** @return whether the manager has a filename associated or not */
   public boolean hasFileAssociated() {
     return !_filename.equals("");
+  }
+
+  /**
+   * clear a partner's given unread notifications
+   * @param key partner's key
+   */
+  public void clearNotifications(String key) throws NoSuchPartnerKeyException {
+    _saveFlag = false;
+    _warehouse.clearNotifications(key);
   }
 
   /** @return current warehouse date */
@@ -179,15 +189,6 @@ public class WarehouseManager {
   /** @return a Collection with all partners associated with the warehouse */
   public Collection<String> getPartnersCollection() {
     return _warehouse.getPartnersCollection();
-  }
-
-  /**
-   * clear a partner's given unread notifications
-   * @param key partner's key
-   */
-  public void clearNotifications(String key) {
-    _saveFlag = false;
-    _warehouse.clearNotifications(key);
   }
 
 }
