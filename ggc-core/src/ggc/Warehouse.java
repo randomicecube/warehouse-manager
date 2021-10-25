@@ -38,7 +38,7 @@ public class Warehouse implements Serializable {
    * @throws IOException
    * @throws BadEntryException
    */   
-  void importFile(String txtfile) throws IOException, BadEntryException, NoSuchPartnerKeyException, NoSuchProductKeyException /* TODO? - maybe add other exceptions */ {
+  void importFile(String txtfile) throws IOException, BadEntryException, NoSuchPartnerKeyException, NoSuchProductKeyException  {
     try (BufferedReader in = new BufferedReader(new FileReader(txtfile))) {
       String s;
       while ((s = in.readLine()) != null) {
