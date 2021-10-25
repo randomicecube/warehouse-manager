@@ -31,6 +31,10 @@ public class WarehouseManager {
        return;
      }
 
+     if (!hasFileAssociated()) {
+       throw new MissingFileAssociationException();
+     }
+
      _saveFlag = true;
      ObjectOutputStream oos = new ObjectOutputStream(
        new BufferedOutputStream(
