@@ -12,6 +12,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+
 /**
  * Class Warehouse implements a warehouse.
  */
@@ -87,6 +90,13 @@ public class Warehouse implements Serializable {
     }
   }
 
+  public String normalizeKeys(String key) {
+    String processedKey = Normalizer.normalize(key, Form.NFD);
+    processedKey = processedKey.replaceAll("\\p{M}", "");
+    processedKey = processedKey.toUpperCase();
+    return processedKey;
+  }
+
   /**
    * clear a partner's given unread notifications
    * @param key partner's key
@@ -135,10 +145,11 @@ public class Warehouse implements Serializable {
    */
   public void registerPartner(String key, String name, String address)
     throws PartnerKeyAlreadyUsedException {
-      if (_products.get(key) != null) {
+      String processedPartnerKey = normalizeKeys(key);
+      if (_products.get(processedPartnerKey) != null) {
         throw new PartnerKeyAlreadyUsedException(key);
       }
-      _partners.put(key, new Partner(key, name, address));
+      _partners.put(processedPartnerKey, new Partner(key, name, address));
   }
 
 
@@ -150,20 +161,24 @@ public class Warehouse implements Serializable {
 
     Product product;
 
+    String processedProductKey = normalizeKeys(productKey);
+
     try {
-      product = getProduct(productKey);
+      product = getProduct(processedProductKey);
       product.updateStock(parsedStock);
     } catch (NoSuchProductKeyException e) {
       product = new Product(productKey, parsedStock, parsedPrice);
-      _products.put(productKey, product);
+      _products.put(processedProductKey, product);
 
       if (parsedPrice > product.getProductPrice()) {
         product.updatePrice(parsedPrice);
       }
     }
 
+    String processedPartnerKey = normalizeKeys(partnerKey);
+
     try {
-      Partner partner = getPartner(partnerKey);
+      Partner partner = getPartner(processedPartnerKey);
       partner.addBatch(new Batch(product, parsedStock, parsedPrice, partner));
     } catch (NoSuchPartnerKeyException e) {
       throw new NoSuchPartnerKeyException(e.getKey());
@@ -186,8 +201,10 @@ public class Warehouse implements Serializable {
     for (String i: ingredients) {
       String[] ingredientFactors = i.split(":");
 
+      String processedIngredientKey = normalizeKeys(ingredientFactors[0]);
+
       try {
-        Product ingredient = getProduct(ingredientFactors[0]);
+        Product ingredient = getProduct(processedIngredientKey);
         productRecipe.addIngredient(ingredient, Integer.parseInt(ingredientFactors[1]));
       } catch (NoSuchProductKeyException e) {
         throw new NoSuchProductKeyException(ingredientFactors[0]);
@@ -196,16 +213,20 @@ public class Warehouse implements Serializable {
 
     Product batchProduct;
 
+    String processedProductKey = normalizeKeys(productKey);
+
     try {
-      batchProduct = getProduct(productKey);
+      batchProduct = getProduct(processedProductKey);
       batchProduct.updateStock(parsedStock);
     } catch (NoSuchProductKeyException e) {
       batchProduct = new BreakdownProduct(productRecipe, parsedAggravationFactor, productKey, parsedStock, parsedPrice);
-      _products.put(productKey, batchProduct);
+      _products.put(processedProductKey, batchProduct);
     }
 
+    String processedPartnerKey = normalizeKeys(partnerKey);
+
     try {
-      Partner partner = getPartner(partnerKey);
+      Partner partner = getPartner(processedPartnerKey);
       partner.addBatch(new Batch(batchProduct, parsedStock, parsedPrice, partner));
     } catch (NoSuchPartnerKeyException e) {
       throw new NoSuchPartnerKeyException(e.getKey());
