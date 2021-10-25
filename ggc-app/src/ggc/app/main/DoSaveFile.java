@@ -5,6 +5,7 @@ import pt.tecnico.uilib.menus.CommandException;
 import ggc.WarehouseManager;
 import ggc.exceptions.MissingFileAssociationException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import pt.tecnico.uilib.forms.Form;
 
@@ -22,12 +23,14 @@ class DoSaveFile extends Command<WarehouseManager> {
   public final void execute() throws CommandException {
 
     try {
-      if (_receiver.hasFileAssociated()) {
-        _receiver.save();
-      } else {
-        _receiver.saveAs(Form.requestString(Prompt.newSaveAs()));
+      _receiver.save();
+    } catch (MissingFileAssociationException mfe) {
+      try {
+        _receiver.saveAs(Form.requestString(Prompt.saveAs()));
+      } catch (MissingFileAssociationException | IOException e) { 
+        // NOT SUPPOSED TO HAPPEN ??
       }
-    } catch (IOException | MissingFileAssociationException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
