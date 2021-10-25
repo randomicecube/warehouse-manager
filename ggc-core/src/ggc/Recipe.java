@@ -8,14 +8,24 @@ import java.util.stream.Collectors;
 
 import java.text.Normalizer.Form;
 
+/**
+ * Class representing a product's recipe 
+ */
 public class Recipe implements Serializable {
     
+    /** Recipe's ingredients and amount */
     private Map<String, Integer> _ingredients = new LinkedHashMap<String, Integer>();
 
-    public void addIngredient(Product p, Integer amount) {
-        _ingredients.put(p.getProductKey(), amount);
+    /**
+     * Add an ingridient to the recipe
+     * @param product
+     * @param amount
+     */
+    public void addIngredient(Product product, Integer amount) {
+        _ingredients.put(product.getProductKey(), amount);
     }
 
+    /**@return recipe's ingridients */
     public Map<String, Integer> getIngredients() {
         return _ingredients;
     }

@@ -32,7 +32,9 @@ public class Warehouse implements Serializable {
   /** Warehouse's current accounting balance */
   private double _accountingBalance = 0;
 
+    /** All products associated with the warehouse */
   private Map<String, Product> _products = new TreeMap<String, Product>();
+  
   /** All partners associated with the warehouse */
   private Map<String, Partner> _partners = new TreeMap<String, Partner>();
 
@@ -90,6 +92,12 @@ public class Warehouse implements Serializable {
     }
   }
 
+  /**
+   * Aux function that returns a version of a key in all caps, without the special characters 
+   * for example: água -> AGUA
+   * @param key
+   * @return
+   */
   public String normalizeKeys(String key) {
     String processedKey = Normalizer.normalize(key, Form.NFD);
     processedKey = processedKey.replaceAll("\\p{M}", "");
@@ -153,6 +161,14 @@ public class Warehouse implements Serializable {
   }
 
 
+  /**
+   * registers a batch to a given partner - applies to simple products
+   * @param productKey
+   * @param partnerKey
+   * @param price
+   * @param stock
+   * @throws NoSuchPartnerKeyException
+   */
   public void registerBatch(String productKey, String partnerKey, String price, String stock)
     throws NoSuchPartnerKeyException {
     
@@ -186,6 +202,17 @@ public class Warehouse implements Serializable {
 
   }
 
+  /**
+   * registers a batch to a given partner - applies to breakdown products
+   * @param productKey
+   * @param partnerKey
+   * @param price
+   * @param stock
+   * @param aggravationFactor
+   * @param recipe
+   * @throws NoSuchProductKeyException
+   * @throws NoSuchPartnerKeyException
+   */
   public void registerBatch(String productKey, String partnerKey, String price,
                             String stock, String aggravationFactor, String recipe)
                             throws NoSuchProductKeyException, NoSuchPartnerKeyException {
@@ -240,7 +267,12 @@ public class Warehouse implements Serializable {
    * GETTERS FOR PRODUCTS, PARTNERS, BATCHES, ETC 
    */
 
-
+  /**
+   * get a product, given their key
+   * @param key
+   * @return desired product
+   * @throws NoSuchProductKeyException
+   */
    public Product getProduct(String key) throws NoSuchProductKeyException {
     Product product = _products.get(key); 
     if (product == null) {
@@ -269,6 +301,7 @@ public class Warehouse implements Serializable {
     return _partners;
   }
 
+  /** @return a Collection with all the products associated with the warehouse */
   public Collection<String> getProductsCollection(){
     return getProducts()
       .values()
@@ -277,6 +310,7 @@ public class Warehouse implements Serializable {
       .collect(Collectors.toList());
   }
 
+  /** @return a Collection with all the batches with partners associated with the warehouse */
   public Collection<String> getBatchesCollection(){
     ArrayList<List<Batch>> partnerBatchesCollection = new ArrayList<List<Batch>>();
     List<String> batchCollection = new ArrayList<String>();
@@ -305,6 +339,7 @@ public class Warehouse implements Serializable {
       .collect(Collectors.toList());
   }
   
+  /** @return all products associated with the warehouse */
   public Map<String, Product> getProducts(){
     return _products;
   }

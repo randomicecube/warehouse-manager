@@ -55,7 +55,8 @@ public class Batch implements Serializable {
         return _price;
     }
 
-    public Partner getPartner() {
+    /** @return batch's associated partner */
+    public Partner getPartner(){
         return _partner;
     }
 
