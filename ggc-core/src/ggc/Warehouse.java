@@ -4,22 +4,13 @@ import java.io.*;
 import ggc.exceptions.*;
 
 import java.util.Map;
-
-import javax.lang.model.element.UnknownAnnotationValueException;
-
-import java.util.HashMap;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
-
-// FIXME import classes (cannot import from pt.tecnico or ggc.app)
 import java.util.TreeMap;
+import java.util.List;
+import java.util.ArrayList;
+
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
-
-import javax.crypto.BadPaddingException;
-
-import java.util.TreeSet;
 
 /**
  * Class Warehouse implements a warehouse.
@@ -38,15 +29,7 @@ public class Warehouse implements Serializable {
   /** Warehouse's current accounting balance */
   private double _accountingBalance = 0;
 
-  private Map<String, Partner> _partners = new HashMap<String, Partner>();
-
-  private Map<String, Product> _products = new HashMap<String, Product>();
-
-  private Map<String, Batch> _batches = new HashMap<String, Batch>();
-
-  // FIXME define attributes
-  // FIXME define contructor(s)
-  // FIXME define methods
+  private Map<String, Product> _products = new TreeMap<String, Product>();
   /** All partners associated with the warehouse */
   private Map<String, Partner> _partners = new TreeMap<String, Partner>();
 
@@ -55,7 +38,7 @@ public class Warehouse implements Serializable {
    * @throws IOException
    * @throws BadEntryException
    */   
-  void importFile(String txtfile) throws IOException, BadEntryException /* TODO? - maybe add other exceptions */ {
+  void importFile(String txtfile) throws IOException, BadEntryException, NoSuchPartnerKeyException, NoSuchProductKeyException /* TODO? - maybe add other exceptions */ {
     try (BufferedReader in = new BufferedReader(new FileReader(txtfile))) {
       String s;
       while ((s = in.readLine()) != null) {
@@ -63,19 +46,32 @@ public class Warehouse implements Serializable {
 
         String[] fields = line.split("\\|");
 
-        switch (fields[0]) {
+        switch (fields[0]) {          
           case "PARTNER" -> registerPartner(
             fields[1],
             fields[2],
             fields[3]
           );
-          // TODO case "BATCH_S"
-          // TODO case "BATCH_M"
+
+          case "BATCH_S" -> registerBatch(
+            fields[1],
+            fields[2],
+            fields[3],
+            fields[4]
+          );
+
+          case "BATCH_M" -> registerBatch(
+            fields[1],
+            fields[2],
+            fields[3],
+            fields[4],
+            fields[5],
+            fields[6]
+          );
+
           default -> throw new BadEntryException(fields[0]); 
         }
-
       }
-      // TODO - FIX CATCHES
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -84,7 +80,22 @@ public class Warehouse implements Serializable {
       e.printStackTrace();
     } catch (PartnerKeyAlreadyUsedException e) {
       e.printStackTrace();
-      // TODO - change this to throwing an actual exception
+    } catch (NoSuchPartnerKeyException e) {
+      e.printStackTrace();
+    } catch (NoSuchProductKeyException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * clear a partner's given unread notifications
+   * @param key partner's key
+   */
+  public void clearNotifications(String key) throws NoSuchPartnerKeyException{
+    try {
+      getPartner(key).getNotifications().clear();
+    } catch (NoSuchPartnerKeyException e) {
+      throw new NoSuchPartnerKeyException(key);
     }
   }
 
@@ -124,11 +135,99 @@ public class Warehouse implements Serializable {
    */
   public void registerPartner(String key, String name, String address)
     throws PartnerKeyAlreadyUsedException {
-      if (_partners.get(key) != null) {
+      if (_products.get(key) != null) {
         throw new PartnerKeyAlreadyUsedException(key);
-      }      
+      }
       _partners.put(key, new Partner(key, name, address));
   }
+
+
+  public void registerBatch(String productKey, String partnerKey, String price, String stock)
+    throws NoSuchPartnerKeyException {
+    
+    Integer parsedStock = Integer.parseInt(stock);
+    Integer parsedPrice = Integer.parseInt(price);
+
+    Product product;
+
+    try {
+      product = getProduct(productKey);
+      product.updateStock(parsedStock);
+    } catch (NoSuchProductKeyException e) {
+      product = new Product(productKey, parsedStock, parsedPrice);
+      _products.put(productKey, product);
+
+      if (parsedPrice > product.getProductPrice()) {
+        product.updatePrice(parsedPrice);
+      }
+    }
+
+    try {
+      Partner partner = getPartner(partnerKey);
+      partner.addBatch(new Batch(product, parsedStock, parsedPrice, partner));
+    } catch (NoSuchPartnerKeyException e) {
+      throw new NoSuchPartnerKeyException(e.getKey());
+    }
+
+  }
+
+  public void registerBatch(String productKey, String partnerKey, String price,
+                            String stock, String aggravationFactor, String recipe)
+                            throws NoSuchProductKeyException, NoSuchPartnerKeyException {
+    
+    Integer parsedStock = Integer.parseInt(stock);
+    Integer parsedPrice = Integer.parseInt(price);
+    Double parsedAggravationFactor = Double.parseDouble(aggravationFactor);
+
+    String[] ingredients = recipe.split("\\#");
+
+    Recipe productRecipe = new Recipe();
+    
+    for (String i: ingredients) {
+      String[] ingredientFactors = i.split(":");
+
+      try {
+        Product ingredient = getProduct(ingredientFactors[0]);
+        productRecipe.addIngredient(ingredient, Integer.parseInt(ingredientFactors[1]));
+      } catch (NoSuchProductKeyException e) {
+        throw new NoSuchProductKeyException(ingredientFactors[0]);
+      }
+    }
+
+    Product batchProduct;
+
+    try {
+      batchProduct = getProduct(productKey);
+      batchProduct.updateStock(parsedStock);
+    } catch (NoSuchProductKeyException e) {
+      batchProduct = new BreakdownProduct(productRecipe, parsedAggravationFactor, productKey, parsedStock, parsedPrice);
+      _products.put(productKey, batchProduct);
+    }
+
+    try {
+      Partner partner = getPartner(partnerKey);
+      partner.addBatch(new Batch(batchProduct, parsedStock, parsedPrice, partner));
+    } catch (NoSuchPartnerKeyException e) {
+      throw new NoSuchPartnerKeyException(e.getKey());
+    }
+
+  }
+
+
+
+  /**
+   * GETTERS FOR PRODUCTS, PARTNERS, BATCHES, ETC 
+   */
+
+
+   public Product getProduct(String key) throws NoSuchProductKeyException {
+    Product product = _products.get(key); 
+    if (product == null) {
+      throw new NoSuchProductKeyException(key);
+    }    
+    return product;
+   }
+
 
   /**
    * get a partner, given their key
@@ -148,7 +247,34 @@ public class Warehouse implements Serializable {
   public Map<String, Partner> getPartners() {
     return _partners;
   }
-  
+
+  public Collection<String> getProductsCollection(){
+    return getProducts()
+      .values()
+      .stream()
+      .map(product -> product.toString())
+      .collect(Collectors.toList());
+  }
+
+  public Collection<String> getBatchesCollection(){
+    ArrayList<List<Batch>> partnerBatchesCollection = new ArrayList<List<Batch>>();
+    List<String> batchCollection = new ArrayList<String>();
+
+    for (Partner p: getPartners().values()) {
+      partnerBatchesCollection.add(p.getPartnerBatches());
+    }
+
+    for (List<Batch> array: partnerBatchesCollection) {
+      for (Batch b: array) {
+        batchCollection.add(b.toString());
+      }
+    }
+
+    batchCollection.sort(null);
+
+    return batchCollection;
+  }
+
   /** @return a Collection with all partners associated with the warehouse */
   public Collection<String> getPartnersCollection() {
     return getPartners()
@@ -157,29 +283,9 @@ public class Warehouse implements Serializable {
       .map(partner -> partner.toString())
       .collect(Collectors.toList());
   }
-
-  /**
-   * clear a partner's given unread notifications
-   * @param key partner's key
-   */
-  public void clearNotifications(String key) {
-    _partners.get(key).getNotifications().clear();
-  }
-
+  
   public Map<String, Product> getProducts(){
     return _products;
-  }
-
-  public Map<String, Batch> getBatches(){
-    return _batches;
-  }
-
-  public Collection<String> getProductsCollection(){
-    return getProducts().values().stream().map(product -> product.toString()).collect(Collectors.toList());
-  }
-
-  public Collection<String> getBatchesCollection(){
-    return getBatches().values().stream().map(batch -> batch.toString()).collect(Collectors.toList());
   }
 
 }

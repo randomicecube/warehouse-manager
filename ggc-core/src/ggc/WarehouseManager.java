@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-//FIXME import classes (cannot import from pt.tecnico or ggc.app)
-
 /** Façade for access. */
 public class WarehouseManager {
 
@@ -91,7 +89,8 @@ public class WarehouseManager {
   public void importFile(String textfile) throws ImportFileException {
     try {
 	    _warehouse.importFile(textfile);
-    } catch (IOException | BadEntryException /* FIXME maybe other exceptions */ e) {
+      _saveFlag = false;
+    } catch (IOException | BadEntryException | NoSuchPartnerKeyException | NoSuchProductKeyException e) {
 	    throw new ImportFileException(textfile);
     }
   }
@@ -112,6 +111,15 @@ public class WarehouseManager {
   /** @return whether the manager has a filename associated or not */
   public boolean hasFileAssociated() {
     return !_filename.equals("");
+  }
+
+  /**
+   * clear a partner's given unread notifications
+   * @param key partner's key
+   */
+  public void clearNotifications(String key) throws NoSuchPartnerKeyException {
+    _saveFlag = false;
+    _warehouse.clearNotifications(key);
   }
 
   /** @return current warehouse date */
@@ -171,10 +179,6 @@ public class WarehouseManager {
     return _warehouse.getProducts();
   }
 
-  public Map<String, Batch> getBatches(){
-    return _warehouse.getBatches();
-  }
-
   public Collection<String> getProductsCollection(){
     return _warehouse.getProductsCollection();
   }
@@ -185,15 +189,6 @@ public class WarehouseManager {
   /** @return a Collection with all partners associated with the warehouse */
   public Collection<String> getPartnersCollection() {
     return _warehouse.getPartnersCollection();
-  }
-
-  /**
-   * clear a partner's given unread notifications
-   * @param key partner's key
-   */
-  public void clearNotifications(String key) {
-    _saveFlag = false;
-    _warehouse.clearNotifications(key);
   }
 
 }
