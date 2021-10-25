@@ -3,61 +3,59 @@ package ggc;
 import java.io.Serializable;
 
 /**
- * Class representing a notification in the system
- * has a product's key and price associated, as well as
- * the notification type (NEW vs BARGAIN)
+ * Class representing a notification in the system has a product's key and price
+ * associated, as well as the notification type (NEW vs BARGAIN)
  */
 public abstract class Notification implements Serializable {
-    
-    /** The product associated with the notifications's key */
-    private String _productKey;
 
-    /** The product associated with the notifications's price */
-    private int _productPrice;
+  /** Serial number for serialization. */
+  private static final long serialVersionUID = 202110252059L;
 
-    /** The notification's type */
-    private String _notificationType;
+  /** The product associated with the notifications's key */
+  private String _productKey;
 
-    /**
-     * Main Constructor
-     * @param productKey associated product's key
-     * @param productPrice associated product's price
-     * @param notificationType
-     */
-    public Notification(String productKey, int productPrice, String notificationType) {
-        _productKey = productKey;
-        _productPrice = productPrice;
-        _notificationType = notificationType;
-    }
+  /** The product associated with the notifications's price */
+  private int _productPrice;
 
-    /** Updating the notification type (NEW vs BARGAIN) */
-    public void updateNotificationType(String notificationType) {
-        _notificationType = notificationType;
-    }
+  /** The notification's type */
+  private String _notificationType;
 
-    /** @return product's key */
-    public String getProductKey() {
-        return _productKey;
-    }
+  /**
+   * Main Constructor
+   * 
+   * @param productKey       associated product's key
+   * @param productPrice     associated product's price
+   * @param notificationType
+   */
+  public Notification(String productKey, int productPrice, String notificationType) {
+    _productKey = productKey;
+    _productPrice = productPrice;
+    _notificationType = notificationType;
+  }
 
-    /** @return product's price */
-    public int getProductPrice() {
-        return _productPrice;
-    }
+  /** Updating the notification type (NEW vs BARGAIN) */
+  public void updateNotificationType(String notificationType) {
+    _notificationType = notificationType;
+  }
 
-    /** @return notification type */
-    public String getNotificationType() {
-        return _notificationType;
-    }
+  /** @return product's key */
+  public String getProductKey() {
+    return _productKey;
+  }
 
-    @Override
-    public String toString() {
-        return String.join(
-            "|",
-            getNotificationType(),
-            getProductKey(),
-            String.valueOf(getProductPrice())
-        );
-    }
+  /** @return product's price */
+  public int getProductPrice() {
+    return _productPrice;
+  }
+
+  /** @return notification type */
+  public String getNotificationType() {
+    return _notificationType;
+  }
+
+  @Override
+  public String toString() {
+    return String.join("|", getNotificationType(), getProductKey(), String.valueOf(getProductPrice()));
+  }
 
 }

@@ -1,15 +1,19 @@
 package ggc.exceptions;
 
+/** Launched when a given product string isn't in the system */
 public class NoSuchProductKeyException extends Exception {
-    
-    private String _key;
 
-    public NoSuchProductKeyException(String key) {
-        _key = key;
-    }
+  /** Serial number for serialization. */
+  private static final long serialVersionUID = 202110252108L;
 
-    public String getKey() {
-        return _key;
-    }
+  private String _key;
+
+  public NoSuchProductKeyException(String key) {
+    _key = key;
+  }
+
+  public String getKey() {
+    return _key;
+  }
 
 }

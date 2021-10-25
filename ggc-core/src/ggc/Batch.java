@@ -3,71 +3,71 @@ package ggc;
 import java.io.Serializable;
 
 /**
- * Class representing Product batches
- * All instances have a product type, a Product amount and the price per product
+ * Class representing Product batches All instances have a product type, a
+ * Product amount and the price per product
  */
 public class Batch implements Serializable {
 
-    /** The Batch's associated Product*/
-    private Product _productType;
+  /** Serial number for serialization. */
+  private static final long serialVersionUID = 202110252104L;
 
-    /** The Batch's product current stock */
-    private int _amount;
-    
-    /** The Batch's per-unit Product price */
-    private int _price;
+  /** The Batch's associated Product */
+  private Product _productType;
 
-    private Partner _partner;
+  /** The Batch's product current stock */
+  private int _amount;
 
-    /**
-     * Main Constructor
-     * @param productType batch's product
-     * @param amount batch's product stock
-     * @param price batch's per-unit product price
-     */
-    public Batch(Product productType, int amount, int price, Partner partner){
-        _productType = productType;
-        _amount = amount;
-        _price = price;
-        _partner = partner;
-    }
+  /** The Batch's per-unit Product price */
+  private int _price;
 
-    /**
-     * Update the batch's current product stock
-     * @param amount
-     */
-    public void updateAmount(int amount){
-        _amount += amount;
-    }
+  private Partner _partner;
 
-    /** @return batch's associated product type */
-    public Product getProductType(){
-        return _productType;
-    }
+  /**
+   * Main Constructor
+   * 
+   * @param productType batch's product
+   * @param amount      batch's product stock
+   * @param price       batch's per-unit product price
+   */
+  public Batch(Product productType, int amount, int price, Partner partner) {
+    _productType = productType;
+    _amount = amount;
+    _price = price;
+    _partner = partner;
+  }
 
-    /** @return batch's current product stock */
-    public int getAmount(){
-        return _amount;
-    }
+  /**
+   * Update the batch's current product stock
+   * 
+   * @param amount
+   */
+  public void updateAmount(int amount) {
+    _amount += amount;
+  }
 
-    /** @return batch's per-unit product price */
-    public int getPrice(){
-        return _price;
-    }
+  /** @return batch's associated product type */
+  public Product getProductType() {
+    return _productType;
+  }
 
-    /** @return batch's associated partner */
-    public Partner getPartner(){
-        return _partner;
-    }
+  /** @return batch's current product stock */
+  public int getAmount() {
+    return _amount;
+  }
 
-    @Override
-    public String toString(){
-        return String.join(
-            "|",
-            getProductType().getProductKey(),
-            getPartner().getPartnerKey(),
-            String.valueOf(getPrice()),
-            String.valueOf(getAmount())
-        );
-    }
+  /** @return batch's per-unit product price */
+  public int getPrice() {
+    return _price;
+  }
+
+  /** @return batch's associated partner */
+  public Partner getPartner() {
+    return _partner;
+  }
+
+  @Override
+  public String toString() {
+    return String.join("|", getProductType().getProductKey(), getPartner().getPartnerKey(), String.valueOf(getPrice()),
+        String.valueOf(getAmount()));
+  }
 }

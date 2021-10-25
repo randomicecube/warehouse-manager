@@ -10,198 +10,211 @@ import java.io.Serializable;
  */
 public class Partner implements Serializable {
 
-    /** Default notification is, by omission, an app notification */
-    private static final String DEFAULT_NOTIFICATION_METHOD = "";
+  /** Serial number for serialization. */
+  private static final long serialVersionUID = 202110252058L;
 
-    /** Partner's status - partners always start with the "Normal" status */
-    private Status _partnerStatus = new NormalStatus();
+  /** Default notification is, by omission, an app notification */
+  private static final String DEFAULT_NOTIFICATION_METHOD = "";
 
-    /** Partner's identification key */
-    private String _partnerKey;
+  /** Partner's status - partners always start with the "Normal" status */
+  private Status _partnerStatus = new NormalStatus();
 
-    /** Partner's name */
-    private String _partnerName;
+  /** Partner's identification key */
+  private String _partnerKey;
 
-    /** Partner's address */
-    private String _partnerAddress;
+  /** Partner's name */
+  private String _partnerName;
 
-    /** Partner's current point score */
-    private int _partnerPoints = 0;
+  /** Partner's address */
+  private String _partnerAddress;
 
-    /** Value representing the price of acquisitions warehouse-partner */
-    private int _acquisitionPrices = 0;
+  /** Partner's current point score */
+  private int _partnerPoints = 0;
 
-    /** Value representing the total price of sales warehouse-partner */
-    private int _overallSalePrices = 0;
+  /** Value representing the price of acquisitions warehouse-partner */
+  private int _acquisitionPrices = 0;
 
-    /** Value representing the amount the partner has actually paid  */
-    private int _paidSalePrices = 0;
+  /** Value representing the total price of sales warehouse-partner */
+  private int _overallSalePrices = 0;
 
-    /** Partner's transaction history */
-    private List<Transaction>  _transactionHistory  = new ArrayList<Transaction>();
+  /** Value representing the amount the partner has actually paid */
+  private int _paidSalePrices = 0;
 
-    /** Partner's unread notifications */
-    private List<Notification> _unreadNotifications = new ArrayList<Notification>();
+  /** Partner's transaction history */
+  private List<Transaction> _transactionHistory = new ArrayList<Transaction>();
 
-    /** Partner's in-stock batches */
-    private List<Batch> _partnerBatches = new ArrayList<Batch>();
+  /** Partner's unread notifications */
+  private List<Notification> _unreadNotifications = new ArrayList<Notification>();
 
-    /** Partner's desired notification method */
-    private String _notificationMethod;
+  /** Partner's in-stock batches */
+  private List<Batch> _partnerBatches = new ArrayList<Batch>();
 
-    /**
-     * Constructor without a given specific notification method
-     * @param key partner's identification key
-     * @param name partner's name
-     * @param address partner's address
-     */
-    public Partner(String key, String name, String address) {
-        this(key, name, address, DEFAULT_NOTIFICATION_METHOD);
-    }
+  /** Partner's desired notification method */
+  private String _notificationMethod;
 
-    /**
-     * Main Constructor
-     * @param key partner's identification key
-     * @param name partner's name
-     * @param address partner's address
-     * @param method partner's desired notification delivery method
-     */
-    public Partner(String key, String name, String address, String method) {
-        _partnerKey = key;
-        _partnerName = name;
-        _partnerAddress = address;
-        _notificationMethod = method;
-    }
+  /**
+   * Constructor without a given specific notification method
+   * 
+   * @param key     partner's identification key
+   * @param name    partner's name
+   * @param address partner's address
+   */
+  public Partner(String key, String name, String address) {
+    this(key, name, address, DEFAULT_NOTIFICATION_METHOD);
+  }
 
-    /** @return partner's identification key */
-    public String getPartnerKey() {
-        return _partnerKey;
-    }
+  /**
+   * Main Constructor
+   * 
+   * @param key     partner's identification key
+   * @param name    partner's name
+   * @param address partner's address
+   * @param method  partner's desired notification delivery method
+   */
+  public Partner(String key, String name, String address, String method) {
+    _partnerKey = key;
+    _partnerName = name;
+    _partnerAddress = address;
+    _notificationMethod = method;
+  }
 
-    /** @return partner's name */
-    public String getPartnerName() {
-        return _partnerName;
-    }
+  /** @return partner's identification key */
+  public String getPartnerKey() {
+    return _partnerKey;
+  }
 
-    /** @return partner's address */
-    public String getPartnerAddress() {
-        return _partnerAddress;
-    }
+  /** @return partner's name */
+  public String getPartnerName() {
+    return _partnerName;
+  }
 
-    /** @return partner's status */
-    public Status getPartnerStatus() {
-        return _partnerStatus;
-    }
+  /** @return partner's address */
+  public String getPartnerAddress() {
+    return _partnerAddress;
+  }
 
-    /** @return partner's points (related to Status) */
-    public int getPartnerPoints() {
-        return _partnerPoints;
-    }
+  /** @return partner's status */
+  public Status getPartnerStatus() {
+    return _partnerStatus;
+  }
 
-    /** @return partner's acquisition prices */
-    public int getAcquisitionPrices() {
-        return _acquisitionPrices;
-    }
+  /** @return partner's points (related to Status) */
+  public int getPartnerPoints() {
+    return _partnerPoints;
+  }
 
-    /** @return partner's total price of sales (paid or not) */
-    public int getOverallSalePrices() {
-        return _overallSalePrices;
-    }
+  /** @return partner's acquisition prices */
+  public int getAcquisitionPrices() {
+    return _acquisitionPrices;
+  }
 
-    /** @return partner's total price of paid sales */
-    public int getPaidSalePrices() {
-        return _paidSalePrices;
-    }
+  /** @return partner's total price of sales (paid or not) */
+  public int getOverallSalePrices() {
+    return _overallSalePrices;
+  }
 
-    /** @return partner's batches */
-    public List<Batch> getPartnerBatches() {
-        return _partnerBatches;
-    }
+  /** @return partner's total price of paid sales */
+  public int getPaidSalePrices() {
+    return _paidSalePrices;
+  }
 
-    /** @return partner's unread notifications */
-    public List<Notification> getNotifications() {
-        return _unreadNotifications;
-    }
+  /** @return partner's batches */
+  public List<Batch> getPartnerBatches() {
+    return _partnerBatches;
+  }
 
-    /** Update the partner's status, according to their current point score */
-    public void updateStatus() {
-        // TODO implement
-    }
+  /** @return partner's unread notifications */
+  public List<Notification> getNotifications() {
+    return _unreadNotifications;
+  }
 
-    /** Update partner's point total 
-     * @param points
-    */
-    public void updatePartnerPoints(int points) {
-        _partnerPoints += points;
-    }
+  /** Update the partner's status, according to their current point score */
+  public void updateStatus() {
+    // TODO implement
+  }
 
-    /** Update the partner's desired notification delivery method 
-     * @param method
-    */
-    public void updateNotificationMethod(String method) {
-        _notificationMethod = method;
-    }
+  /**
+   * Update partner's point total
+   * 
+   * @param points
+   */
+  public void updatePartnerPoints(int points) {
+    _partnerPoints += points;
+  }
 
-    /** Add a transaction to the partner's transaction history collection 
-     * @param transaction
-    */
-    public void addTransaction(Transaction transaction) {
-        _transactionHistory.add(transaction);
-    }
+  /**
+   * Update the partner's desired notification delivery method
+   * 
+   * @param method
+   */
+  public void updateNotificationMethod(String method) {
+    _notificationMethod = method;
+  }
 
-    /** Add a notification to the partner's to-be-read notification collection 
-     * @param notification
-    */
-    public void addToBeReadNotification(Notification notification) {
-        _unreadNotifications.add(notification);
-    }
+  /**
+   * Add a transaction to the partner's transaction history collection
+   * 
+   * @param transaction
+   */
+  public void addTransaction(Transaction transaction) {
+    _transactionHistory.add(transaction);
+  }
 
-    /** Add a batch to the partner's in-stock batch collection 
-     * @param batch
-    */
-    public void addBatch(Batch batch) {
-        _partnerBatches.add(batch);
-    }
+  /**
+   * Add a notification to the partner's to-be-read notification collection
+   * 
+   * @param notification
+   */
+  public void addToBeReadNotification(Notification notification) {
+    _unreadNotifications.add(notification);
+  }
 
-    /** Update the partner's total acquisition prices 
-     * @param amount
-    */
-    public void updateAcquisitionPrices(int amount) {
-        _acquisitionPrices += amount;
-    }
+  /**
+   * Add a batch to the partner's in-stock batch collection
+   * 
+   * @param batch
+   */
+  public void addBatch(Batch batch) {
+    _partnerBatches.add(batch);
+  }
 
-    /** Update the partner's total price of sales (paid or not) 
-     * @param amount
-    */
-    public void updateOverallSalePrices(int amount) {
-        _overallSalePrices += amount;
-    }
+  /**
+   * Update the partner's total acquisition prices
+   * 
+   * @param amount
+   */
+  public void updateAcquisitionPrices(int amount) {
+    _acquisitionPrices += amount;
+  }
 
-    /** Update the partner's total price of paid sales 
-     * @param amount
-    */
-    public void updatePaidSalePrices(int amount) {
-        _paidSalePrices += amount;
-    }
+  /**
+   * Update the partner's total price of sales (paid or not)
+   * 
+   * @param amount
+   */
+  public void updateOverallSalePrices(int amount) {
+    _overallSalePrices += amount;
+  }
 
-    /** Clear the partner's unread notifications array */
-    public void clearNotifications() {
-        _unreadNotifications.clear();
-    }
+  /**
+   * Update the partner's total price of paid sales
+   * 
+   * @param amount
+   */
+  public void updatePaidSalePrices(int amount) {
+    _paidSalePrices += amount;
+  }
 
-    @Override
-    public String toString() {
-        return String.join(
-            "|",
-            getPartnerKey(),
-            getPartnerName(),
-            getPartnerAddress(),
-            getPartnerStatus().toString(),
-            String.valueOf(getPartnerPoints()),
-            String.valueOf(getAcquisitionPrices()),
-            String.valueOf(getOverallSalePrices()),
-            String.valueOf(getPaidSalePrices())
-        );
-    }
+  /** Clear the partner's unread notifications array */
+  public void clearNotifications() {
+    _unreadNotifications.clear();
+  }
+
+  @Override
+  public String toString() {
+    return String.join("|", getPartnerKey(), getPartnerName(), getPartnerAddress(), getPartnerStatus().toString(),
+        String.valueOf(getPartnerPoints()), String.valueOf(getAcquisitionPrices()),
+        String.valueOf(getOverallSalePrices()), String.valueOf(getPaidSalePrices()));
+  }
 
 }
