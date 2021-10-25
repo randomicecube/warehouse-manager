@@ -32,10 +32,10 @@ public class Partner implements Serializable {
     private int _acquisitionPrices = 0;
 
     /** Value representing the total price of sales warehouse-partner */
-    private double _overallSalePrices = 0;
+    private int _overallSalePrices = 0;
 
     /** Value representing the amount the partner has actually paid  */
-    private double _paidSalePrices = 0;
+    private int _paidSalePrices = 0;
 
     /** Partner's transaction history */
     private List<Transaction>  _transactionHistory  = new ArrayList<Transaction>();
@@ -104,12 +104,12 @@ public class Partner implements Serializable {
     }
 
     /** @return partner's total price of sales (paid or not) */
-    public double getOverallSalePrices() {
+    public int getOverallSalePrices() {
         return _overallSalePrices;
     }
 
     /** @return partner's total price of paid sales */
-    public double getPaidSalePrices() {
+    public int getPaidSalePrices() {
         return _paidSalePrices;
     }
 
@@ -173,14 +173,14 @@ public class Partner implements Serializable {
     /** Update the partner's total price of sales (paid or not) 
      * @param amount
     */
-    public void updateOverallSalePrices(double amount) {
+    public void updateOverallSalePrices(int amount) {
         _overallSalePrices += amount;
     }
 
     /** Update the partner's total price of paid sales 
      * @param amount
     */
-    public void updatePaidSalePrices(double amount) {
+    public void updatePaidSalePrices(int amount) {
         _paidSalePrices += amount;
     }
 

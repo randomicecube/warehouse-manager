@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,9 +15,6 @@ import java.util.stream.Collectors;
 
 import java.text.Collator;
 import java.util.Locale;
-
-// import java.text.Normalizer;
-// import java.text.Normalizer.Form;
 
 /**
  * Class Warehouse implements a warehouse.
@@ -143,8 +141,11 @@ public class Warehouse implements Serializable {
    */
   public void registerPartner(String key, String name, String address)
     throws PartnerKeyAlreadyUsedException {
-      if (_products.get(key) != null) {
-        throw new PartnerKeyAlreadyUsedException(key);
+      String lowerCasePartnerKey = key.toLowerCase();
+      for (String mapKey: _partners.keySet()) {
+        if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
+          throw new PartnerKeyAlreadyUsedException(key);
+        }
       }
       _partners.put(key, new Partner(key, name, address));
   }
@@ -258,13 +259,15 @@ public class Warehouse implements Serializable {
    * @return desired product
    * @throws NoSuchProductKeyException
    */
-   public Product getProduct(String key) throws NoSuchProductKeyException {
-    Product product = _products.get(key); 
-    if (product == null) {
-      throw new NoSuchProductKeyException(key);
-    }    
-    return product;
-   }
+  public Product getProduct(String key) throws NoSuchProductKeyException {
+    String lowerCaseProductKey = key.toLowerCase();
+    for (String mapKey: _products.keySet()) {
+      if (mapKey.toLowerCase().equals(lowerCaseProductKey)) {
+        return _products.get(mapKey);
+      }
+    }
+    throw new NoSuchProductKeyException(key);
+  }
 
 
   /**
@@ -274,11 +277,13 @@ public class Warehouse implements Serializable {
    * @throws NoSuchPartnerKeyException
    */
   public Partner getPartner(String key) throws NoSuchPartnerKeyException {
-    Partner partner = _partners.get(key);
-    if (partner == null) {
-      throw new NoSuchPartnerKeyException(key);
+    String lowerCasePartnerKey = key.toLowerCase();
+    for (String mapKey: _partners.keySet()) {
+      if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
+        return _partners.get(mapKey);
+      }
     }
-    return partner;
+    throw new NoSuchPartnerKeyException(key);
   }
 
   /** @return all partners associated with the warehouse */
