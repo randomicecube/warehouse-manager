@@ -46,8 +46,11 @@ public class Recipe implements Serializable {
 
   @Override
   public String toString() {
-    return getIngredients().entrySet().stream().map(entry -> entry.getKey() + ":" + entry.getValue())
-        .collect(Collectors.joining("#"));
+    return getIngredients()
+      .entrySet()
+      .stream()
+      .map(entry -> entry.getKey() + ":" + entry.getValue())
+      .collect(Collectors.joining("#"));
   }
 
 }

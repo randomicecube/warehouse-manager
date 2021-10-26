@@ -18,7 +18,7 @@ public class Batch implements Serializable {
   private int _amount;
 
   /** The Batch's per-unit Product price */
-  private int _price;
+  private double _price;
 
   private Partner _partner;
 
@@ -29,7 +29,7 @@ public class Batch implements Serializable {
    * @param amount      batch's product stock
    * @param price       batch's per-unit product price
    */
-  public Batch(Product productType, int amount, int price, Partner partner) {
+  public Batch(Product productType, int amount, double price, Partner partner) {
     _productType = productType;
     _amount = amount;
     _price = price;
@@ -56,7 +56,7 @@ public class Batch implements Serializable {
   }
 
   /** @return batch's per-unit product price */
-  public int getPrice() {
+  public double getPrice() {
     return _price;
   }
 
@@ -67,7 +67,11 @@ public class Batch implements Serializable {
 
   @Override
   public String toString() {
-    return String.join("|", getProductType().getProductKey(), getPartner().getPartnerKey(), String.valueOf(getPrice()),
-        String.valueOf(getAmount()));
+    return String.join("|",
+      getProductType().getProductKey(),
+      getPartner().getPartnerKey(),
+      String.valueOf(Math.round(getPrice())),
+      String.valueOf(getAmount())
+    );
   }
 }

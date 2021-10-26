@@ -14,7 +14,7 @@ public class Product implements Serializable {
   private String _productKey;
 
   /** Product's price */
-  private Integer _productPrice = 0;
+  private Double _productPrice = 0.0;
 
   /** Product's stock */
   private Integer _stock = 0; // Integer instead of int for consistency's sake with Maps
@@ -26,7 +26,7 @@ public class Product implements Serializable {
    * @param stock        product's stock
    * @param productPrice product's price
    */
-  public Product(String productKey, Integer stock, Integer productPrice) {
+  public Product(String productKey, Integer stock, Double productPrice) {
     _productKey = productKey;
     _productPrice = productPrice;
     _stock = stock;
@@ -46,7 +46,7 @@ public class Product implements Serializable {
    * 
    * @param price
    */
-  public void updatePrice(Integer price) {
+  public void updatePrice(Double price) {
     _productPrice = price;
   }
 
@@ -65,7 +65,7 @@ public class Product implements Serializable {
   }
 
   /** @return product's pricey */
-  public Integer getProductPrice() {
+  public Double getProductPrice() {
     return _productPrice;
   }
 
@@ -76,6 +76,11 @@ public class Product implements Serializable {
 
   @Override
   public String toString() {
-    return String.join("|", getProductKey(), String.valueOf(getProductPrice()), String.valueOf(getStock()));
+    return String.join(
+      "|",
+      getProductKey(),
+      String.valueOf(Math.round(getProductPrice())),
+      String.valueOf(getStock())
+    );
   }
 }

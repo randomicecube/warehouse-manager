@@ -32,13 +32,13 @@ public class Partner implements Serializable {
   private int _partnerPoints = 0;
 
   /** Value representing the price of acquisitions warehouse-partner */
-  private int _acquisitionPrices = 0;
+  private double _acquisitionPrices = 0;
 
   /** Value representing the total price of sales warehouse-partner */
-  private int _overallSalePrices = 0;
+  private double _overallSalePrices = 0;
 
   /** Value representing the amount the partner has actually paid */
-  private int _paidSalePrices = 0;
+  private double _paidSalePrices = 0;
 
   /** Partner's transaction history */
   private List<Transaction> _transactionHistory = new ArrayList<Transaction>();
@@ -104,17 +104,17 @@ public class Partner implements Serializable {
   }
 
   /** @return partner's acquisition prices */
-  public int getAcquisitionPrices() {
+  public double getAcquisitionPrices() {
     return _acquisitionPrices;
   }
 
   /** @return partner's total price of sales (paid or not) */
-  public int getOverallSalePrices() {
+  public double getOverallSalePrices() {
     return _overallSalePrices;
   }
 
   /** @return partner's total price of paid sales */
-  public int getPaidSalePrices() {
+  public double getPaidSalePrices() {
     return _paidSalePrices;
   }
 
@@ -183,7 +183,7 @@ public class Partner implements Serializable {
    * 
    * @param amount
    */
-  public void updateAcquisitionPrices(int amount) {
+  public void updateAcquisitionPrices(double amount) {
     _acquisitionPrices += amount;
   }
 
@@ -192,7 +192,7 @@ public class Partner implements Serializable {
    * 
    * @param amount
    */
-  public void updateOverallSalePrices(int amount) {
+  public void updateOverallSalePrices(double amount) {
     _overallSalePrices += amount;
   }
 
@@ -201,7 +201,7 @@ public class Partner implements Serializable {
    * 
    * @param amount
    */
-  public void updatePaidSalePrices(int amount) {
+  public void updatePaidSalePrices(double amount) {
     _paidSalePrices += amount;
   }
 
@@ -212,9 +212,17 @@ public class Partner implements Serializable {
 
   @Override
   public String toString() {
-    return String.join("|", getPartnerKey(), getPartnerName(), getPartnerAddress(), getPartnerStatus().toString(),
-        String.valueOf(getPartnerPoints()), String.valueOf(getAcquisitionPrices()),
-        String.valueOf(getOverallSalePrices()), String.valueOf(getPaidSalePrices()));
+    return String.join(
+      "|",
+      getPartnerKey(),
+      getPartnerName(),
+      getPartnerAddress(),
+      getPartnerStatus().toString(),
+      String.valueOf(getPartnerPoints()),
+      String.valueOf(Math.round(getAcquisitionPrices())),
+      String.valueOf(Math.round(getOverallSalePrices())),
+      String.valueOf(Math.round(getPaidSalePrices()))
+    );
   }
 
 }

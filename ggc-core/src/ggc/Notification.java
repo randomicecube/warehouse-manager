@@ -55,7 +55,12 @@ public abstract class Notification implements Serializable {
 
   @Override
   public String toString() {
-    return String.join("|", getNotificationType(), getProductKey(), String.valueOf(getProductPrice()));
+    return String.join(
+      "|",
+      getNotificationType(),
+      getProductKey(),
+      String.valueOf(getProductPrice())
+    );
   }
 
 }

@@ -33,9 +33,9 @@ public class Warehouse implements Serializable {
   /** Warehouse's current accounting balance */
   private double _accountingBalance = 0;
 
-    /** All products associated with the warehouse */
+  /** All products associated with the warehouse */
   private Map<String, Product> _products = new HashMap<String, Product>();
-  
+
   /** All partners associated with the warehouse */
   private Map<String, Partner> _partners = new HashMap<String, Partner>();
 
@@ -43,8 +43,9 @@ public class Warehouse implements Serializable {
    * @param txtfile filename to be loaded.
    * @throws IOException
    * @throws BadEntryException
-   */   
-  void importFile(String txtfile) throws IOException, BadEntryException, NoSuchPartnerKeyException, NoSuchProductKeyException  {
+   */
+  void importFile(String txtfile)
+      throws IOException, BadEntryException, NoSuchPartnerKeyException, NoSuchProductKeyException {
     try (BufferedReader in = new BufferedReader(new FileReader(txtfile))) {
       String s;
       while ((s = in.readLine()) != null) {
@@ -52,7 +53,7 @@ public class Warehouse implements Serializable {
 
         String[] fields = line.split("\\|");
 
-        switch (fields[0]) {          
+        switch (fields[0]) {
           case "PARTNER" -> registerPartner(
             fields[1],
             fields[2],
@@ -66,8 +67,7 @@ public class Warehouse implements Serializable {
             fields[4]
           );
 
-          case "BATCH_M" -> registerBatch(
-            fields[1],
+          case "BATCH_M" -> registerBatch(fields[1],
             fields[2],
             fields[3],
             fields[4],
@@ -75,7 +75,7 @@ public class Warehouse implements Serializable {
             fields[6]
           );
 
-          default -> throw new BadEntryException(fields[0]); 
+          default -> throw new BadEntryException(fields[0]);
         }
       }
     } catch (FileNotFoundException e) {
@@ -95,9 +95,10 @@ public class Warehouse implements Serializable {
 
   /**
    * clear a partner's given unread notifications
+   * 
    * @param key partner's key
    */
-  public void clearNotifications(String key) throws NoSuchPartnerKeyException{
+  public void clearNotifications(String key) throws NoSuchPartnerKeyException {
     try {
       getPartner(key).getNotifications().clear();
     } catch (NoSuchPartnerKeyException e) {
@@ -112,6 +113,7 @@ public class Warehouse implements Serializable {
 
   /**
    * update warehouse's date
+   * 
    * @param days days to add to current date
    * @throws NoSuchDateException
    */
@@ -134,36 +136,36 @@ public class Warehouse implements Serializable {
 
   /**
    * register a partner to be associated with the warehouse
-   * @param key partner's key
-   * @param name partner's name
+   * 
+   * @param key     partner's key
+   * @param name    partner's name
    * @param address partner's address
    * @throws PartnerKeyAlreadyUsedException
    */
-  public void registerPartner(String key, String name, String address)
-    throws PartnerKeyAlreadyUsedException {
-      String lowerCasePartnerKey = key.toLowerCase();
-      for (String mapKey: _partners.keySet()) {
-        if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
-          throw new PartnerKeyAlreadyUsedException(key);
-        }
+  public void registerPartner(String key, String name, String address) throws PartnerKeyAlreadyUsedException {
+    String lowerCasePartnerKey = key.toLowerCase();
+    for (String mapKey : _partners.keySet()) {
+      if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
+        throw new PartnerKeyAlreadyUsedException(key);
       }
-      _partners.put(key, new Partner(key, name, address));
+    }
+    _partners.put(key, new Partner(key, name, address));
   }
-
 
   /**
    * registers a batch to a given partner - applies to simple products
+   * 
    * @param productKey product's key
    * @param partnerKey partner's key
-   * @param price batch's assoicated price
-   * @param stock batch's product stock
+   * @param price      batch's assoicated price
+   * @param stock      batch's product stock
    * @throws NoSuchPartnerKeyException
    */
   public void registerBatch(String productKey, String partnerKey, String price, String stock)
-    throws NoSuchPartnerKeyException {
-    
+      throws NoSuchPartnerKeyException {
+
     Integer parsedStock = Integer.parseInt(stock);
-    Integer parsedPrice = Integer.parseInt(price);
+    Double parsedPrice = Double.parseDouble(price);
 
     Product product;
 
@@ -190,28 +192,28 @@ public class Warehouse implements Serializable {
 
   /**
    * registers a batch to a given partner - applies to breakdown products
-   * @param productKey product's key
-   * @param partnerKey partner's key
-   * @param price batch's associated proce
-   * @param stock batch's product stock
+   * 
+   * @param productKey        product's key
+   * @param partnerKey        partner's key
+   * @param price             batch's associated proce
+   * @param stock             batch's product stock
    * @param aggravationFactor product breakdown aggravation factor
-   * @param recipe recipe in it's string format
+   * @param recipe            recipe in it's string format
    * @throws NoSuchProductKeyException
    * @throws NoSuchPartnerKeyException
    */
-  public void registerBatch(String productKey, String partnerKey, String price,
-                            String stock, String aggravationFactor, String recipe)
-                            throws NoSuchProductKeyException, NoSuchPartnerKeyException {
-    
+  public void registerBatch(String productKey, String partnerKey, String price, String stock, String aggravationFactor,
+      String recipe) throws NoSuchProductKeyException, NoSuchPartnerKeyException {
+
     Integer parsedStock = Integer.parseInt(stock);
-    Integer parsedPrice = Integer.parseInt(price);
+    Double parsedPrice = Double.parseDouble(price);
     Double parsedAggravationFactor = Double.parseDouble(aggravationFactor);
 
     String[] ingredients = recipe.split("\\#");
 
     Recipe productRecipe = new Recipe();
-    
-    for (String i: ingredients) {
+
+    for (String i : ingredients) {
       String[] ingredientFactors = i.split(":");
 
       try {
@@ -243,13 +245,14 @@ public class Warehouse implements Serializable {
 
   /**
    * get a product, given their key
+   * 
    * @param key product's key
    * @return desired product
    * @throws NoSuchProductKeyException
    */
   public Product getProduct(String key) throws NoSuchProductKeyException {
     String lowerCaseProductKey = key.toLowerCase();
-    for (String mapKey: _products.keySet()) {
+    for (String mapKey : _products.keySet()) {
       if (mapKey.toLowerCase().equals(lowerCaseProductKey)) {
         return _products.get(mapKey);
       }
@@ -257,16 +260,16 @@ public class Warehouse implements Serializable {
     throw new NoSuchProductKeyException(key);
   }
 
-
   /**
    * get a partner, given their key
+   * 
    * @param key partner's key
    * @return desired partner
    * @throws NoSuchPartnerKeyException
    */
   public Partner getPartner(String key) throws NoSuchPartnerKeyException {
     String lowerCasePartnerKey = key.toLowerCase();
-    for (String mapKey: _partners.keySet()) {
+    for (String mapKey : _partners.keySet()) {
       if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
         return _partners.get(mapKey);
       }
@@ -280,36 +283,38 @@ public class Warehouse implements Serializable {
   }
 
   /** @return all products associated with the warehouse */
-  public Map<String, Product> getProducts(){
+  public Map<String, Product> getProducts() {
     return _products;
   }
 
   /** @return a Collection with all the products associated with the warehouse */
-  public Collection<String> getProductsCollection(){
-    List<String> products = 
-      getProducts()
+  public Collection<String> getProductsCollection() {
+    List<String> products = getProducts()
       .values()
       .stream()
       .map(product -> product.toString())
       .collect(Collectors.toList());
-    
+
     Collections.sort(products, Collator.getInstance(Locale.getDefault()));
 
     return products;
 
   }
 
-  /** @return a Collection with all the batches with partners associated with the warehouse */
-  public Collection<String> getBatchesCollection(){
+  /**
+   * @return a Collection with all the batches with partners associated with the
+   *         warehouse
+   */
+  public Collection<String> getBatchesCollection() {
     ArrayList<List<Batch>> partnerBatchesCollection = new ArrayList<List<Batch>>();
     List<String> batchCollection = new ArrayList<String>();
 
-    for (Partner p: getPartners().values()) {
+    for (Partner p : getPartners().values()) {
       partnerBatchesCollection.add(p.getPartnerBatches());
     }
 
-    for (List<Batch> array: partnerBatchesCollection) {
-      for (Batch b: array) {
+    for (List<Batch> array : partnerBatchesCollection) {
+      for (Batch b : array) {
         batchCollection.add(b.toString());
       }
     }
@@ -326,7 +331,7 @@ public class Warehouse implements Serializable {
       .stream()
       .map(partner -> partner.toString())
       .collect(Collectors.toList());
-    
+
     Collections.sort(partners, Collator.getInstance(Locale.getDefault()));
 
     return partners;
