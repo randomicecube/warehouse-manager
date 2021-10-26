@@ -173,10 +173,10 @@ public class Warehouse implements Serializable {
     } catch (NoSuchProductKeyException e) {
       product = new Product(productKey, parsedStock, parsedPrice);
       _products.put(productKey, product);
+    }
 
-      if (parsedPrice > product.getProductPrice()) {
-        product.updatePrice(parsedPrice);
-      }
+    if (parsedPrice > product.getProductPrice()) {
+      product.updatePrice(parsedPrice);
     }
 
     try {
