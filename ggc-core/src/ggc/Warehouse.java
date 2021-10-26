@@ -142,7 +142,8 @@ public class Warehouse implements Serializable {
    * @param address partner's address
    * @throws PartnerKeyAlreadyUsedException
    */
-  public void registerPartner(String key, String name, String address) throws PartnerKeyAlreadyUsedException {
+  public void registerPartner(String key, String name, String address) 
+                              throws PartnerKeyAlreadyUsedException {
     String lowerCasePartnerKey = key.toLowerCase();
     for (String mapKey : _partners.keySet()) {
       if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
@@ -161,8 +162,9 @@ public class Warehouse implements Serializable {
    * @param stock      batch's product stock
    * @throws NoSuchPartnerKeyException
    */
-  public void registerBatch(String productKey, String partnerKey, String price, String stock)
-      throws NoSuchPartnerKeyException {
+  public void registerBatch(String productKey, String partnerKey, String price, 
+                            String stock) 
+    throws NoSuchPartnerKeyException {
 
     Integer parsedStock = Integer.parseInt(stock);
     Double parsedPrice = Double.parseDouble(price);
@@ -202,8 +204,9 @@ public class Warehouse implements Serializable {
    * @throws NoSuchProductKeyException
    * @throws NoSuchPartnerKeyException
    */
-  public void registerBatch(String productKey, String partnerKey, String price, String stock, String aggravationFactor,
-      String recipe) throws NoSuchProductKeyException, NoSuchPartnerKeyException {
+  public void registerBatch(String productKey, String partnerKey, String price, 
+                            String stock, String aggravationFactor, String recipe) 
+    throws NoSuchProductKeyException, NoSuchPartnerKeyException {
 
     Integer parsedStock = Integer.parseInt(stock);
     Double parsedPrice = Double.parseDouble(price);
@@ -230,7 +233,8 @@ public class Warehouse implements Serializable {
       batchProduct = getProduct(productKey);
       batchProduct.updateStock(parsedStock);
     } catch (NoSuchProductKeyException e) {
-      batchProduct = new BreakdownProduct(productRecipe, parsedAggravationFactor, productKey, parsedStock, parsedPrice);
+      batchProduct = new BreakdownProduct(productRecipe, parsedAggravationFactor, 
+                                          productKey, parsedStock, parsedPrice);
       _products.put(productKey, batchProduct);
     }
 

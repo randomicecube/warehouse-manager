@@ -25,7 +25,8 @@ public class WarehouseManager {
    * @@throws FileNotFoundException
    * @@throws MissingFileAssociationException
    */
-  public void save() throws IOException, FileNotFoundException, MissingFileAssociationException {
+  public void save() throws IOException, FileNotFoundException, 
+                            MissingFileAssociationException {
 
     if (_saveFlag) {
       return;
@@ -36,7 +37,12 @@ public class WarehouseManager {
     }
 
     _saveFlag = true;
-    ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getFilename())));
+    ObjectOutputStream oos = 
+      new ObjectOutputStream(
+        new BufferedOutputStream(
+          new FileOutputStream(getFilename())
+        )
+      );
     oos.writeObject(_warehouse);
     oos.close();
 
@@ -48,7 +54,8 @@ public class WarehouseManager {
    * @@throws IOException
    * @@throws FileNotFoundException
    */
-  public void saveAs(String filename) throws MissingFileAssociationException, FileNotFoundException, IOException {
+  public void saveAs(String filename) 
+    throws MissingFileAssociationException, FileNotFoundException, IOException {
     setFilename(filename);
     save();
   }
@@ -61,7 +68,12 @@ public class WarehouseManager {
 
     try {
 
-      ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
+      ObjectInputStream ois = 
+        new ObjectInputStream(
+          new BufferedInputStream(
+            new FileInputStream(filename)
+          )
+        );
 
       _warehouse = (Warehouse) ois.readObject();
       ois.close();
@@ -81,7 +93,8 @@ public class WarehouseManager {
     try {
       _warehouse.importFile(textfile);
       _saveFlag = false;
-    } catch (IOException | BadEntryException | NoSuchPartnerKeyException | NoSuchProductKeyException e) {
+    } catch (IOException | BadEntryException | NoSuchPartnerKeyException | 
+        NoSuchProductKeyException e) {
       throw new ImportFileException(textfile);
     }
   }
@@ -145,7 +158,8 @@ public class WarehouseManager {
    * @param address partner's address
    * @throws PartnerKeyAlreadyUsedException
    */
-  public void registerPartner(String key, String name, String address) throws PartnerKeyAlreadyUsedException {
+  public void registerPartner(String key, String name, String address) 
+    throws PartnerKeyAlreadyUsedException {
     _saveFlag = false;
     _warehouse.registerPartner(key, name, address);
   }
