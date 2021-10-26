@@ -143,14 +143,14 @@ public class Warehouse implements Serializable {
    * @throws PartnerKeyAlreadyUsedException
    */
   public void registerPartner(String key, String name, String address) 
-                              throws PartnerKeyAlreadyUsedException {
-    String lowerCasePartnerKey = key.toLowerCase();
-    for (String mapKey : _partners.keySet()) {
-      if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
-        throw new PartnerKeyAlreadyUsedException(key);
+    throws PartnerKeyAlreadyUsedException {
+      String lowerCasePartnerKey = key.toLowerCase();
+      for (String mapKey : _partners.keySet()) {
+        if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
+          throw new PartnerKeyAlreadyUsedException(key);
+        }
       }
-    }
-    _partners.put(key, new Partner(key, name, address));
+      _partners.put(key, new Partner(key, name, address));
   }
 
   /**
@@ -162,33 +162,33 @@ public class Warehouse implements Serializable {
    * @param stock      batch's product stock
    * @throws NoSuchPartnerKeyException
    */
-  public void registerBatch(String productKey, String partnerKey, String price, 
-                            String stock) 
+  public void registerBatch(String productKey, String partnerKey,
+                            String price, String stock) 
     throws NoSuchPartnerKeyException {
 
-    Integer parsedStock = Integer.parseInt(stock);
-    Double parsedPrice = Double.parseDouble(price);
+      Integer parsedStock = Integer.parseInt(stock);
+      Double parsedPrice = Double.parseDouble(price);
 
-    Product product;
+      Product product;
 
-    try {
-      product = getProduct(productKey);
-      product.updateStock(parsedStock);
-    } catch (NoSuchProductKeyException e) {
-      product = new Product(productKey, parsedStock, parsedPrice);
-      _products.put(productKey, product);
-    }
+      try {
+        product = getProduct(productKey);
+        product.updateStock(parsedStock);
+      } catch (NoSuchProductKeyException e) {
+        product = new Product(productKey, parsedStock, parsedPrice);
+        _products.put(productKey, product);
+      }
 
-    if (parsedPrice > product.getProductPrice()) {
-      product.updatePrice(parsedPrice);
-    }
+      if (parsedPrice > product.getProductPrice()) {
+        product.updatePrice(parsedPrice);
+      }
 
-    try {
-      Partner partner = getPartner(partnerKey);
-      partner.addBatch(new Batch(product, parsedStock, parsedPrice, partner));
-    } catch (NoSuchPartnerKeyException e) {
-      throw new NoSuchPartnerKeyException(e.getKey());
-    }
+      try {
+        Partner partner = getPartner(partnerKey);
+        partner.addBatch(new Batch(product, parsedStock, parsedPrice, partner));
+      } catch (NoSuchPartnerKeyException e) {
+        throw new NoSuchPartnerKeyException(e.getKey());
+      }
 
   }
 
@@ -208,42 +208,42 @@ public class Warehouse implements Serializable {
                             String stock, String aggravationFactor, String recipe) 
     throws NoSuchProductKeyException, NoSuchPartnerKeyException {
 
-    Integer parsedStock = Integer.parseInt(stock);
-    Double parsedPrice = Double.parseDouble(price);
-    Double parsedAggravationFactor = Double.parseDouble(aggravationFactor);
+      Integer parsedStock = Integer.parseInt(stock);
+      Double parsedPrice = Double.parseDouble(price);
+      Double parsedAggravationFactor = Double.parseDouble(aggravationFactor);
 
-    String[] ingredients = recipe.split("\\#");
+      String[] ingredients = recipe.split("\\#");
 
-    Recipe productRecipe = new Recipe();
+      Recipe productRecipe = new Recipe();
 
-    for (String i : ingredients) {
-      String[] ingredientFactors = i.split(":");
+      for (String i : ingredients) {
+        String[] ingredientFactors = i.split(":");
+
+        try {
+          Product ingredient = getProduct(ingredientFactors[0]);
+          productRecipe.addIngredient(ingredient, Integer.parseInt(ingredientFactors[1]));
+        } catch (NoSuchProductKeyException e) {
+          throw new NoSuchProductKeyException(ingredientFactors[0]);
+        }
+      }
+
+      Product batchProduct;
 
       try {
-        Product ingredient = getProduct(ingredientFactors[0]);
-        productRecipe.addIngredient(ingredient, Integer.parseInt(ingredientFactors[1]));
+        batchProduct = getProduct(productKey);
+        batchProduct.updateStock(parsedStock);
       } catch (NoSuchProductKeyException e) {
-        throw new NoSuchProductKeyException(ingredientFactors[0]);
+        batchProduct = new BreakdownProduct(productRecipe, parsedAggravationFactor, 
+                                            productKey, parsedStock, parsedPrice);
+        _products.put(productKey, batchProduct);
       }
-    }
 
-    Product batchProduct;
-
-    try {
-      batchProduct = getProduct(productKey);
-      batchProduct.updateStock(parsedStock);
-    } catch (NoSuchProductKeyException e) {
-      batchProduct = new BreakdownProduct(productRecipe, parsedAggravationFactor, 
-                                          productKey, parsedStock, parsedPrice);
-      _products.put(productKey, batchProduct);
-    }
-
-    try {
-      Partner partner = getPartner(partnerKey);
-      partner.addBatch(new Batch(batchProduct, parsedStock, parsedPrice, partner));
-    } catch (NoSuchPartnerKeyException e) {
-      throw new NoSuchPartnerKeyException(e.getKey());
-    }
+      try {
+        Partner partner = getPartner(partnerKey);
+        partner.addBatch(new Batch(batchProduct, parsedStock, parsedPrice, partner));
+      } catch (NoSuchPartnerKeyException e) {
+        throw new NoSuchPartnerKeyException(e.getKey());
+      }
 
   }
 
