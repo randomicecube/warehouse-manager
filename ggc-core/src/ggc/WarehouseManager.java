@@ -93,7 +93,6 @@ public class WarehouseManager {
 
   /**
    * set the manager's associated filename (for future save() calls)
-   * 
    * @param filename
    */
   public void setFilename(String filename) {
@@ -107,7 +106,6 @@ public class WarehouseManager {
 
   /**
    * clear a partner's given unread notifications
-   * 
    * @param key partner's key
    */
   public void clearNotifications(String key) throws NoSuchPartnerKeyException {
@@ -122,7 +120,6 @@ public class WarehouseManager {
 
   /**
    * update current warehouse date
-   * 
    * @param days
    * @throws NoSuchDateException
    */
@@ -143,7 +140,6 @@ public class WarehouseManager {
 
   /**
    * register a partner to be associated with the warehouse
-   * 
    * @param key     partner's key
    * @param name    partner's name
    * @param address partner's address
@@ -156,7 +152,6 @@ public class WarehouseManager {
 
   /**
    * get a partner, given their key
-   * 
    * @param key
    * @return desired partner
    * @throws NoSuchPartnerKeyException
@@ -182,7 +177,7 @@ public class WarehouseManager {
 
   /**
    * @return a Collection with all the batches with partners associated with the
-   *         warehouse
+   *  warehouse
    */
   public Collection<String> getBatchesCollection() {
     return _warehouse.getBatchesCollection();

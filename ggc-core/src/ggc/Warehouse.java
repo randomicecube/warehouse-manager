@@ -153,10 +153,10 @@ public class Warehouse implements Serializable {
 
   /**
    * registers a batch to a given partner - applies to simple products
-   * @param productKey
-   * @param partnerKey
-   * @param price
-   * @param stock
+   * @param productKey product's key
+   * @param partnerKey partner's key
+   * @param price batch's assoicated price
+   * @param stock batch's product stock
    * @throws NoSuchPartnerKeyException
    */
   public void registerBatch(String productKey, String partnerKey, String price, String stock)
@@ -190,12 +190,12 @@ public class Warehouse implements Serializable {
 
   /**
    * registers a batch to a given partner - applies to breakdown products
-   * @param productKey
-   * @param partnerKey
-   * @param price
-   * @param stock
-   * @param aggravationFactor
-   * @param recipe
+   * @param productKey product's key
+   * @param partnerKey partner's key
+   * @param price batch's associated proce
+   * @param stock batch's product stock
+   * @param aggravationFactor product breakdown aggravation factor
+   * @param recipe recipe in it's string format
    * @throws NoSuchProductKeyException
    * @throws NoSuchPartnerKeyException
    */
@@ -214,8 +214,6 @@ public class Warehouse implements Serializable {
     for (String i: ingredients) {
       String[] ingredientFactors = i.split(":");
 
-      // String processedIngredientKey = normalizeKeys(ingredientFactors[0]);
-
       try {
         Product ingredient = getProduct(ingredientFactors[0]);
         productRecipe.addIngredient(ingredient, Integer.parseInt(ingredientFactors[1]));
@@ -226,8 +224,6 @@ public class Warehouse implements Serializable {
 
     Product batchProduct;
 
-    // String processedProductKey = normalizeKeys(productKey);
-
     try {
       batchProduct = getProduct(productKey);
       batchProduct.updateStock(parsedStock);
@@ -235,8 +231,6 @@ public class Warehouse implements Serializable {
       batchProduct = new BreakdownProduct(productRecipe, parsedAggravationFactor, productKey, parsedStock, parsedPrice);
       _products.put(productKey, batchProduct);
     }
-
-    // String processedPartnerKey = normalizeKeys(partnerKey);
 
     try {
       Partner partner = getPartner(partnerKey);
@@ -247,15 +241,9 @@ public class Warehouse implements Serializable {
 
   }
 
-
-
-  /**
-   * GETTERS FOR PRODUCTS, PARTNERS, BATCHES, ETC 
-   */
-
   /**
    * get a product, given their key
-   * @param key
+   * @param key product's key
    * @return desired product
    * @throws NoSuchProductKeyException
    */
@@ -272,7 +260,7 @@ public class Warehouse implements Serializable {
 
   /**
    * get a partner, given their key
-   * @param key
+   * @param key partner's key
    * @return desired partner
    * @throws NoSuchPartnerKeyException
    */
@@ -289,6 +277,11 @@ public class Warehouse implements Serializable {
   /** @return all partners associated with the warehouse */
   public Map<String, Partner> getPartners() {
     return _partners;
+  }
+
+  /** @return all products associated with the warehouse */
+  public Map<String, Product> getProducts(){
+    return _products;
   }
 
   /** @return a Collection with all the products associated with the warehouse */
@@ -337,11 +330,6 @@ public class Warehouse implements Serializable {
     Collections.sort(partners, Collator.getInstance(Locale.getDefault()));
 
     return partners;
-  }
-  
-  /** @return all products associated with the warehouse */
-  public Map<String, Product> getProducts(){
-    return _products;
   }
 
 }
