@@ -122,8 +122,8 @@ public class WarehouseManager {
    * @param key partner's key
    */
   public void clearNotifications(String key) throws NoSuchPartnerKeyException {
-    _saveFlag = false;
     _warehouse.clearNotifications(key);
+    _saveFlag = false;
   }
 
   /** @return current warehouse date */
@@ -137,8 +137,8 @@ public class WarehouseManager {
    * @throws NoSuchDateException
    */
   public void updateDate(int days) throws NoSuchDateException {
-    _saveFlag = false;
     _warehouse.updateDate(days);
+    _saveFlag = false;
   }
 
   /** @return current warehouse available balance */
@@ -160,8 +160,8 @@ public class WarehouseManager {
    */
   public void registerPartner(String key, String name, String address) 
     throws PartnerKeyAlreadyUsedException {
-    _saveFlag = false;
     _warehouse.registerPartner(key, name, address);
+    _saveFlag = false;
   }
 
   /**
