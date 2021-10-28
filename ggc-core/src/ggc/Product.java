@@ -1,6 +1,16 @@
 package ggc;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+
+import java.util.stream.Collectors;
+
+import java.text.Collator;
+import java.util.Locale;
 
 /**
  * Class representing a Product in the system
@@ -18,6 +28,10 @@ public class Product implements Serializable {
 
   /** Product's stock */
   private Integer _stock = 0; // Integer instead of int for consistency's sake with Maps
+
+  /** Product's in-stock batches */
+  private List<Batch> _productBatches = new ArrayList<Batch>();
+
 
   /**
    * Main Constructor
@@ -51,6 +65,16 @@ public class Product implements Serializable {
   }
 
   /**
+   * A given batch is associated with a product - now literally
+   * 
+   * @param batch to-add batch
+   */
+
+  public void addBatch(Batch batch) {
+    _productBatches.add(batch);
+  }
+
+  /**
    * Update product's current stock
    * 
    * @param stock
@@ -72,6 +96,18 @@ public class Product implements Serializable {
   /** @return product's stock */
   public Integer getStock() {
     return _stock;
+  }
+
+  /** @return product's in-stock batches in toString format */
+  public Collection<String> getBatchStrings() {
+    List<String> productBatches = _productBatches
+      .stream()
+      .map(batch -> batch.toString())
+      .collect(Collectors.toList());
+    
+    Collections.sort(productBatches, Collator.getInstance(Locale.getDefault()));
+    
+    return productBatches;
   }
 
   @Override

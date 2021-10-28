@@ -182,10 +182,11 @@ public class Warehouse implements Serializable {
       if (parsedPrice > product.getProductPrice()) {
         product.updatePrice(parsedPrice);
       }
-
       try {
         Partner partner = getPartner(partnerKey);
-        partner.addBatch(new Batch(product, parsedStock, parsedPrice, partner));
+        Batch batch = new Batch(product, parsedStock, parsedPrice, partner);
+        partner.addBatch(batch);
+        product.addBatch(batch);
       } catch (NoSuchPartnerKeyException e) {
         throw new NoSuchPartnerKeyException(e.getKey());
       }
@@ -238,9 +239,15 @@ public class Warehouse implements Serializable {
         _products.put(productKey, batchProduct);
       }
 
+      if (parsedPrice > batchProduct.getProductPrice()) {
+        batchProduct.updatePrice(parsedPrice);
+      }
+
       try {
         Partner partner = getPartner(partnerKey);
-        partner.addBatch(new Batch(batchProduct, parsedStock, parsedPrice, partner));
+        Batch batch = new Batch(batchProduct, parsedStock, parsedPrice, partner);
+        partner.addBatch(batch);
+        batchProduct.addBatch(batch);
       } catch (NoSuchPartnerKeyException e) {
         throw new NoSuchPartnerKeyException(e.getKey());
       }
@@ -293,15 +300,25 @@ public class Warehouse implements Serializable {
 
   /** @return a Collection with all the products associated with the warehouse */
   public Collection<String> getProductsCollection() {
-    List<String> products = getProducts()
+    List<String> productKeys = getProducts()
       .values()
       .stream()
-      .map(product -> product.toString())
+      .map(product -> product.getProductKey())
       .collect(Collectors.toList());
 
-    Collections.sort(products, Collator.getInstance(Locale.getDefault()));
+    Collections.sort(productKeys, Collator.getInstance(Locale.getDefault()));
 
-    return products;
+    List<String> stringedProducts = new ArrayList<String>();
+
+    for (String product: productKeys) {
+      try {
+        stringedProducts.add(getProduct(product).toString());
+      } catch (NoSuchProductKeyException e) {
+        // will never happen
+      }
+    }
+
+    return stringedProducts;
 
   }
 
@@ -310,35 +327,51 @@ public class Warehouse implements Serializable {
    *         warehouse
    */
   public Collection<String> getBatchesCollection() {
-    ArrayList<List<Batch>> partnerBatchesCollection = new ArrayList<List<Batch>>();
-    List<String> batchCollection = new ArrayList<String>();
+    List<String> productKeys = getProducts()
+      .values()
+      .stream()
+      .map(product -> product.getProductKey())
+      .collect(Collectors.toList());
 
-    for (Partner p : getPartners().values()) {
-      partnerBatchesCollection.add(p.getPartnerBatches());
-    }
+    Collections.sort(productKeys, Collator.getInstance(Locale.getDefault()));
 
-    for (List<Batch> array : partnerBatchesCollection) {
-      for (Batch b : array) {
-        batchCollection.add(b.toString());
+    List<String> batches = new ArrayList<String>();
+
+    for (String key: productKeys) {
+      try {
+        Product product = getProduct(key);
+        for (String batch: product.getBatchStrings()) {
+          batches.add(batch);
+        }
+      } catch (NoSuchProductKeyException e) {
+        // will never happen
       }
     }
 
-    Collections.sort(batchCollection, Collator.getInstance(Locale.getDefault()));
-
-    return batchCollection;
+    return batches;
   }
 
   /** @return a Collection with all partners associated with the warehouse */
   public Collection<String> getPartnersCollection() {
-    List<String> partners = getPartners()
+    List<String> partnerKeys = getPartners()
       .values()
       .stream()
-      .map(partner -> partner.toString())
+      .map(partner -> partner.getPartnerKey())
       .collect(Collectors.toList());
 
-    Collections.sort(partners, Collator.getInstance(Locale.getDefault()));
+    Collections.sort(partnerKeys, Collator.getInstance(Locale.getDefault()));
 
-    return partners;
+    List<String> stringedPartners = new ArrayList<String>();
+
+    for (String partner: partnerKeys) {
+      try {
+        stringedPartners.add(getPartner(partner).toString());
+      } catch (NoSuchPartnerKeyException e) {
+        // will never happen
+      }
+    }
+
+    return stringedPartners;
   }
 
 }
