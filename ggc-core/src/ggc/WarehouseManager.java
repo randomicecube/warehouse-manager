@@ -202,4 +202,23 @@ public class WarehouseManager {
     return _warehouse.getPartnersCollection();
   }
 
+  /** 
+   * @param partnerKey partner's key
+   * @return a Collection with all batches associated with a given partner  
+   */
+  public Collection<String> getBatchesByPartner(String partnerKey)
+    throws NoSuchPartnerKeyException {
+      return _warehouse.getBatchesByPartner(partnerKey);
+  }
+
+  /** 
+   * @param productKey product's key
+   * @return a Collection with all batches associated with a given product  
+   */
+  public Collection<String> getBatchesByProduct(String productKey)
+    throws NoSuchProductKeyException {
+      return _warehouse.getBatchesByProduct(productKey);
+  }
+
+
 }

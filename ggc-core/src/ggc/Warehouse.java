@@ -377,4 +377,30 @@ public class Warehouse implements Serializable {
     return stringedPartners;
   }
 
+  /** 
+   * @param partnerKey partner's key
+   * @return a Collection with all batches associated with a given partner  
+   */
+  public Collection<String> getBatchesByPartner(String partnerKey)
+    throws NoSuchPartnerKeyException {
+      List<String> batches = getPartner(partnerKey)
+        .getPartnerBatches()
+        .stream()
+        .map(batch -> batch.toString())
+        .collect(Collectors.toList());
+
+      Collections.sort(batches, Collator.getInstance(Locale.getDefault()));
+
+      return batches;
+  }
+
+  /** 
+   * @param productKey product's key
+   * @return a Collection with all batches associated with a given product  
+   */
+  public Collection<String> getBatchesByProduct(String productKey)
+    throws NoSuchProductKeyException {
+      return getProduct(productKey).getBatchStrings();
+  }
+
 }
