@@ -315,6 +315,7 @@ public class Warehouse implements Serializable {
         stringedProducts.add(getProduct(product).toString());
       } catch (NoSuchProductKeyException e) {
         // will never happen
+        e.printStackTrace();
       }
     }
 
@@ -345,6 +346,7 @@ public class Warehouse implements Serializable {
         }
       } catch (NoSuchProductKeyException e) {
         // will never happen
+        e.printStackTrace();
       }
     }
 
@@ -368,6 +370,7 @@ public class Warehouse implements Serializable {
         stringedPartners.add(getPartner(partner).toString());
       } catch (NoSuchPartnerKeyException e) {
         // will never happen
+        e.printStackTrace();
       }
     }
 
