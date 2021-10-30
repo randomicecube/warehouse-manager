@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import java.text.Collator;
 import java.util.Locale;
 
+import java.util.Comparator;
+
 /**
  * Class representing a Product in the system
  */
@@ -100,14 +102,49 @@ public class Product implements Serializable {
 
   /** @return product's in-stock batches in toString format */
   public Collection<String> getBatchStrings() {
-    List<String> productBatches = _productBatches
+    
+    List<Batch> sortedBatches = _productBatches;
+    
+    sortedBatches.sort(
+      new Comparator<Batch>() {
+
+        public int comparePartnerKeys(Batch b1, Batch b2) {
+          String partnerKeyB1 = b1.getPartner().getPartnerKey();
+          String partnerKeyB2 = b2.getPartner().getPartnerKey();
+          return partnerKeyB1.compareTo(partnerKeyB2);
+        }
+        
+        public int comparePrices(Batch b1, Batch b2) {
+          return (int) (b1.getPrice() - b2.getPrice());
+        }
+
+        public int compareStocks(Batch b1, Batch b2) {
+          return b1.getAmount() - b2.getAmount();
+        }
+
+        @Override
+        public int compare(Batch b1, Batch b2) {
+          int keyComparator = comparePartnerKeys(b1, b2);
+          if (keyComparator != 0) {
+            return keyComparator;
+          }
+
+          int priceComparator = comparePrices(b1, b2);
+          if (priceComparator != 0) {
+            return priceComparator;
+          }
+
+          return compareStocks(b1, b2);
+        }
+
+      }
+    );
+
+    return sortedBatches
       .stream()
       .map(batch -> batch.toString())
       .collect(Collectors.toList());
-    
-    Collections.sort(productBatches, Collator.getInstance(Locale.getDefault()));
-    
-    return productBatches;
+
   }
 
   @Override

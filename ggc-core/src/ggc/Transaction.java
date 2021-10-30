@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Class representing a Transaction in the system
  */
-public class Transaction implements Serializable {
+public abstract class Transaction implements Serializable {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252052L;
@@ -16,10 +16,10 @@ public class Transaction implements Serializable {
   /** Transaction's corresponding payment (or due, if a Sale) date */
   private int _paymentDate;
 
-  public Transaction(int key, int paymentDate) {
-    _transactionKey = key;
-    _paymentDate = paymentDate;
-  }
+  // public Transaction(int key, int paymentDate) {
+    // _transactionKey = key;
+    // _paymentDate = paymentDate;
+  // }
 
   /** @return transaction's key */
   public int getTransactionKey() {
