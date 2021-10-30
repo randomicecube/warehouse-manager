@@ -39,6 +39,8 @@ public class Warehouse implements Serializable {
   /** All partners associated with the warehouse */
   private Map<String, Partner> _partners = new HashMap<String, Partner>();
 
+  private Map<Integer, Transaction> _transactions = new HashMap<Integer, Transaction>();
+
   /**
    * @param txtfile filename to be loaded.
    * @throws IOException
@@ -401,6 +403,15 @@ public class Warehouse implements Serializable {
   public Collection<String> getBatchesByProduct(String productKey)
     throws NoSuchProductKeyException {
       return getProduct(productKey).getBatchStrings();
+  }
+
+  /**
+   * @param transactionKey transaction's key
+   * @return transaction with the given key
+   */
+  public Transaction getTransaction(int transactionKey) 
+    throws NoSuchTransactionKeyException {
+    return _transactions.get(transactionKey);
   }
 
 }

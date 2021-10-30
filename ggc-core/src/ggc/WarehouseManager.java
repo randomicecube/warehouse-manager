@@ -220,4 +220,13 @@ public class WarehouseManager {
       return _warehouse.getBatchesByProduct(productKey);
   }
 
+  /**
+   * @param transactionKey transaction's key
+   * @return transaction with the given key
+   */
+  public Transaction getTransaction(int transactionKey) 
+    throws NoSuchTransactionKeyException {
+    return _warehouse.getTransaction(transactionKey);
+  }
+
 }

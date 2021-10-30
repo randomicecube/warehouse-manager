@@ -6,13 +6,13 @@ public class NoSuchTransactionKeyException extends Exception {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110301051L;
 
-  private String _key;
+  private int _key;
 
-  public NoSuchTransactionKeyException(String key) {
+  public NoSuchTransactionKeyException(int key) {
     _key = key;
   }
 
-  public String getKey() {
+  public int getKey() {
     return _key;
   }
 
