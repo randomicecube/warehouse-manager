@@ -118,6 +118,11 @@ public class Partner implements Serializable {
     return _paidSalePrices;
   }
 
+  /** @return partner's transactions */
+  public List<Transaction> getTransactions() {
+    return _transactionHistory;
+  }
+
   /** @return partner's batches */
   public List<Batch> getPartnerBatches() {
     return _partnerBatches;

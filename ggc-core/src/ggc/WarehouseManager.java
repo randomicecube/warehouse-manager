@@ -220,5 +220,4 @@ public class WarehouseManager {
       return _warehouse.getBatchesByProduct(productKey);
   }
 
-
 }

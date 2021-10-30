@@ -3,7 +3,6 @@ package ggc.app.lookups;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 import ggc.WarehouseManager;
-//FIXME import classes
 
 /**
  * Lookup products cheaper than a given price.
@@ -12,12 +11,13 @@ public class DoLookupProductBatchesUnderGivenPrice extends Command<WarehouseMana
 
   public DoLookupProductBatchesUnderGivenPrice(WarehouseManager receiver) {
     super(Label.PRODUCTS_UNDER_PRICE, receiver);
-    //FIXME add command fields
+    // TODO - is it an Integer field (?)
+    addDoubleField("limit", Prompt.priceLimit());
   }
 
   @Override
   public void execute() throws CommandException {
-    //FIXME implement command
+    _display.popup(_receiver.getProductBatchesUnderGivenPrice(doubleField("key")));
   }
 
 }
