@@ -11,4 +11,9 @@ public class Acquisition extends Transaction implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252105L;
 
+  /** accepts a visitor - specifically, a TransactionVisitor */
+  public void accept(TransactionVisitor visitor) {
+    visitor.visitAcquisition(this);
+  }
+
 }

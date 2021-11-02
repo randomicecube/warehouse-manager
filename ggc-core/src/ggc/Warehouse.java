@@ -414,4 +414,32 @@ public class Warehouse implements Serializable {
     return _transactions.get(transactionKey);
   }
 
+  public void toggleProductNotifications(String partnerKey, String productKey)
+    throws NoSuchProductKeyException, NoSuchPartnerKeyException {
+      // TODO implement
+  }
+
+  public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
+    throws NoSuchPartnerKeyException {
+      // TODO implement
+      return new ArrayList<Acquisition>(); // compiling placeholder
+  }
+
+  public Collection<Sale> getPartnerSales(String partnerKey)
+    throws NoSuchPartnerKeyException {
+      // TODO implement
+      return new ArrayList<Sale>(); // compiling placeholder
+  }
+
+  public Collection<Transaction> getPaymentsByPartner(String partnerKey)
+    throws NoSuchPartnerKeyException {
+      // TODO implement
+      return new ArrayList<Transaction>(); // compiling placeholder
+  }
+
+  public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
+    // TODO implement
+    return new ArrayList<Batch>(); // compiling placeholder
+  }
+
 }

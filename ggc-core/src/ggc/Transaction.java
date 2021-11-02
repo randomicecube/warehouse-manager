@@ -40,4 +40,7 @@ public abstract class Transaction implements Serializable {
     _paymentDate = date;
   }
 
+  /** accepts a visitor - specifically, a TransactionVisitor */
+  public abstract void accept(TransactionVisitor visitor);
+
 }

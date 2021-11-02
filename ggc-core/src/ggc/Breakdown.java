@@ -11,4 +11,9 @@ public class Breakdown extends Transaction implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252103L;
 
+  /** accepts a visitor - specifically, a TransactionVisitor */
+  public void accept(TransactionVisitor visitor) {
+    visitor.visitBreakdown(this);
+  }
+
 }

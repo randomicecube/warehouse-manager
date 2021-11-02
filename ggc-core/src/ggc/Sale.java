@@ -11,4 +11,9 @@ public class Sale extends Transaction implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252054L;
 
+  /** accepts a visitor - specifically, a TransactionVisitor */
+  public void accept(TransactionVisitor visitor) {
+    visitor.visitSale(this);
+  }
+
 }

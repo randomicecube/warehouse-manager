@@ -174,16 +174,6 @@ public class WarehouseManager {
     return _warehouse.getPartner(key);
   }
 
-  /** @return all partners associated with the warehouse */
-  public Map<String, Partner> getPartners() {
-    return _warehouse.getPartners();
-  }
-
-  /** @return all products associated with the warehouse */
-  public Map<String, Product> getProducts() {
-    return _warehouse.getProducts();
-  }
-
   /** @return a Collection with all the products associated with the warehouse */
   public Collection<String> getProductsCollection() {
     return _warehouse.getProductsCollection();
@@ -226,7 +216,31 @@ public class WarehouseManager {
    */
   public Transaction getTransaction(int transactionKey) 
     throws NoSuchTransactionKeyException {
-    return _warehouse.getTransaction(transactionKey);
+      return _warehouse.getTransaction(transactionKey);
+  }
+
+  public void toggleProductNotifications(String partnerKey, String productKey)
+    throws NoSuchProductKeyException, NoSuchPartnerKeyException {
+      _warehouse.toggleProductNotifications(partnerKey, productKey);
+  }
+
+  public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
+    throws NoSuchPartnerKeyException {
+      return _warehouse.getPartnerAcquisitions(partnerKey);
+  }
+
+  public Collection<Sale> getPartnerSales(String partnerKey)
+    throws NoSuchPartnerKeyException {
+      return _warehouse.getPartnerSales(partnerKey); 
+  }
+
+  public Collection<Transaction> getPaymentsByPartner(String partnerKey)
+    throws NoSuchPartnerKeyException {
+      return _warehouse.getPaymentsByPartner(partnerKey);
+  }
+
+  public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
+    return _warehouse.getProductBatchesUnderGivenPrice(priceCap);
   }
 
 }

@@ -7,6 +7,7 @@
 
 *.dat
 *.txt
+*.xml
 
 # ---> Java
 # Compiled class file

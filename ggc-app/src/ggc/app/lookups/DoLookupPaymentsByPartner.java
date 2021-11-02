@@ -20,7 +20,7 @@ public class DoLookupPaymentsByPartner extends Command<WarehouseManager> {
   @Override
   public void execute() throws CommandException {
     try {
-      _display.popup(_receiver.getPaymentsbyPartner(stringField("key")));
+      _display.popup(_receiver.getPaymentsByPartner(stringField("key")));
     } catch (NoSuchPartnerKeyException e) {
       throw new UnknownPartnerKeyException(e.getKey());
     }

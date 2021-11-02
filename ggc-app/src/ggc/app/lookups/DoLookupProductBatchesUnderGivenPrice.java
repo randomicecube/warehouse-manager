@@ -12,12 +12,12 @@ public class DoLookupProductBatchesUnderGivenPrice extends Command<WarehouseMana
   public DoLookupProductBatchesUnderGivenPrice(WarehouseManager receiver) {
     super(Label.PRODUCTS_UNDER_PRICE, receiver);
     // TODO - is it an Integer field (?)
-    addDoubleField("limit", Prompt.priceLimit());
+    addRealField("limit", Prompt.priceLimit());
   }
 
   @Override
   public void execute() throws CommandException {
-    _display.popup(_receiver.getProductBatchesUnderGivenPrice(doubleField("key")));
+    _display.popup(_receiver.getProductBatchesUnderGivenPrice(realField("limit")));
   }
 
 }
