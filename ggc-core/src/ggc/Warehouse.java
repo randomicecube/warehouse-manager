@@ -411,7 +411,11 @@ public class Warehouse implements Serializable {
    */
   public Transaction getTransaction(int transactionKey) 
     throws NoSuchTransactionKeyException {
-    return _transactions.get(transactionKey);
+    Transaction t = _transactions.get(transactionKey);
+    if (t == null) {
+      throw new NoSuchTransactionKeyException(transactionKey);
+    }
+    return t;
   }
 
   public void toggleProductNotifications(String partnerKey, String productKey)
@@ -444,7 +448,12 @@ public class Warehouse implements Serializable {
 
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
-      // _transactions.get(transactionKey).pay(_date);
+      Transaction t = getTransaction(transactionKey);
+      if (t.isPaid()) {
+        return;
+      }
+      t.updatePaid();
+      t.updatePaymentDate(_date);
   }
 
 }

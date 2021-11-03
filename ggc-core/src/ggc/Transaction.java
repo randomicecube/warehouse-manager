@@ -16,6 +16,8 @@ public abstract class Transaction implements Serializable {
   /** Transaction's corresponding payment (or due, if a Sale) date */
   private int _paymentDate;
 
+  private boolean _paid = false;
+
   // public Transaction(int key, int paymentDate) {
     // _transactionKey = key;
     // _paymentDate = paymentDate;
@@ -31,6 +33,10 @@ public abstract class Transaction implements Serializable {
     return _paymentDate;
   }
 
+  public boolean isPaid() {
+    return _paid;
+  }
+
   /** Used only in Sales and Breakdown Transactions
    *  updates the previously set "due date" to a given one
    * 
@@ -38,6 +44,10 @@ public abstract class Transaction implements Serializable {
    */
   public void updatePaymentDate(int date) {
     _paymentDate = date;
+  }
+
+  public void updatePaid() {
+    _paid = true;
   }
 
   /** accepts a visitor - specifically, a TransactionVisitor */
