@@ -34,6 +34,11 @@ public class Product implements Serializable {
   /** Product's in-stock batches */
   private List<Batch> _productBatches = new ArrayList<Batch>();
 
+  /** Stores partners' intent to receive notifications about the product
+   *  true if they want to, false if they do not
+   */
+  private Map<Partner, Boolean> _notifiedPartners = new HashMap<Partner, Boolean>();
+
 
   /**
    * Main Constructor

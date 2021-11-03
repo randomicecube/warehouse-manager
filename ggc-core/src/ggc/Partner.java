@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Class representing a Partner in the system
  */
-public class Partner implements Serializable {
+public class Partner implements Serializable, ProductObserver {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252058L;
@@ -213,6 +213,10 @@ public class Partner implements Serializable {
   /** Clear the partner's unread notifications array */
   public void clearNotifications() {
     _unreadNotifications.clear();
+  }
+
+  public void update(String productKey, int productPrice, String notificationType) {
+    _unreadNotifications.add(new Notification(productKey, productPrice, notificationType));
   }
 
   @Override

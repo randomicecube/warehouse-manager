@@ -444,7 +444,7 @@ public class Warehouse implements Serializable {
 
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
-      // TODO implement
+      // _transactions.get(transactionKey).pay(_date);
   }
 
 }
