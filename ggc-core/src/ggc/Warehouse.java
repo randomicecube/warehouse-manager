@@ -442,4 +442,9 @@ public class Warehouse implements Serializable {
     return new ArrayList<Batch>(); // compiling placeholder
   }
 
+  public void receivePayment(int transactionKey)
+    throws NoSuchTransactionKeyException {
+      // TODO implement
+  }
+
 }

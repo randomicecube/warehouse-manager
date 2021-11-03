@@ -243,4 +243,9 @@ public class WarehouseManager {
     return _warehouse.getProductBatchesUnderGivenPrice(priceCap);
   }
 
+  public void receivePayment(int transactionKey)
+    throws NoSuchTransactionKeyException {
+      _warehouse.receivePayment(transactionKey);
+  }
+
 }
