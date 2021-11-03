@@ -18,10 +18,10 @@ public abstract class Transaction implements Serializable {
 
   private boolean _paid = false;
 
-  // public Transaction(int key, int paymentDate) {
-    // _transactionKey = key;
-    // _paymentDate = paymentDate;
-  // }
+  public Transaction(int key, int paymentDate) {
+    _transactionKey = key;
+    _paymentDate = paymentDate;
+  }
 
   /** @return transaction's key */
   public int getTransactionKey() {
