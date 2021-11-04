@@ -5,6 +5,7 @@ import pt.tecnico.uilib.menus.CommandException;
 import ggc.WarehouseManager;
 //FIXME import classes
 import ggc.exceptions.NoSuchTransactionKeyException;
+import ggc.app.exceptions.UnknownTransactionKeyException;
 
 /**
  * Receive payment for sale transaction.
@@ -19,7 +20,7 @@ public class DoReceivePayment extends Command<WarehouseManager> {
   @Override
   public final void execute() throws CommandException {
     try {
-      _receiver.receivePayment(stringField("key"));
+      _receiver.receivePayment(integerField("key"));
     } catch (NoSuchTransactionKeyException e) {
       throw new UnknownTransactionKeyException(e.getKey());
     }

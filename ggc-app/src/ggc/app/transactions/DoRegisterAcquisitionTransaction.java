@@ -4,9 +4,15 @@ import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import ggc.WarehouseManager;
 import ggc.exceptions.NoSuchProductKeyException;
+import ggc.exceptions.NoSuchPartnerKeyException;
+import ggc.app.exceptions.UnknownPartnerKeyException;
+import ggc.app.exceptions.UnknownProductKeyException;
+
+import pt.tecnico.uilib.forms.Form;
 
 /**
  * Register order.
@@ -24,7 +30,12 @@ public class DoRegisterAcquisitionTransaction extends Command<WarehouseManager> 
   @Override
   public final void execute() throws CommandException {
     try {
-      // stuff
+      _receiver.registerAcquisitionTransaction(
+        stringField("partnerKey"),
+        stringField("productKey"),
+        realField("price"),
+        integerField("amount")
+      );
     } catch (NoSuchPartnerKeyException e) {
       throw new UnknownPartnerKeyException(e.getKey());
     } catch (NoSuchProductKeyException eOutside) {
@@ -38,14 +49,18 @@ public class DoRegisterAcquisitionTransaction extends Command<WarehouseManager> 
             // se o produto existe
             ingredients.put(
               Form.requestString(Prompt.productKey()),
-              Form.requestString(Prompt.amount())
+              Form.requestInteger(Prompt.amount())
             );
+
+            // THIS IS A PLACEHOLDER for compilation
+            throw new NoSuchProductKeyException(stringField("productKey"));
+
           } catch (NoSuchProductKeyException eInside) {
             throw new UnknownProductKeyException(eInside.getKey());
           }
         }
       } else {
-
+        // more stuff
       }
     }
 

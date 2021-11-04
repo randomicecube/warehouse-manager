@@ -4,6 +4,9 @@ import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 import ggc.WarehouseManager;
 import ggc.exceptions.NoSuchProductKeyException;
+import ggc.exceptions.NoSuchPartnerKeyException;
+import ggc.app.exceptions.UnknownPartnerKeyException;
+import ggc.app.exceptions.UnknownProductKeyException;
 
 /**
  * Register order.
@@ -20,7 +23,11 @@ public class DoRegisterBreakdownTransaction extends Command<WarehouseManager> {
   @Override
   public final void execute() throws CommandException {
     try {
-      // stuff
+      _receiver.registerBreakdownTransaction(
+        stringField("partnerKey"),
+        stringField("productKey"),
+        integerField("amount")
+      );
     } catch (NoSuchPartnerKeyException e) {
       throw new UnknownPartnerKeyException(e.getKey());
     } catch (NoSuchProductKeyException e) {
