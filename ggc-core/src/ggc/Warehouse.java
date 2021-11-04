@@ -451,7 +451,10 @@ public class Warehouse implements Serializable {
   public Collection<Transaction> getPaymentsByPartner(String partnerKey)
     throws NoSuchPartnerKeyException {
       // TODO implement
-      return new ArrayList<Transaction>(); // compiling placeholder
+
+      return getPartner(partnerKey).getPayments();
+
+      // return new ArrayList<Transaction>(); // compiling placeholder
   }
 
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
