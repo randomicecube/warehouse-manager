@@ -100,15 +100,8 @@ public class Product implements Serializable {
     return _productPrice;
   }
 
-  /** @return product's stock */
-  public Integer getStock() {
-    return _stock;
-  }
-
-  /** @return product's in-stock batches in toString format */
-  public Collection<String> getBatchStrings() {
-    
-    List<Batch> sortedBatches = _productBatches;
+  public List<Batch> getSortedBatches() {
+    List<Batch> sortedBatches = getBatches();
     
     sortedBatches.sort(
       new Comparator<Batch>() {
@@ -145,7 +138,18 @@ public class Product implements Serializable {
       }
     );
 
-    return sortedBatches
+    return sortedBatches;
+  }
+
+  /** @return product's stock */
+  public Integer getStock() {
+    return _stock;
+  }
+
+  /** @return product's in-stock batches in toString format */
+  public Collection<String> getBatchStrings() {
+    
+    return getBatches()
       .stream()
       .map(batch -> batch.toString())
       .collect(Collectors.toList());

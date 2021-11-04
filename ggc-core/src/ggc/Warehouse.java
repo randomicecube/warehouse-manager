@@ -325,9 +325,22 @@ public class Warehouse implements Serializable {
 
   }
 
+  public Collection<Batch> getBatches() {
+    List<Product> products = getProducts();
+    List<Batch> batches = new ArrayList<Batch>();
+
+    for (Product p: products) {
+      for (Batch b: p.getBatches()) {
+        batches.add(b);
+      }
+    }
+
+    return batches;
+  }
+
   /**
-   * @return a Collection with all the batches with partners associated with the
-   *         warehouse
+   * @return a Collection with all the batches (in toStrinf form)
+   * with partners associated with the warehouse
    */
   public Collection<String> getBatchesCollection() {
     List<String> productKeys = getProducts()
@@ -442,8 +455,14 @@ public class Warehouse implements Serializable {
   }
 
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
-    // TODO implement
-    return new ArrayList<Batch>(); // compiling placeholder
+
+    List<Batch> availableBatches = getBatches();
+
+    return availableBatches
+      .stream()
+      .filter(batch -> batch.getPrice() < priceCap)
+      .collect(Collectors.toList());
+    
   }
 
   public void receivePayment(int transactionKey)

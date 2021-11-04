@@ -11,7 +11,6 @@ public class DoLookupProductBatchesUnderGivenPrice extends Command<WarehouseMana
 
   public DoLookupProductBatchesUnderGivenPrice(WarehouseManager receiver) {
     super(Label.PRODUCTS_UNDER_PRICE, receiver);
-    // TODO - is it an Integer field (?)
     addRealField("limit", Prompt.priceLimit());
   }
 
