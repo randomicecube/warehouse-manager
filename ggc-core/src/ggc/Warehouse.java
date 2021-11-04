@@ -326,7 +326,7 @@ public class Warehouse implements Serializable {
   }
 
   public Collection<Batch> getBatches() {
-    List<Product> products = getProducts();
+    List<Product> products = getProducts().values().stream().collect(Collectors.toList());
     List<Batch> batches = new ArrayList<Batch>();
 
     for (Product p: products) {
@@ -452,30 +452,42 @@ public class Warehouse implements Serializable {
     throws NoSuchPartnerKeyException {
       // TODO implement
 
-      return getPartner(partnerKey).getPayments();
+      // return getPartner(partnerKey).getPayments();
 
-      // return new ArrayList<Transaction>(); // compiling placeholder
+      return new ArrayList<Transaction>(); // compiling placeholder
   }
 
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
-
-    List<Batch> availableBatches = getBatches();
-
+    Collection<Batch> availableBatches = getBatches();
     return availableBatches
       .stream()
       .filter(batch -> batch.getPrice() < priceCap)
-      .collect(Collectors.toList());
-    
+      .collect(Collectors.toList());    
   }
 
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
-      Transaction t = getTransaction(transactionKey);
-      if (t.isPaid()) {
+      Sale sale = (Sale) getTransaction(transactionKey);
+      if (sale.isPaid()) {
         return;
       }
-      t.updatePaid();
-      t.updatePaymentDate(_date);
+      sale.updatePaid();
+      sale.updatePaymentDate(_date);
+  }
+
+  public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
+    throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
+      // TODO implement
+  }
+
+  public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
+    throws NoSuchPartnerKeyException, NoSuchProductKeyException {
+      // TODO implement
+  }
+
+  public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
+    throws NoSuchPartnerKeyException, NoSuchProductKeyException {
+      // TODO implement
   }
 
 }

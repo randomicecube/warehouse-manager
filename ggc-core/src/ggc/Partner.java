@@ -123,11 +123,11 @@ public class Partner implements Serializable, ProductObserver {
     return _transactionHistory;
   }
 
-  public List<Transaction> getSales() {
-    return getTransactions()
-      .stream()
-      .filter(transaction -> (transaction))
-  }
+  // public List<Transaction> getSales() {
+    // return getTransactions()
+      // .stream()
+      // .filter(transaction -> (transaction))
+  // }
 
   /** @return partner's batches */
   public List<Batch> getPartnerBatches() {

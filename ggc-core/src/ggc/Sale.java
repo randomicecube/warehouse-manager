@@ -6,14 +6,50 @@ import java.io.Serializable;
  * Class representing a specific Transaction - a Sale
  */
 public class Sale extends Transaction implements Serializable {
-  // TODO - implement Sale
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252054L;
 
+  private int _dueDate;
+
+  private boolean _paid = false;
+
+  public Sale(int transactionKey, Partner partner, Product product, int baseDate, int amount, int basePrice, int dueDate) {
+    super(transactionKey, partner, product, baseDate, amount, basePrice);
+    _dueDate = dueDate;
+  }
+
+  public int getDueDate() {
+    return _dueDate;
+  }
+
+  public int getActualPrice() {
+    // TODO - IMPLEMENT CORRECTLY
+    return getBasePrice();
+  }
+
+  public boolean isPaid() {
+    return _paid;
+  }
+
+  public void updatePaid() {
+    _paid = true;
+  }
+
   /** accepts a visitor - specifically, a TransactionVisitor */
   public void accept(TransactionVisitor visitor) {
     visitor.visitSale(this);
+  }
+
+  @Override
+  public String toString() {
+    return String.join(
+      "|",
+      super.toString(),
+      String.valueOf(getBasePrice()),
+      String.valueOf(getActualPrice()),
+      String.valueOf(getDueDate())
+    ) + (isPaid() ? ("|" + getPaymentDate()) : "");
   }
 
 }

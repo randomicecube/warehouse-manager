@@ -248,4 +248,19 @@ public class WarehouseManager {
       _warehouse.receivePayment(transactionKey);
   }
 
+  public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
+    throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
+      _warehouse.registerSaleTransaction(partnerKey, deadline, productKey, amount);
+  }
+
+  public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
+    throws NoSuchPartnerKeyException, NoSuchProductKeyException {
+      _warehouse.registerAcquisitionTransaction(partnerKey, productKey, price, amount);
+  }
+
+  public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
+    throws NoSuchPartnerKeyException, NoSuchProductKeyException {
+      _warehouse.registerBreakdownTransaction(partnerKey, productKey, amount);
+  }
+
 }

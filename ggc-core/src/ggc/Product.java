@@ -6,7 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
-
+import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import java.text.Collator;
@@ -98,6 +99,10 @@ public class Product implements Serializable {
   /** @return product's pricey */
   public Double getProductPrice() {
     return _productPrice;
+  }
+
+  public List<Batch> getBatches() {
+    return _productBatches;
   }
 
   public List<Batch> getSortedBatches() {

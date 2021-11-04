@@ -13,14 +13,24 @@ public abstract class Transaction implements Serializable {
   /** Transaction's key */
   private int _transactionKey;
 
-  /** Transaction's corresponding payment (or due, if a Sale) date */
+  /** Transaction's corresponding base date */
   private int _paymentDate;
 
-  private boolean _paid = false;
+  private Partner _partner;
 
-  public Transaction(int key, int paymentDate) {
-    _transactionKey = key;
-    _paymentDate = paymentDate;
+  private Product _product;
+
+  private int _amount;
+
+  private int _basePrice;
+
+  public Transaction(int transactionKey, Partner partner, Product product, int baseDate, int amount, int basePrice) {
+    _transactionKey = transactionKey;
+    _partner = partner;
+    _product = product;
+    _paymentDate = baseDate;
+    _amount = amount;
+    _basePrice = basePrice;
   }
 
   /** @return transaction's key */
@@ -33,8 +43,8 @@ public abstract class Transaction implements Serializable {
     return _paymentDate;
   }
 
-  public boolean isPaid() {
-    return _paid;
+  public int getBasePrice() {
+    return _basePrice;
   }
 
   /** Used only in Sales and Breakdown Transactions
@@ -46,11 +56,18 @@ public abstract class Transaction implements Serializable {
     _paymentDate = date;
   }
 
-  public void updatePaid() {
-    _paid = true;
-  }
-
   /** accepts a visitor - specifically, a TransactionVisitor */
   public abstract void accept(TransactionVisitor visitor);
+
+  @Override
+  public String toString() {
+    return String.join(
+      "|",
+      String.valueOf(_transactionKey),
+      _partner.getPartnerKey(),
+      _product.getProductKey(),
+      String.valueOf(_amount)
+    );
+  }
 
 }
