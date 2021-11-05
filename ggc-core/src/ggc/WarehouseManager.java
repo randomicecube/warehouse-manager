@@ -259,7 +259,7 @@ public class WarehouseManager {
   }
 
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
-    throws NoSuchPartnerKeyException, NoSuchProductKeyException {
+    throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       _warehouse.registerBreakdownTransaction(partnerKey, productKey, amount);
   }
 

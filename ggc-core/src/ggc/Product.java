@@ -154,7 +154,7 @@ public class Product implements Serializable {
   /** @return product's in-stock batches in toString format */
   public Collection<String> getBatchStrings() {
     
-    return getBatches()
+    return getSortedBatches()
       .stream()
       .map(batch -> batch.toString())
       .collect(Collectors.toList());

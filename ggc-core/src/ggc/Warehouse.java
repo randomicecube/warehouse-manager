@@ -484,7 +484,7 @@ public class Warehouse implements Serializable {
   }
 
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
-    throws NoSuchPartnerKeyException, NoSuchProductKeyException {
+    throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       // TODO implement
   }
 
@@ -502,9 +502,4 @@ public class Warehouse implements Serializable {
     _products.put(p.getProductKey(), p);
   }
 
-  public void registerAcquisition(String partnerKey, String productKey, float price, int amount){
-    Partner partner = getPartner(partnerKey);
-    //receber o produto pretendido e depois adicionar ao stock da warehouse com a quantidade necessária (amount)
-    updatePriceAcquisition(price);
-  }
 }

@@ -45,8 +45,6 @@ public class DoRegisterAcquisitionTransaction extends Command<WarehouseManager> 
         Map<String, Integer> ingredients = new LinkedHashMap<String, Integer>();
         for (int i = 0; i < numberOfComponents; i++) {
           try {
-            // está mal - deviamos verificar _sempre_ in the meantime
-            // se o produto existe
             ingredients.put(
               Form.requestString(Prompt.productKey()),
               Form.requestInteger(Prompt.amount())
