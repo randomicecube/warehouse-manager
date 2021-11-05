@@ -108,6 +108,9 @@ public class Product implements Serializable {
    * @param stock
    */
   public void updateStock(Integer stock) {
+    if (getStock() == 0) {
+      notifyPartners("NEW");
+    }
     _stock += stock;
   }
 
