@@ -43,6 +43,10 @@ public class Partner implements Serializable, ProductObserver {
   /** Partner's transaction history */
   private List<Transaction> _transactionHistory = new ArrayList<Transaction>();
 
+  private List<Sale> _saleHistory = new ArrayList<Sale>();
+
+  private List<Acquisition> _acquisitionHistory = new ArrayList<Acquisition>();
+
   /** Partner's unread notifications */
   private List<Notification> _unreadNotifications = new ArrayList<Notification>();
 
@@ -123,11 +127,13 @@ public class Partner implements Serializable, ProductObserver {
     return _transactionHistory;
   }
 
-  // public List<Transaction> getSales() {
-    // return getTransactions()
-      // .stream()
-      // .filter(transaction -> (transaction))
-  // }
+  public List<Sale> getSales() {
+    return _saleHistory;
+  }
+
+  public List<Acquisition> getAcquisitions() {
+    return _acquisitionHistory;
+  }
 
   /** @return partner's batches */
   public List<Batch> getPartnerBatches() {

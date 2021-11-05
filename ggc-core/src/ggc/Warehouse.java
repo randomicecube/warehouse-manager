@@ -438,23 +438,20 @@ public class Warehouse implements Serializable {
 
   public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
     throws NoSuchPartnerKeyException {
-      // TODO implement
-      return new ArrayList<Acquisition>(); // compiling placeholder
+      return getPartner(partnerKey).getAcquisitions();
   }
 
   public Collection<Sale> getPartnerSales(String partnerKey)
     throws NoSuchPartnerKeyException {
-      // TODO implement
-      return new ArrayList<Sale>(); // compiling placeholder
+      return getPartner(partnerKey).getSales();
   }
 
   public Collection<Transaction> getPaymentsByPartner(String partnerKey)
     throws NoSuchPartnerKeyException {
-      // TODO implement
-
-      // return getPartner(partnerKey).getPayments();
-
-      return new ArrayList<Transaction>(); // compiling placeholder
+      return getPartnerSales(partnerKey)
+        .stream()
+        .filter(sale -> sale.isPaid())
+        .collect(Collectors.toList());
   }
 
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
@@ -467,6 +464,7 @@ public class Warehouse implements Serializable {
 
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
+      // TODO - missing updating points and stuff
       Sale sale = (Sale) getTransaction(transactionKey);
       if (sale.isPaid()) {
         return;

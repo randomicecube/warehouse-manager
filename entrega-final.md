@@ -8,8 +8,8 @@
 ## Menu de Gestão de Parceiros
 
 - Ativar/Desativar notificações de um produto
-- Mostrar compras com parceiro
-- Mostrar vendas/desagregações com parceiro
+- [DONE] Mostrar compras com parceiro
+- [DONE] Mostrar vendas/desagregações com parceiro
 
 ## Menu de Gestão de Transações
 
@@ -22,4 +22,4 @@
 ## Menu de Consultas
 
 - [DONE] Produtos com preço abaixo de limite
-- Faturas pagas por parceiro
+- [DONE] Faturas pagas por parceiro
