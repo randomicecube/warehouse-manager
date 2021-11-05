@@ -15,7 +15,7 @@ public class Notification implements Serializable {
   private String _productKey;
 
   /** The product associated with the notifications's price */
-  private int _productPrice;
+  private double _productPrice;
 
   /** The notification's type */
   private String _notificationType;
@@ -27,7 +27,7 @@ public class Notification implements Serializable {
    * @param productPrice     associated product's price
    * @param notificationType
    */
-  public Notification(String productKey, int productPrice, String notificationType) {
+  public Notification(String productKey, double productPrice, String notificationType) {
     _productKey = productKey;
     _productPrice = productPrice;
     _notificationType = notificationType;
@@ -44,7 +44,7 @@ public class Notification implements Serializable {
   }
 
   /** @return product's price */
-  public int getProductPrice() {
+  public double getProductPrice() {
     return _productPrice;
   }
 

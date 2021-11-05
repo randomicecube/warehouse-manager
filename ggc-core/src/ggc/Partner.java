@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Class representing a Partner in the system
  */
-public class Partner implements Serializable, ProductObserver {
+public class Partner implements Serializable, Observer {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252058L;
@@ -178,15 +178,6 @@ public class Partner implements Serializable, ProductObserver {
   }
 
   /**
-   * Add a notification to the partner's to-be-read notification collection
-   * 
-   * @param notification
-   */
-  public void addToBeReadNotification(Notification notification) {
-    _unreadNotifications.add(notification);
-  }
-
-  /**
    * Add a batch to the partner's in-stock batch collection
    * 
    * @param batch
@@ -227,8 +218,10 @@ public class Partner implements Serializable, ProductObserver {
     _unreadNotifications.clear();
   }
 
-  public void update(String productKey, int productPrice, String notificationType) {
-    _unreadNotifications.add(new Notification(productKey, productPrice, notificationType));
+  public void update(String productKey, double productPrice, String notificationType) {
+    _unreadNotifications.add(
+      new Notification(productKey, productPrice, notificationType)
+    );
   }
 
   @Override

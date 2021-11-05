@@ -35,6 +35,11 @@ public class BreakdownProduct extends Product implements Serializable {
   }
 
   @Override
+  public int getProductDeadlineDelta() {
+    return 5; // 5 for "Breakdown" Products
+  }
+
+  @Override
   public String toString() {
     return String.join(
       "|",

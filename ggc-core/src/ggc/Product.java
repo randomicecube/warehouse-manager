@@ -27,10 +27,10 @@ public class Product implements Serializable {
   private String _productKey;
 
   /** Product's price */
-  private Double _productPrice = 0.0;
+  private double _productPrice = 0.0;
 
   /** Product's stock */
-  private Integer _stock = 0; // Integer instead of int for consistency's sake with Maps
+  private int _stock = 0; // Integer instead of int for consistency's sake with Maps
 
   /** Product's in-stock batches */
   private List<Batch> _productBatches = new ArrayList<Batch>();
@@ -38,7 +38,7 @@ public class Product implements Serializable {
   /** Stores partners' intent to receive notifications about the product
    *  true if they want to, false if they do not
    */
-  private Map<Partner, Boolean> _notifiedPartners = new HashMap<Partner, Boolean>();
+  private Map<Observer, Boolean> _notifiedPartners = new HashMap<Observer, Boolean>();
 
 
   /**
@@ -48,7 +48,7 @@ public class Product implements Serializable {
    * @param stock        product's stock
    * @param productPrice product's price
    */
-  public Product(String productKey, Integer stock, Double productPrice) {
+  public Product(String productKey, int stock, double productPrice) {
     _productKey = productKey;
     _productPrice = productPrice;
     _stock = stock;
@@ -65,11 +65,31 @@ public class Product implements Serializable {
 
   /**
    * Update product's current price
+   * Notify partners if price has changed
    * 
    * @param price
    */
   public void updatePrice(Double price) {
+    if (price < _productPrice) {
+      notifyPartners("BARGAIN");
+    }
     _productPrice = price;
+  }
+
+  public void partnerNowObserving(Observer partner) {
+    _notifiedPartners.put(partner, true);
+  }
+
+  public void partnerNoLongerObserving(Observer partner) {
+    _notifiedPartners.put(partner, false);
+  }
+
+  public void notifyPartners(String message) {
+    for (Observer partner : _notifiedPartners.keySet()) {
+      if (_notifiedPartners.get(partner)) {
+        partner.update(getProductKey(), getProductPrice(), message);
+      }
+    }
   }
 
   /**
@@ -91,13 +111,17 @@ public class Product implements Serializable {
     _stock += stock;
   }
 
+  public int getProductDeadlineDelta() {
+    return 3; // 3 for "Simple" Products
+  }
+
   /** @return product's identification key */
   public String getProductKey() {
     return _productKey;
   }
 
   /** @return product's pricey */
-  public Double getProductPrice() {
+  public double getProductPrice() {
     return _productPrice;
   }
 
@@ -117,8 +141,8 @@ public class Product implements Serializable {
           return partnerKeyB1.compareTo(partnerKeyB2);
         }
         
-        public int comparePrices(Batch b1, Batch b2) {
-          return (int) (b1.getPrice() - b2.getPrice());
+        public double comparePrices(Batch b1, Batch b2) {
+          return b1.getPrice() - b2.getPrice();
         }
 
         public int compareStocks(Batch b1, Batch b2) {
@@ -132,9 +156,9 @@ public class Product implements Serializable {
             return keyComparator;
           }
 
-          int priceComparator = comparePrices(b1, b2);
+          double priceComparator = comparePrices(b1, b2);
           if (priceComparator != 0) {
-            return priceComparator;
+            return (int) priceComparator;
           }
 
           return compareStocks(b1, b2);
@@ -147,18 +171,20 @@ public class Product implements Serializable {
   }
 
   /** @return product's stock */
-  public Integer getStock() {
+  public int getStock() {
     return _stock;
   }
 
   /** @return product's in-stock batches in toString format */
-  public Collection<String> getBatchStrings() {
-    
+  public Collection<String> getBatchStrings() {    
     return getSortedBatches()
       .stream()
       .map(batch -> batch.toString())
       .collect(Collectors.toList());
+  }
 
+  public Map<Observer, Boolean> getObservingPartners() {
+    return _notifiedPartners;
   }
 
   @Override

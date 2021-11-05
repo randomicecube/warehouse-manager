@@ -117,15 +117,6 @@ public class WarehouseManager {
     return !_filename.equals("");
   }
 
-  /**
-   * clear a partner's given unread notifications
-   * @param key partner's key
-   */
-  public void clearNotifications(String key) throws NoSuchPartnerKeyException {
-    _warehouse.clearNotifications(key);
-    _saveFlag = false;
-  }
-
   /** @return current warehouse date */
   public int getDate() {
     return _warehouse.getDate();
@@ -262,5 +253,10 @@ public class WarehouseManager {
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       _warehouse.registerBreakdownTransaction(partnerKey, productKey, amount);
   }
+
+  public Collection<Notification> readPartnerNotifications(String key) 
+    throws NoSuchPartnerKeyException {
+      return _warehouse.readPartnerNotifications(key);
+    }
 
 }

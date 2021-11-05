@@ -69,7 +69,8 @@ public class Warehouse implements Serializable {
             fields[4]
           );
 
-          case "BATCH_M" -> registerBatch(fields[1],
+          case "BATCH_M" -> registerBatch(
+            fields[1],
             fields[2],
             fields[3],
             fields[4],
@@ -92,19 +93,6 @@ public class Warehouse implements Serializable {
       e.printStackTrace();
     } catch (NoSuchProductKeyException e) {
       e.printStackTrace();
-    }
-  }
-
-  /**
-   * clear a partner's given unread notifications
-   * 
-   * @param key partner's key
-   */
-  public void clearNotifications(String key) throws NoSuchPartnerKeyException {
-    try {
-      getPartner(key).getNotifications().clear();
-    } catch (NoSuchPartnerKeyException e) {
-      throw new NoSuchPartnerKeyException(key);
     }
   }
 
@@ -290,6 +278,14 @@ public class Warehouse implements Serializable {
     throw new NoSuchPartnerKeyException(key);
   }
 
+  public Collection<Notification> readPartnerNotifications(String key) 
+    throws NoSuchPartnerKeyException {
+      Partner partner = getPartner(key);
+      Collection<Notification> notifications = partner.getNotifications();
+      partner.getNotifications().clear();
+      return notifications;
+  }
+
   /** @return all partners associated with the warehouse */
   public Map<String, Partner> getPartners() {
     return _partners;
@@ -433,11 +429,18 @@ public class Warehouse implements Serializable {
 
   public void toggleProductNotifications(String partnerKey, String productKey)
     throws NoSuchProductKeyException, NoSuchPartnerKeyException {
-      // TODO implement
+      Product product = getProduct(productKey);
+      Partner partner = getPartner(partnerKey);
+      if (!product.getObservingPartners().get(partner)) {
+        product.partnerNowObserving(partner);
+      } else {
+        product.partnerNoLongerObserving(partner);
+      }
   }
 
   public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
     throws NoSuchPartnerKeyException {
+      // TODO - UNMODIFIABLE COLLECTION
       return getPartner(partnerKey).getAcquisitions();
   }
 

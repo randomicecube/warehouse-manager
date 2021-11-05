@@ -7,13 +7,13 @@
 
 ## Menu de Gestão de Parceiros
 
-- Ativar/Desativar notificações de um produto
+- [DONE] Ativar/Desativar notificações de um produto
 - [DONE] Mostrar compras com parceiro
 - [DONE] Mostrar vendas/desagregações com parceiro
 
 ## Menu de Gestão de Transações
 
-- Visualizar Transação
+- [DONE] Visualizar Transação
 - Registar desagregação
 - Registar venda
 - Registar compra
@@ -23,3 +23,5 @@
 
 - [DONE] Produtos com preço abaixo de limite
 - [DONE] Faturas pagas por parceiro
+
+[IMPORTANTE] - falta a lógica de dar update aos Status (e a lógica de dar update aos pontos) também
