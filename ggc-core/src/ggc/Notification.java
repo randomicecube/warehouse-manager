@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Class representing a notification in the system has a product's key and price
  * associated, as well as the notification type (NEW vs BARGAIN)
  */
-public abstract class Notification implements Serializable {
+public class Notification implements Serializable {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252059L;
