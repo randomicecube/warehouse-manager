@@ -478,4 +478,23 @@ public class Warehouse implements Serializable {
       t.updatePaymentDate(_date);
   }
 
+  public void updatePriceAcquisition(double money){
+    _availableBalance -= money;
+    _accountingBalance -= money;
+  }
+
+  public void updatePriceSale(double money){
+    _availableBalance -= money;
+    _accountingBalance -= money;
+  }
+
+  public void addProduct(Product p){
+    _products.put(p.getProductKey(), p);
+  }
+
+  public void registerAcquisition(String partnerKey, String productKey, float price, int amount){
+    Partner partner = getPartner(partnerKey);
+    //receber o produto pretendido e depois adicionar ao stock da warehouse com a quantidade necessária (amount)
+    updatePriceAcquisition(price);
+  }
 }

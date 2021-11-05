@@ -248,4 +248,7 @@ public class WarehouseManager {
       _warehouse.receivePayment(transactionKey);
   }
 
+  public void registerAcquisition(String partnerKey, String productKey, float price, int amount){
+    _warehouse.registerAcquisition(partnerKey, productKey, price, amount);
+  }
 }

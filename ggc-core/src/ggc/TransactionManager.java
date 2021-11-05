@@ -9,6 +9,7 @@ public class TransactionManager extends TransactionVisitor implements Serializab
 
   public void visitAcquisition(Acquisition a) {
     // TODO implement
+    //tirar o produto ao parceiro, adicionar transação ao parceiro
   }
 
   public void visitBreakdown(Breakdown b) {

@@ -24,7 +24,7 @@ public class DoRegisterAcquisitionTransaction extends Command<WarehouseManager> 
   @Override
   public final void execute() throws CommandException {
     try {
-      // stuff
+      // stuff - mandar p WM
     } catch (NoSuchPartnerKeyException e) {
       throw new UnknownPartnerKeyException(e.getKey());
     } catch (NoSuchProductKeyException eOutside) {
