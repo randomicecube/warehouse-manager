@@ -14,11 +14,6 @@ public class Acquisition extends Transaction implements Serializable {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
   }
 
-  /** accepts a visitor - specifically, a TransactionVisitor */
-  public void accept(TransactionVisitor visitor) {
-    visitor.visitAcquisition(this);
-  }
-
   @Override
   public String toString() {
     return String.join(

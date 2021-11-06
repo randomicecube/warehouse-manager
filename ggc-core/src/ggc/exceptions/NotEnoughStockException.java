@@ -1,6 +1,8 @@
 package ggc.exceptions;
 
-public class NotEnoughStockException extends Exception {
+import java.io.Serializable;
+
+public class NotEnoughStockException extends Exception implements Serializable {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202111042317L;

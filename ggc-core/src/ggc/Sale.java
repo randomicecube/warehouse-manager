@@ -25,7 +25,7 @@ public class Sale extends Transaction implements Serializable {
 
   public double getActualPrice() {
     // TODO - IMPLEMENT CORRECTLY
-    return getBasePrice();
+    return getBasePrice(); // currently just a placeholder
   }
 
   public boolean isPaid() {
@@ -34,11 +34,6 @@ public class Sale extends Transaction implements Serializable {
 
   public void updatePaid() {
     _paid = true;
-  }
-
-  /** accepts a visitor - specifically, a TransactionVisitor */
-  public void accept(TransactionVisitor visitor) {
-    visitor.visitSale(this);
   }
 
   @Override

@@ -213,6 +213,7 @@ public class WarehouseManager {
   public void toggleProductNotifications(String partnerKey, String productKey)
     throws NoSuchProductKeyException, NoSuchPartnerKeyException {
       _warehouse.toggleProductNotifications(partnerKey, productKey);
+      _saveFlag = false;
   }
 
   public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
@@ -237,34 +238,41 @@ public class WarehouseManager {
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
       _warehouse.receivePayment(transactionKey);
+      _saveFlag = false;
   }
 
   public void registerProduct(String productKey, int stock) {
     _warehouse.registerProduct(productKey, stock);
+    _saveFlag = false;
   }
 
   public void registerProduct(String productKey, int stock, Map<String, Integer> ingredients, double alpha)
     throws NoSuchProductKeyException {
     _warehouse.registerProduct(productKey, stock, ingredients, alpha);
+    _saveFlag = false;
   }
 
   public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       _warehouse.registerSaleTransaction(partnerKey, deadline, productKey, amount);
+      _saveFlag = false;
   }
 
   public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException {
       _warehouse.registerAcquisitionTransaction(partnerKey, productKey, price, amount);
-  }
+      _saveFlag = false;
+    }
 
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       _warehouse.registerBreakdownTransaction(partnerKey, productKey, amount);
-  }
+      _saveFlag = false;
+    }
 
   public Collection<Notification> readPartnerNotifications(String key) 
     throws NoSuchPartnerKeyException {
+      _saveFlag = false;
       return _warehouse.readPartnerNotifications(key);
     }
 

@@ -17,11 +17,6 @@ public class Breakdown extends Sale implements Serializable {
     _recipe = recipe;
   }
 
-  /** accepts a visitor - specifically, a TransactionVisitor */
-  public void accept(TransactionVisitor visitor) {
-    visitor.visitBreakdown(this);
-  }
-
   public Recipe getRecipe() {
     return _recipe;
   }

@@ -478,7 +478,7 @@ public class Warehouse implements Serializable {
       if (sale.isPaid()) {
         return;
       }
-      sale.updatePaid();
+      sale.updatePaid(); //TODO - here update stuff 
       sale.updatePaymentDate(_date);
   }
 
