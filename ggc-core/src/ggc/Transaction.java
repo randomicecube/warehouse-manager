@@ -22,9 +22,9 @@ public abstract class Transaction implements Serializable {
 
   private int _amount;
 
-  private int _basePrice;
+  private double _basePrice;
 
-  public Transaction(int transactionKey, Partner partner, Product product, int baseDate, int amount, int basePrice) {
+  public Transaction(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice) {
     _transactionKey = transactionKey;
     _partner = partner;
     _product = product;
@@ -43,7 +43,7 @@ public abstract class Transaction implements Serializable {
     return _paymentDate;
   }
 
-  public int getBasePrice() {
+  public double getBasePrice() {
     return _basePrice;
   }
 

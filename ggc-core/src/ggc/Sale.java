@@ -14,7 +14,7 @@ public class Sale extends Transaction implements Serializable {
 
   private boolean _paid = false;
 
-  public Sale(int transactionKey, Partner partner, Product product, int baseDate, int amount, int basePrice, int dueDate) {
+  public Sale(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice, int dueDate) {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
     _dueDate = dueDate;
   }
@@ -23,7 +23,7 @@ public class Sale extends Transaction implements Serializable {
     return _dueDate;
   }
 
-  public int getActualPrice() {
+  public double getActualPrice() {
     // TODO - IMPLEMENT CORRECTLY
     return getBasePrice();
   }

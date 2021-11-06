@@ -25,3 +25,4 @@
 - [DONE] Faturas pagas por parceiro
 
 [IMPORTANTE] - falta a lógica de dar update aos Status (e a lógica de dar update aos pontos) também
+[IMPORTANTE] - tratar dos métodos do saldo -> accounting e etc

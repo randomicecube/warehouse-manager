@@ -168,13 +168,14 @@ public class Partner implements Serializable, Observer {
     _notificationMethod = method;
   }
 
-  /**
-   * Add a transaction to the partner's transaction history collection
-   * 
-   * @param transaction
-   */
-  public void addTransaction(Transaction transaction) {
-    _transactionHistory.add(transaction);
+  public void addNewSale(Sale sale) {
+    _saleHistory.add(sale);
+    _transactionHistory.add(sale);
+  }
+
+  public void addNewAcquisition(Acquisition acquisition) {
+    _acquisitionHistory.add(acquisition);
+    _transactionHistory.add(acquisition);
   }
 
   /**

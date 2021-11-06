@@ -239,6 +239,15 @@ public class WarehouseManager {
       _warehouse.receivePayment(transactionKey);
   }
 
+  public void registerProduct(String productKey, int stock) {
+    _warehouse.registerProduct(productKey, stock);
+  }
+
+  public void registerProduct(String productKey, int stock, Map<String, Integer> ingredients, double alpha)
+    throws NoSuchProductKeyException {
+    _warehouse.registerProduct(productKey, stock, ingredients, alpha);
+  }
+
   public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       _warehouse.registerSaleTransaction(partnerKey, deadline, productKey, amount);

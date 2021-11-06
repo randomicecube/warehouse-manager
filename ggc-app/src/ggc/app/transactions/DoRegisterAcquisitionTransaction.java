@@ -41,24 +41,41 @@ public class DoRegisterAcquisitionTransaction extends Command<WarehouseManager> 
     } catch (NoSuchProductKeyException eOutside) {
       if (Form.confirm(Prompt.addRecipe())) {
         int numberOfComponents = Form.requestInteger(Prompt.numberOfComponents());
-        int alpha = Form.requestInteger(Prompt.alpha());
+        double alpha = Form.requestReal(Prompt.alpha());
         Map<String, Integer> ingredients = new LinkedHashMap<String, Integer>();
         for (int i = 0; i < numberOfComponents; i++) {
-          try {
-            ingredients.put(
-              Form.requestString(Prompt.productKey()),
-              Form.requestInteger(Prompt.amount())
-            );
-
-            // THIS IS A PLACEHOLDER for compilation
-            throw new NoSuchProductKeyException(stringField("productKey"));
-
-          } catch (NoSuchProductKeyException eInside) {
-            throw new UnknownProductKeyException(eInside.getKey());
-          }
+          ingredients.put(
+            Form.requestString(Prompt.productKey()),
+            Form.requestInteger(Prompt.amount())
+          );
         }
+        try {
+          _receiver.registerProduct(
+            stringField("productKey"),
+            integerField("amount"),
+            ingredients,
+            alpha
+          );
+        } catch (NoSuchProductKeyException e) {
+          throw new UnknownProductKeyException(e.getKey());
+        }
+        // TODO -> IN CORE try -> catch noSuchProductKeyException
       } else {
-        // more stuff
+        _receiver.registerProduct(
+          stringField("productKey"),
+          integerField("amount")
+        );
+      }
+
+      try {
+        _receiver.registerAcquisitionTransaction(
+          stringField("partnerKey"),
+          stringField("productKey"),
+          realField("price"),
+          integerField("amount")
+        );
+      } catch (NoSuchPartnerKeyException | NoSuchProductKeyException e) {
+        e.printStackTrace(); // will never happen
       }
     }
 

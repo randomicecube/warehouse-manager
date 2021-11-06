@@ -10,7 +10,7 @@ public class Acquisition extends Transaction implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252105L;
 
-  public Acquisition(int transactionKey, Partner partner, Product product, int baseDate, int amount, int basePrice) {
+  public Acquisition(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice) {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
   }
 

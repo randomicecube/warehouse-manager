@@ -12,7 +12,7 @@ public class Breakdown extends Sale implements Serializable {
 
   private Recipe _recipe;
 
-  public Breakdown(int transactionKey, Partner partner, Product product, int baseDate, int amount, int basePrice, int dueDate, Recipe recipe) {
+  public Breakdown(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice, int dueDate, Recipe recipe) {
     super(transactionKey, partner, product, baseDate, amount, basePrice, dueDate);
     _recipe = recipe;
   }

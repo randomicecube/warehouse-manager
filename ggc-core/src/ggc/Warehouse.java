@@ -27,6 +27,8 @@ public class Warehouse implements Serializable {
   /** Warehouse's current date */
   private int _date = 0;
 
+  private int _nextTransactionKey = 0;
+
   /** Warehouse's current available balance */
   private double _availableBalance = 0;
 
@@ -322,7 +324,11 @@ public class Warehouse implements Serializable {
   }
 
   public Collection<Batch> getBatches() {
-    List<Product> products = getProducts().values().stream().collect(Collectors.toList());
+    List<Product> products = getProducts()
+      .values()
+      .stream()
+      .collect(Collectors.toList());
+
     List<Batch> batches = new ArrayList<Batch>();
 
     for (Product p: products) {
@@ -476,14 +482,38 @@ public class Warehouse implements Serializable {
       sale.updatePaymentDate(_date);
   }
 
+  public void registerProduct(String productKey, int stock) {
+    Product product = new Product(productKey, stock);
+    _products.put(productKey, product);
+  }
+
+  public void registerProduct(String productKey, int stock, Map<String, Integer> ingredients, double alpha)
+    throws NoSuchProductKeyException {
+      for (String key: ingredients.keySet()) {
+        if (getProduct(key) == null) {
+          throw new NoSuchProductKeyException(key);
+        }
+      }
+      Recipe recipe = new Recipe(ingredients);
+      Product product = new BreakdownProduct(recipe, alpha, productKey, stock);
+      _products.put(productKey, product);
+  }
+
   public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
-      // TODO implement
+    // TODO implement
+    // Don't forget -> Sale and Transaction need to account for
+    // creating new BreakdownProducts (and their prices)
   }
 
   public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException {
-      // TODO implement
+      Partner partner = getPartner(partnerKey);
+      Product product = getProduct(productKey);
+      Acquisition acquisition = new Acquisition(_nextTransactionKey++, partner, product, getDate(), amount, price);
+      partner.addNewAcquisition(acquisition);
+      product.updatePrice(price);
+      updateBalanceAcquisition(price);
   }
 
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
@@ -491,12 +521,7 @@ public class Warehouse implements Serializable {
       // TODO implement
   }
 
-  public void updatePriceAcquisition(double money){
-    _availableBalance -= money;
-    _accountingBalance -= money;
-  }
-
-  public void updatePriceSale(double money){
+  public void updateBalanceAcquisition(double money){
     _availableBalance -= money;
     _accountingBalance -= money;
   }

@@ -19,6 +19,14 @@ public class Recipe implements Serializable {
   /** Recipe's ingredients and amount */
   private Map<String, Integer> _ingredients = new LinkedHashMap<String, Integer>();
 
+  public Recipe() {
+    // create an empty recipe
+  }
+
+  public Recipe(Map<String, Integer> ingredients) {
+    _ingredients = ingredients;
+  }
+
   /**
    * Add an ingredient to the recipe
    * 

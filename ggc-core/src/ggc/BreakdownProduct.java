@@ -24,6 +24,13 @@ public class BreakdownProduct extends Product implements Serializable {
     _aggravationFactor = aggravationFactor;
   }
 
+  public BreakdownProduct(Recipe recipe, Double aggravationFactor, 
+                          String productKey, Integer stock) {
+    super(productKey, stock);
+    _recipe = recipe;
+    _aggravationFactor = aggravationFactor;
+  }
+
   /** @return product's recipe */
   public Recipe getRecipe() {
     return _recipe;

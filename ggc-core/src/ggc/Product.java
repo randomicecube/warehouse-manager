@@ -27,7 +27,7 @@ public class Product implements Serializable {
   private String _productKey;
 
   /** Product's price */
-  private double _productPrice = 0.0;
+  private double _productPrice;
 
   /** Product's stock */
   private int _stock = 0; // Integer instead of int for consistency's sake with Maps
@@ -51,6 +51,11 @@ public class Product implements Serializable {
   public Product(String productKey, int stock, double productPrice) {
     _productKey = productKey;
     _productPrice = productPrice;
+    _stock += stock;
+  }
+
+  public Product(String productKey, int stock) {
+    _productKey = productKey;
     _stock = stock;
   }
 
