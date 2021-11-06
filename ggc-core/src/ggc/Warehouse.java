@@ -489,10 +489,13 @@ public class Warehouse implements Serializable {
 
   public void registerProduct(String productKey, int stock, Map<String, Integer> ingredients, double alpha)
     throws NoSuchProductKeyException {
-      for (String key: ingredients.keySet()) {
-        if (getProduct(key) == null) {
-          throw new NoSuchProductKeyException(key);
+      // check if all ingredients are registered
+      try {
+        for (String key: ingredients.keySet()) {
+          getProduct(key);
         }
+      } catch (NoSuchProductKeyException e) {
+        throw new NoSuchProductKeyException(productKey);
       }
       Recipe recipe = new Recipe(ingredients);
       Product product = new BreakdownProduct(recipe, alpha, productKey, stock);
