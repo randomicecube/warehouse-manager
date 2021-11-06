@@ -218,10 +218,8 @@ public class Partner implements Serializable, Observer {
     _unreadNotifications.clear();
   }
 
-  public void update(String productKey, double productPrice, String notificationType) {
-    _unreadNotifications.add(
-      new Notification(productKey, productPrice, notificationType)
-    );
+  public void update(Notification notification) {
+    _unreadNotifications.add(notification);
   }
 
   @Override

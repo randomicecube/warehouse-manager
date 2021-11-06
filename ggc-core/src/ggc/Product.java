@@ -71,7 +71,9 @@ public class Product implements Serializable {
    */
   public void updatePrice(Double price) {
     if (price < _productPrice) {
-      notifyPartners("BARGAIN");
+      notifyPartners(
+        new BargainNotification(getProductKey(), price)
+      );
     }
     _productPrice = price;
   }
@@ -84,10 +86,10 @@ public class Product implements Serializable {
     _notifiedPartners.put(partner, false);
   }
 
-  public void notifyPartners(String message) {
+  public void notifyPartners(Notification notification) {
     for (Observer partner : _notifiedPartners.keySet()) {
       if (_notifiedPartners.get(partner)) {
-        partner.update(getProductKey(), getProductPrice(), message);
+        partner.update(notification);
       }
     }
   }
@@ -109,7 +111,9 @@ public class Product implements Serializable {
    */
   public void updateStock(Integer stock) {
     if (getStock() == 0) {
-      notifyPartners("NEW");
+      notifyPartners(
+        new NewNotification(getProductKey(), getProductPrice())
+      );
     }
     _stock += stock;
   }

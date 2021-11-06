@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Class representing a notification in the system has a product's key and price
  * associated, as well as the notification type (NEW vs BARGAIN)
  */
-public class Notification implements Serializable {
+public abstract class Notification implements Serializable {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252059L;
@@ -17,9 +17,6 @@ public class Notification implements Serializable {
   /** The product associated with the notifications's price */
   private double _productPrice;
 
-  /** The notification's type */
-  private String _notificationType;
-
   /**
    * Main Constructor
    * 
@@ -27,15 +24,9 @@ public class Notification implements Serializable {
    * @param productPrice     associated product's price
    * @param notificationType
    */
-  public Notification(String productKey, double productPrice, String notificationType) {
+  public Notification(String productKey, double productPrice) {
     _productKey = productKey;
     _productPrice = productPrice;
-    _notificationType = notificationType;
-  }
-
-  /** Updating the notification type (NEW vs BARGAIN) */
-  public void updateNotificationType(String notificationType) {
-    _notificationType = notificationType;
   }
 
   /** @return product's key */
@@ -48,16 +39,10 @@ public class Notification implements Serializable {
     return _productPrice;
   }
 
-  /** @return notification type */
-  public String getNotificationType() {
-    return _notificationType;
-  }
-
   @Override
   public String toString() {
     return String.join(
       "|",
-      getNotificationType(),
       getProductKey(),
       String.valueOf(getProductPrice())
     );
