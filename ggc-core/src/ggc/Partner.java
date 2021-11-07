@@ -17,7 +17,7 @@ public class Partner implements Serializable, Observer {
   private static final String DEFAULT_NOTIFICATION_METHOD = "";
 
   /** Partner's status - partners always start with the "Normal" status */
-  private Status _partnerStatus = new NormalStatus();
+  private Status _partnerStatus = new NormalStatus(this);
 
   /** Partner's identification key */
   private String _partnerKey;
@@ -146,8 +146,8 @@ public class Partner implements Serializable, Observer {
   }
 
   /** Update the partner's status, according to their current point score */
-  public void updateStatus() {
-    // TODO implement
+  public void updatePartnerStatus(Status status) {
+    _partnerStatus = status;
   }
 
   /**
@@ -157,6 +157,10 @@ public class Partner implements Serializable, Observer {
    */
   public void updatePartnerPoints(int points) {
     _partnerPoints += points;
+  }
+
+  public void clearPartnerPoints() {
+    _partnerPoints = 0;
   }
 
   /**

@@ -24,5 +24,5 @@
 - [DONE] Produtos com preço abaixo de limite
 - [DONE] Faturas pagas por parceiro
 
-[IMPORTANTE] - falta a lógica de dar update aos Status (e a lógica de dar update aos pontos) também
-[IMPORTANTE] - tratar dos métodos do saldo -> accounting e etc
+- [IMPORTANTE] - falta a lógica de dar update aos Status (e a lógica de dar update aos pontos) também
+- [IMPORTANTE] - tratar dos métodos do saldo -> apresentar accounting balance e etc

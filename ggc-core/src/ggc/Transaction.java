@@ -47,6 +47,10 @@ public abstract class Transaction implements Serializable {
     return _basePrice;
   }
 
+  public Product getProduct() {
+    return _product;
+  }
+
   /** Used only in Sales and Breakdown Transactions
    *  updates the previously set "due date" to a given one
    * 

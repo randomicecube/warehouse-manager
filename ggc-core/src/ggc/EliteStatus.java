@@ -10,6 +10,14 @@ public class EliteStatus extends Status implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252101L;
 
+  public EliteStatus(Partner partner) {
+    super(partner);
+  }
+
+  public void payTransaction(Sale sale, int currentDate) {
+    // TODO implement
+  }
+
   /** @return Elite Status price modifiers for P2 */
   public double getModifierP2(int currentDate, int limitDate) {
     return 0.9;

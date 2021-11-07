@@ -5,6 +5,7 @@ import ggc.exceptions.*;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -41,7 +42,7 @@ public class Warehouse implements Serializable {
   /** All partners associated with the warehouse */
   private Map<String, Partner> _partners = new HashMap<String, Partner>();
 
-  private Map<Integer, Transaction> _transactions = new HashMap<Integer, Transaction>();
+  private Map<Integer, Transaction> _transactions = new LinkedHashMap<Integer, Transaction>();
 
   /**
    * @param txtfile filename to be loaded.
@@ -504,9 +505,11 @@ public class Warehouse implements Serializable {
 
   public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
-    // TODO implement
-    // Don't forget -> Sale and Transaction need to account for
-    // creating new BreakdownProducts (and their prices)
+      Partner partner = getPartner(partnerKey);
+      Product product = getProduct(productKey);
+      // TODO implement
+      // Don't forget -> Sale and Transaction need to account for
+      // creating new BreakdownProducts (and their prices)
   }
 
   public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
@@ -517,10 +520,13 @@ public class Warehouse implements Serializable {
       partner.addNewAcquisition(acquisition);
       product.updatePrice(price);
       updateBalanceAcquisition(price);
+      addTransaction(acquisition);
   }
 
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
+      Partner partner = getPartner(partnerKey);
+      Product product = getProduct(productKey);
       // TODO implement
   }
 
@@ -531,6 +537,10 @@ public class Warehouse implements Serializable {
 
   public void addProduct(Product p){
     _products.put(p.getProductKey(), p);
+  }
+
+  public void addTransaction(Transaction t) {
+    _transactions.put(t.getTransactionKey(), t);
   }
 
 }

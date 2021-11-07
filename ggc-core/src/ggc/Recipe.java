@@ -6,8 +6,6 @@ import java.util.Map;
 
 import java.util.stream.Collectors;
 
-import java.text.Normalizer.Form;
-
 /**
  * Class representing a product's recipe
  */

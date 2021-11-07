@@ -30,10 +30,14 @@ public class Batch implements Serializable {
    * @param price       batch's per-unit product price
    */
   public Batch(Product productType, int amount, double price, Partner partner) {
+    this(productType, amount, price);
+    _partner = partner;
+  }
+
+  public Batch(Product productType, int amount, double price) {
     _productType = productType;
     _amount = amount;
     _price = price;
-    _partner = partner;
   }
 
   /**

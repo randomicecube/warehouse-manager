@@ -10,6 +10,14 @@ public class SelectionStatus extends Status implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252055L;
 
+  public SelectionStatus(Partner partner) {
+    super(partner);
+  }
+
+  public void payTransaction(Sale sale, int currentDate) {
+    // TODO implement
+  }
+
   /** @return Selection Status price modifiers for P2 */
   public double getModifierP2(int currentDate, int limitDate) {
     return limitDate - currentDate >= 2 ? 0.95 : 1.0;

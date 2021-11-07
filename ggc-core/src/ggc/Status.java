@@ -16,6 +16,30 @@ public abstract class Status implements Serializable {
   /** The "border" between Selection and Elite Status is 25000 points */
   private final static int ELITE_LIMIT = 25000;
 
+  private Partner _partner;
+
+  public Status(Partner partner) {
+    _partner = partner;
+  }
+
+  public abstract void payTransaction(Sale sale, int currentDate);
+
+  public Partner getPartner() {
+    return _partner;
+  }
+
+  public boolean changeToNormal() {
+    return _partner.getPartnerPoints() <= SELECTION_LIMIT;
+  }
+
+  public boolean changeToSelection() {
+    return _partner.getPartnerPoints() > SELECTION_LIMIT && !changeToElite();
+  }
+
+  public boolean changeToElite() {
+    return _partner.getPartnerPoints() > ELITE_LIMIT;
+  }
+
   /** @return Status price modifiers for P1 */
   public double getModifierP1() {
     return 0.9;
@@ -41,5 +65,5 @@ public abstract class Status implements Serializable {
    * @return Status price modifiers for P4
    */
   public abstract double getModifierP4(int currentDate, int limitDate);
-
+  
 }
