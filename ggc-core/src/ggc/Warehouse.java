@@ -507,6 +507,11 @@ public class Warehouse implements Serializable {
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       Partner partner = getPartner(partnerKey);
       Product product = getProduct(productKey);
+      //baseprice??
+      Sale sale = new Sale(_nextTransactionKey++, partner, product, getDate(), amount, basePrice, deadline);
+      partner.addNewSale(sale);
+      addTransaction(sale);
+      partner.addProduct(product);
       // TODO implement
       // Don't forget -> Sale and Transaction need to account for
       // creating new BreakdownProducts (and their prices)
@@ -527,12 +532,20 @@ public class Warehouse implements Serializable {
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       Partner partner = getPartner(partnerKey);
       Product product = getProduct(productKey);
+      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, product, getDate(), amount, basePrice, getDate(), recipe);
+      partner.addNewTransation(breakdown); //?
+      addTransaction(breakdown);
       // TODO implement
   }
 
   public void updateBalanceAcquisition(double money){
     _availableBalance -= money;
     _accountingBalance -= money;
+  }
+
+  public void updateBalanceSale(double money){
+    _availableBalance += money;
+    _accountingBalance  += money;
   }
 
   public void addProduct(Product p){
