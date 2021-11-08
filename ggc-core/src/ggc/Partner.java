@@ -29,7 +29,7 @@ public class Partner implements Serializable, Observer {
   private String _partnerAddress;
 
   /** Partner's current point score */
-  private int _partnerPoints = 0;
+  private double _partnerPoints = 0;
 
   /** Value representing the price of acquisitions warehouse-partner */
   private double _acquisitionPrices = 0;
@@ -103,7 +103,7 @@ public class Partner implements Serializable, Observer {
   }
 
   /** @return partner's points (related to Status) */
-  public int getPartnerPoints() {
+  public double getPartnerPoints() {
     return _partnerPoints;
   }
 
@@ -155,7 +155,7 @@ public class Partner implements Serializable, Observer {
    * 
    * @param points
    */
-  public void updatePartnerPoints(int points) {
+  public void updatePartnerPoints(double points) {
     _partnerPoints += points;
   }
 
@@ -235,7 +235,7 @@ public class Partner implements Serializable, Observer {
       getPartnerName(),
       getPartnerAddress(),
       getPartnerStatus().toString(),
-      String.valueOf(getPartnerPoints()),
+      String.valueOf(Math.round(getPartnerPoints())),
       String.valueOf(Math.round(getAcquisitionPrices())),
       String.valueOf(Math.round(getOverallSalePrices())),
       String.valueOf(Math.round(getPaidSalePrices()))

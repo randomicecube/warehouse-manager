@@ -11,10 +11,10 @@ public abstract class Status implements Serializable {
   private static final long serialVersionUID = 202110252053L;
 
   /** The "border" between Normal and Selection Status is 2000 points */
-  private final static int SELECTION_LIMIT = 2000;
+  private final static double SELECTION_LIMIT = 2000.0;
 
   /** The "border" between Selection and Elite Status is 25000 points */
-  private final static int ELITE_LIMIT = 25000;
+  private final static double ELITE_LIMIT = 25000.0;
 
   private Partner _partner;
 

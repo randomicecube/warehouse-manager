@@ -23,7 +23,7 @@ public class NormalStatus extends Status implements Serializable {
     if (isLate) {
       partner.clearPartnerPoints();
     } else {
-      partner.updatePartnerPoints((int) (10 * price));
+      partner.updatePartnerPoints(10 * price);
       if (changeToSelection()) {
         partner.updatePartnerStatus(new SelectionStatus(partner));
       } else if (changeToElite()) {
