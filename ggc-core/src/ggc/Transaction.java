@@ -50,6 +50,10 @@ public abstract class Transaction implements Serializable {
   public Product getProduct() {
     return _product;
   }
+  
+  public Partner getPartner() {
+    return _partner;
+  }
 
   /** Used only in Sales and Breakdown Transactions
    *  updates the previously set "due date" to a given one
@@ -59,6 +63,8 @@ public abstract class Transaction implements Serializable {
   public void updatePaymentDate(int date) {
     _paymentDate = date;
   }
+
+  public abstract void updateActualPrice(int currentDate);
 
   @Override
   public String toString() {

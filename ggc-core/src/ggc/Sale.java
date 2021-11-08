@@ -12,6 +12,8 @@ public class Sale extends Transaction implements Serializable {
 
   private int _dueDate;
 
+  private double _actualPrice;
+
   private boolean _paid = false;
 
   public Sale(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice, int dueDate) {
@@ -23,17 +25,34 @@ public class Sale extends Transaction implements Serializable {
     return _dueDate;
   }
 
+  public void updateActualPrice(int currentDate) {
+    int delta = getProduct().getProductDeadlineDelta();
+    int deadline = getDueDate();
+    int daysToDeadline = deadline - currentDate;
+    Status partnerStatus = getPartner().getPartnerStatus();
+
+    if (daysToDeadline >= delta) {
+      _actualPrice = getBasePrice() * partnerStatus.getModifierP1();
+    } else if (daysToDeadline >= 0) {
+      _actualPrice = getBasePrice() * partnerStatus.getModifierP2(currentDate, deadline);
+    } else if (daysToDeadline >= -delta) {
+      _actualPrice = getBasePrice() * partnerStatus.getModifierP3(currentDate, deadline);
+    } else {
+      _actualPrice = getBasePrice() * partnerStatus.getModifierP4(currentDate, deadline);
+    }
+  }
+
   public double getActualPrice() {
-    // TODO - IMPLEMENT CORRECTLY
-    return getBasePrice(); // currently just a placeholder
+    return _actualPrice;
   }
 
   public boolean isPaid() {
     return _paid;
   }
 
-  public void updatePaid() {
+  public void updatePaid(double price) {
     _paid = true;
+    _actualPrice = price;
   }
 
   @Override

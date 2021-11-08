@@ -16,7 +16,7 @@
 - [DONE] Visualizar Transação
 - Registar desagregação
 - Registar venda
-- Registar compra
+- [DONE] Registar compra
 - [DONE] Receber pagamento de venda
 
 ## Menu de Consultas
@@ -24,5 +24,5 @@
 - [DONE] Produtos com preço abaixo de limite
 - [DONE] Faturas pagas por parceiro
 
-- [IMPORTANTE] - falta a lógica de dar update aos Status (e a lógica de dar update aos pontos) também
+- [DONE] - falta a lógica de dar update aos Status (e a lógica de dar update aos pontos) também
 - [IMPORTANTE] - tratar dos métodos do saldo -> apresentar accounting balance e etc

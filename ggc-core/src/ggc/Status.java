@@ -28,9 +28,9 @@ public abstract class Status implements Serializable {
     return _partner;
   }
 
-  public boolean changeToNormal() {
-    return _partner.getPartnerPoints() <= SELECTION_LIMIT;
-  }
+  // public boolean changeToNormal() {
+    // return _partner.getPartnerPoints() <= SELECTION_LIMIT;
+  // }
 
   public boolean changeToSelection() {
     return _partner.getPartnerPoints() > SELECTION_LIMIT && !changeToElite();

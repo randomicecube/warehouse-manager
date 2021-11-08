@@ -22,6 +22,9 @@ public class Breakdown extends Sale implements Serializable {
   }
 
   @Override
+  public void updateActualPrice(int currentDate) { }
+
+  @Override
   public String toString() {
     return String.join(
       "|",

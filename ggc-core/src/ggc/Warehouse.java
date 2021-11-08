@@ -431,6 +431,7 @@ public class Warehouse implements Serializable {
     if (t == null) {
       throw new NoSuchTransactionKeyException(transactionKey);
     }
+    t.updateActualPrice(getDate());
     return t;
   }
 
@@ -453,7 +454,12 @@ public class Warehouse implements Serializable {
 
   public Collection<Sale> getPartnerSales(String partnerKey)
     throws NoSuchPartnerKeyException {
-      return getPartner(partnerKey).getSales();
+      Collection<Sale> sales = getPartner(partnerKey).getSales();
+      int currentDate = getDate();
+      for (Sale sale: sales) {
+        sale.updateActualPrice(currentDate);
+      }
+      return sales;
   }
 
   public Collection<Transaction> getPaymentsByPartner(String partnerKey)
@@ -474,13 +480,17 @@ public class Warehouse implements Serializable {
 
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
-      // TODO - missing updating points and stuff
       Sale sale = (Sale) getTransaction(transactionKey);
       if (sale.isPaid()) {
         return;
       }
-      sale.updatePaid(); //TODO - here update stuff 
-      sale.updatePaymentDate(_date);
+      int currentDate = getDate();
+      sale.updatePaymentDate(currentDate);
+      sale.updateActualPrice(currentDate);
+      double pricePaid = sale.getActualPrice();
+      sale.updatePaid(pricePaid);
+      sale.getPartner().getPartnerStatus().payTransaction(sale, currentDate);
+      updateBalanceSale(pricePaid);
   }
 
   public void registerProduct(String productKey, int stock) {
@@ -530,9 +540,14 @@ public class Warehouse implements Serializable {
       // TODO implement
   }
 
-  public void updateBalanceAcquisition(double money){
+  public void updateBalanceAcquisition(double money) {
     _availableBalance -= money;
     _accountingBalance -= money;
+  }
+
+  public void updateBalanceSale(double money) {
+    _availableBalance += money;
+    _accountingBalance += money;
   }
 
   public void addProduct(Product p){

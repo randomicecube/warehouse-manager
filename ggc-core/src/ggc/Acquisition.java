@@ -14,6 +14,8 @@ public class Acquisition extends Transaction implements Serializable {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
   }
 
+  public void updateActualPrice(int currentDate) { }
+
   @Override
   public String toString() {
     return String.join(

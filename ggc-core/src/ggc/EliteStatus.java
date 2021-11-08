@@ -10,12 +10,27 @@ public class EliteStatus extends Status implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252101L;
 
+  private static final int LOSE_POINTS_GAP = -15;
+
   public EliteStatus(Partner partner) {
     super(partner);
   }
 
   public void payTransaction(Sale sale, int currentDate) {
-    // TODO implement
+    int dueDate = sale.getDueDate();
+    double dayDifference = dueDate - currentDate;
+    boolean isLate = dueDate < currentDate;
+    sale.updateActualPrice(currentDate);
+    double price = sale.getActualPrice();
+    Partner partner = getPartner();
+    if (isLate) {
+      partner.updatePartnerStatus(new SelectionStatus(partner));
+      if (dayDifference < LOSE_POINTS_GAP) {
+        partner.updatePartnerPoints(-0.75 * partner.getPartnerPoints());
+      }
+    } else {
+      partner.updatePartnerPoints(10 * price);
+    }
   }
 
   /** @return Elite Status price modifiers for P2 */
