@@ -33,9 +33,6 @@ public class Warehouse implements Serializable {
   /** Warehouse's current available balance */
   private double _availableBalance = 0;
 
-  /** Warehouse's current accounting balance */
-  private double _accountingBalance = 0;
-
   /** All products associated with the warehouse */
   private Map<String, Product> _products = new HashMap<String, Product>();
 
@@ -124,7 +121,13 @@ public class Warehouse implements Serializable {
 
   /** @return warehouse accounting balance */
   public double getAccountingBalance() {
-    return _accountingBalance;
+    double accountingBalance = _availableBalance;
+    TransactionVisitor transactionVisitor = new TransactionManager();
+    int date = getDate();
+    for (Transaction t: _transactions.values()) {
+      accountingBalance += transactionVisitor.visitTransaction(t, date);
+    }
+    return accountingBalance;
   }
 
   /**
@@ -542,12 +545,10 @@ public class Warehouse implements Serializable {
 
   public void updateBalanceAcquisition(double money) {
     _availableBalance -= money;
-    _accountingBalance -= money;
   }
 
   public void updateBalanceSale(double money) {
     _availableBalance += money;
-    _accountingBalance += money;
   }
 
   public void addProduct(Product p){

@@ -27,3 +27,4 @@
 - [DONE] - falta a lógica de dar update aos Status (e a lógica de dar update aos pontos) também
 - [IMPORTANTE] - tratar dos métodos do saldo -> apresentar accounting balance e etc
 - [IMPORTANTE] - delivery methods de notificações -> strategy
+- [IMPORTANTE] - mudar pontos de int para double
