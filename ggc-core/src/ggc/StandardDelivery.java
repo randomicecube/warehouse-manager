@@ -2,10 +2,11 @@ package ggc;
 
 import java.io.Serializable;
 
-public class StandardDelivery implements Serializable {
+public class StandardDelivery extends DeliveryStrategy implements Serializable {
   
-  public Notification deliver(Notification notification, List<Notification> unread) {
-    unread.add(notification);
+  public void deliver(Partner partner, Notification notification) {
+    partner.updateNotificationMethod(new StandardDelivery());
+    partner.getNotifications().add(notification);
   }
 
 }

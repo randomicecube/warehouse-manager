@@ -165,7 +165,7 @@ public class Partner implements Serializable, Observer {
    * 
    * @param method
    */
-  public void updateNotificationMethod(String method) {
+  public void updateNotificationMethod(DeliveryStrategy method) {
     _notificationMethod = method;
   }
 
@@ -221,7 +221,7 @@ public class Partner implements Serializable, Observer {
   }
 
   public void update(Notification notification) {
-    _notificationMethod.deliver(notification, _unreadNotifications);
+    _notificationMethod.deliver(this, notification);
   }
 
   @Override
