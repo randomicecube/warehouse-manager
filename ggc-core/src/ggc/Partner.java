@@ -13,9 +13,6 @@ public class Partner implements Serializable, Observer {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252058L;
 
-  /** Default notification is, by omission, an app notification */
-  private static final String DEFAULT_NOTIFICATION_METHOD = "";
-
   /** Partner's status - partners always start with the "Normal" status */
   private Status _partnerStatus = new NormalStatus(this);
 
@@ -54,7 +51,7 @@ public class Partner implements Serializable, Observer {
   private List<Batch> _partnerBatches = new ArrayList<Batch>();
 
   /** Partner's desired notification method */
-  private String _notificationMethod;
+  private DeliveryStrategy _notificationMethod;
 
   /**
    * Constructor without a given specific notification method
@@ -64,7 +61,7 @@ public class Partner implements Serializable, Observer {
    * @param address partner's address
    */
   public Partner(String key, String name, String address) {
-    this(key, name, address, DEFAULT_NOTIFICATION_METHOD);
+    this(key, name, address, new StandardDelivery());
   }
 
   /**
@@ -75,11 +72,11 @@ public class Partner implements Serializable, Observer {
    * @param address partner's address
    * @param method  partner's desired notification delivery method
    */
-  public Partner(String key, String name, String address, String method) {
+  public Partner(String key, String name, String address, DeliveryStrategy strategy) {
     _partnerKey = key;
     _partnerName = name;
     _partnerAddress = address;
-    _notificationMethod = method;
+    _notificationMethod = strategy;
   }
 
   /** @return partner's identification key */
@@ -224,7 +221,7 @@ public class Partner implements Serializable, Observer {
   }
 
   public void update(Notification notification) {
-    _unreadNotifications.add(notification);
+    _notificationMethod.deliver(notification, _unreadNotifications);
   }
 
   @Override
