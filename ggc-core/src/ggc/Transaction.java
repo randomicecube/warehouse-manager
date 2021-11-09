@@ -66,6 +66,8 @@ public abstract class Transaction implements Serializable {
 
   public abstract void updateActualPrice(int currentDate);
 
+  public abstract double accept(TransactionVisitor visitor, int date);
+
   @Override
   public String toString() {
     return String.join(

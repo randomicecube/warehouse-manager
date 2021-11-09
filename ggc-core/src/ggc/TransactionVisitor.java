@@ -11,12 +11,12 @@ public abstract class TransactionVisitor implements Serializable {
    * Visit an Acquisition Transaction
    * @param acquisiton to-be-visited acquisition
    */
-  public abstract double visitTransaction(Acquisition acquisiton);
+  public abstract double visitAcquisition(Acquisition acquisiton, int currentDate);
   
   /**
    * Visit a Sale Transaction
    * @param sale to-be-visited sale
    */
-  public abstract double visitTransaction(Sale sale, int currentDate);
+  public abstract double visitSale(Sale sale, int currentDate);
 
 }

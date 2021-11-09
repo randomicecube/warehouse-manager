@@ -125,7 +125,7 @@ public class Warehouse implements Serializable {
     TransactionVisitor transactionVisitor = new TransactionManager();
     int date = getDate();
     for (Transaction t: _transactions.values()) {
-      accountingBalance += transactionVisitor.visitTransaction(t, date);
+      accountingBalance += t.accept(transactionVisitor, date);
     }
     return accountingBalance;
   }

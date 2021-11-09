@@ -55,6 +55,10 @@ public class Sale extends Transaction implements Serializable {
     _actualPrice = price;
   }
 
+  public double accept(TransactionVisitor visitor, int date) {
+    return visitor.visitSale(this, date);
+  }
+
   @Override
   public String toString() {
     return String.join(

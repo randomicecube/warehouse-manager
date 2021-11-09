@@ -16,6 +16,10 @@ public class Acquisition extends Transaction implements Serializable {
 
   public void updateActualPrice(int currentDate) { }
 
+  public double accept(TransactionVisitor visitor, int date) {
+    return visitor.visitAcquisition(this, date);
+  }
+
   @Override
   public String toString() {
     return String.join(
