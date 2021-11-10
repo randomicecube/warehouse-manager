@@ -68,6 +68,10 @@ public abstract class Transaction implements Serializable {
 
   public abstract double accept(TransactionVisitor visitor, int date);
 
+  public boolean hasRecipe() {
+    return false;
+  }
+
   @Override
   public String toString() {
     return String.join(

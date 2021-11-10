@@ -28,15 +28,6 @@ public class Partner implements Serializable, Observer {
   /** Partner's current point score */
   private double _partnerPoints = 0;
 
-  /** Value representing the price of acquisitions warehouse-partner */
-  private double _acquisitionPrices = 0;
-
-  /** Value representing the total price of sales warehouse-partner */
-  private double _overallSalePrices = 0;
-
-  /** Value representing the amount the partner has actually paid */
-  private double _paidSalePrices = 0;
-
   /** Partner's transaction history */
   private List<Transaction> _transactionHistory = new ArrayList<Transaction>();
 
@@ -102,21 +93,6 @@ public class Partner implements Serializable, Observer {
   /** @return partner's points (related to Status) */
   public double getPartnerPoints() {
     return _partnerPoints;
-  }
-
-  /** @return partner's acquisition prices */
-  public double getAcquisitionPrices() {
-    return _acquisitionPrices;
-  }
-
-  /** @return partner's total price of sales (paid or not) */
-  public double getOverallSalePrices() {
-    return _overallSalePrices;
-  }
-
-  /** @return partner's total price of paid sales */
-  public double getPaidSalePrices() {
-    return _paidSalePrices;
   }
 
   /** @return partner's transactions */
@@ -188,31 +164,31 @@ public class Partner implements Serializable, Observer {
     _partnerBatches.add(batch);
   }
 
-  /**
-   * Update the partner's total acquisition prices
-   * 
-   * @param amount
-   */
-  public void updateAcquisitionPrices(double amount) {
-    _acquisitionPrices += amount;
+  public Double getAcquisitionPrices() {
+    return getAcquisitions()
+      .stream()
+      .map(Acquisition::getBasePrice)
+      .reduce(Double::sum)
+      .orElse(0.0);
   }
 
-  /**
-   * Update the partner's total price of sales (paid or not)
-   * 
-   * @param amount
-   */
-  public void updateOverallSalePrices(double amount) {
-    _overallSalePrices += amount;
+  public Double getOverallSalePrices(int date) {
+    getSales().stream().forEach(s -> s.updateActualPrice(date));
+    return getSales()
+      .stream()
+      .filter(s -> !s.hasRecipe())
+      .map(Sale::getActualPrice)
+      .reduce(Double::sum)
+      .orElse(0.0);
   }
 
-  /**
-   * Update the partner's total price of paid sales
-   * 
-   * @param amount
-   */
-  public void updatePaidSalePrices(double amount) {
-    _paidSalePrices += amount;
+  public Double getPaidSalePrices() {
+    return getSales()
+      .stream()
+      .filter(s -> !s.hasRecipe() && s.isPaid())
+      .map(Sale::getActualPrice)
+      .reduce(Double::sum)
+      .orElse(0.0);
   }
 
   /** Clear the partner's unread notifications array */
@@ -224,8 +200,7 @@ public class Partner implements Serializable, Observer {
     _notificationMethod.deliver(this, notification);
   }
 
-  @Override
-  public String toString() {
+  public String partnerStringed(int date) {
     return String.join(
       "|",
       getPartnerKey(),
@@ -234,7 +209,7 @@ public class Partner implements Serializable, Observer {
       getPartnerStatus().toString(),
       String.valueOf(Math.round(getPartnerPoints())),
       String.valueOf(Math.round(getAcquisitionPrices())),
-      String.valueOf(Math.round(getOverallSalePrices())),
+      String.valueOf(Math.round(getOverallSalePrices(date))),
       String.valueOf(Math.round(getPaidSalePrices()))
     );
   }

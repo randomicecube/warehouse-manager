@@ -161,8 +161,8 @@ public class WarehouseManager {
    * @return desired partner
    * @throws NoSuchPartnerKeyException
    */
-  public Partner getPartner(String key) throws NoSuchPartnerKeyException {
-    return _warehouse.getPartner(key);
+  public String getPartnerString(String key) throws NoSuchPartnerKeyException {
+    return _warehouse.getPartnerString(key);
   }
 
   /** @return a Collection with all the products associated with the warehouse */

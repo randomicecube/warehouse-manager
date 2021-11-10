@@ -301,6 +301,10 @@ public class Warehouse implements Serializable {
     throw new NoSuchPartnerKeyException(key);
   }
 
+  public String getPartnerString(String key) throws NoSuchPartnerKeyException {
+    return getPartner(key).partnerStringed(getDate());
+  }
+
   public Collection<Notification> readPartnerNotifications(String key) 
     throws NoSuchPartnerKeyException {
       Partner partner = getPartner(key);
@@ -405,7 +409,7 @@ public class Warehouse implements Serializable {
 
     for (String partner: partnerKeys) {
       try {
-        stringedPartners.add(getPartner(partner).toString());
+        stringedPartners.add(getPartner(partner).partnerStringed(getDate()));
       } catch (NoSuchPartnerKeyException e) {
         // will never happen
         e.printStackTrace();
@@ -533,26 +537,30 @@ public class Warehouse implements Serializable {
       _products.put(productKey, product);
   }
 
-  /** registers a sale transaction */
-  // public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
-    // throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
-      // Partner partner = getPartner(partnerKey);
-      // Product product = getProduct(productKey);
-      // int currentDate = getDate();
-      // if (product.getStock() < amount) {
-        // throw new NotEnoughStockException(productKey, amount, product.getStock());
-      // }
-      // product.updateStock(-amount);
-      // double price = product.getPrice();
-      // Transaction sale = new Sale(partner, deadline, productKey, amount, price, currentDate);
-      // partner.addNewSale(sale);
-      // updateBalanceSale(price);
-      // addTransaction(sale);
-  // }
-
   public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
-      // TODO implement 
+      Partner partner = getPartner(partnerKey);
+      Product product = getProduct(productKey);
+      int currentDate = getDate();
+      Sale sale;
+      if (product.getStock() < amount) {
+        if (!product.hasRecipe()) {
+          throw new NotEnoughStockException(productKey, amount, product.getStock());
+        }
+        BreakdownProduct breakdownProduct = (BreakdownProduct) product;
+        // if product has a recipe, try to make a breakdown
+        checkIngredientsStock(breakdownProduct, amount);
+        makeBreakdown(breakdownProduct, amount);
+        sale = new Sale(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, breakdownProduct.getProductPrice(), deadline);
+      } else {
+        // if we get here, we have stock anyway, so it's a regular sale
+        Batch batch = new Batch(product, amount, product.getProductPrice(), partner);
+        partner.addBatch(batch);
+        sale = new Sale(_nextTransactionKey++, partner, product, currentDate, amount, product.getProductPrice(), deadline);
+      }
+      // transaction "procedures"
+      partner.addNewSale(sale);
+      addTransaction(sale);
   }
 
   public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
@@ -568,13 +576,6 @@ public class Warehouse implements Serializable {
       updateBalanceAcquisition(price);
       addTransaction(acquisition);
   }
-
-  // public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
-    // throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
-      // Partner partner = getPartner(partnerKey);
-      // Product product = getProduct(productKey);
-      // TODO implement
-  // }
 
   /** Registers a breakdown transaction */
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
@@ -595,6 +596,7 @@ public class Warehouse implements Serializable {
       int currentDate = getDate();
       Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionCost, currentDate, recipe);
       partner.addNewSale(breakdown);
+      partner.getPartnerStatus().payTransaction(breakdown, currentDate);
       updateBalanceSale(transactionCost);
       addTransaction(breakdown);
   }
@@ -628,6 +630,41 @@ public class Warehouse implements Serializable {
 
   public void addTransaction(Transaction t) {
     _transactions.put(t.getTransactionKey(), t);
+  }
+
+  public void checkIngredientsStock(BreakdownProduct product, int amount)
+    throws NotEnoughStockException, NoSuchProductKeyException {
+      Map<String, Integer> ingredients = product.getRecipe().getIngredients();
+      for (String ingredientKey: ingredients.keySet()) {
+        Product ingredient = getProduct(ingredientKey);
+        int ingredientAmount = ingredients.get(ingredientKey);
+        int totalAmount = ingredientAmount * amount;
+        if (ingredient.getStock() < totalAmount) {
+          if (ingredient.hasRecipe()) {
+            BreakdownProduct breakdownProduct = (BreakdownProduct) ingredient;
+            checkIngredientsStock(breakdownProduct, totalAmount);
+          } else {
+            throw new NotEnoughStockException(ingredientKey, totalAmount, ingredient.getStock());
+          }
+        }
+      }
+  }
+
+  public void makeBreakdown(BreakdownProduct product, int amount)
+    throws NotEnoughStockException, NoSuchProductKeyException {
+      Map<String, Integer> ingredients = product.getRecipe().getIngredients();
+      for (String ingredientKey: ingredients.keySet()) {
+        Product ingredient = getProduct(ingredientKey);
+        int ingredientAmount = ingredients.get(ingredientKey);
+        int totalAmount = ingredientAmount * amount;
+        if (ingredient.getStock() < totalAmount) {
+          // necessarily a breakdownproduct - checked in checkIngredientsStock
+          BreakdownProduct breakdownProduct = (BreakdownProduct) getProduct(ingredientKey);
+          makeBreakdown(breakdownProduct, totalAmount);
+        }
+        ingredient.updateStock(-totalAmount);
+      }
+      product.updateStock(amount);
   }
 
 }
