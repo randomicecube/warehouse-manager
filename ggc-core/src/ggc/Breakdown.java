@@ -33,6 +33,7 @@ public class Breakdown extends Sale implements Serializable {
   public String toString() {
     return String.join(
       "|",
+      "DESAGREGAÇÃO",
       super.toString(),
       getRecipe().toString()
     );

@@ -24,8 +24,9 @@ public class Acquisition extends Transaction implements Serializable {
   public String toString() {
     return String.join(
       "|",
+      "COMPRA",
       super.toString(),
-      String.valueOf(getBasePrice()),
+      String.valueOf(Math.round(getBasePrice())),
       String.valueOf(getPaymentDate())
     );
   }

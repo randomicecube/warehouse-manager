@@ -551,12 +551,13 @@ public class Warehouse implements Serializable {
         // if product has a recipe, try to make a breakdown
         checkIngredientsStock(breakdownProduct, amount);
         makeBreakdown(breakdownProduct, amount);
-        sale = new Sale(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, breakdownProduct.getProductPrice(), deadline);
+        sale = new Sale(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, breakdownProduct.getProductPrice() * amount, deadline);
       } else {
         // if we get here, we have stock anyway, so it's a regular sale
+        product.updateStock(-amount);
         Batch batch = new Batch(product, amount, product.getProductPrice(), partner);
         partner.addBatch(batch);
-        sale = new Sale(_nextTransactionKey++, partner, product, currentDate, amount, product.getProductPrice(), deadline);
+        sale = new Sale(_nextTransactionKey++, partner, product, currentDate, amount, product.getProductPrice() * amount, deadline);
       }
       // transaction "procedures"
       partner.addNewSale(sale);
@@ -567,10 +568,11 @@ public class Warehouse implements Serializable {
     throws NoSuchPartnerKeyException, NoSuchProductKeyException {
       Partner partner = getPartner(partnerKey);
       Product product = getProduct(productKey);
-      Acquisition acquisition = new Acquisition(_nextTransactionKey++, partner, product, getDate(), amount, price);
+      Acquisition acquisition = new Acquisition(_nextTransactionKey++, partner, product, getDate(), amount, price * amount);
       partner.addNewAcquisition(acquisition);
       product.updatePrice(price);
-      if (price > _biggestKnownPrices.get(product)) {
+      Double biggestKnownPrice = _biggestKnownPrices.get(product);
+      if (biggestKnownPrice == null || price > biggestKnownPrice) {
         _biggestKnownPrices.put(product, price);
       }
       updateBalanceAcquisition(price);
@@ -594,7 +596,7 @@ public class Warehouse implements Serializable {
       productPrice *= amount; // TODO - not sure if needed to include alpha here
       double transactionCost = breakdownProcedure(breakdownProduct, amount, productPrice);
       int currentDate = getDate();
-      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionCost, currentDate, recipe);
+      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionCost * amount, currentDate, recipe);
       partner.addNewSale(breakdown);
       partner.getPartnerStatus().payTransaction(breakdown, currentDate);
       updateBalanceSale(transactionCost);

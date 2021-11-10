@@ -63,9 +63,10 @@ public class Sale extends Transaction implements Serializable {
   public String toString() {
     return String.join(
       "|",
+      "VENDA",
       super.toString(),
-      String.valueOf(getBasePrice()),
-      String.valueOf(getActualPrice()),
+      String.valueOf(Math.round(getBasePrice())),
+      String.valueOf(Math.round(getActualPrice())),
       String.valueOf(getDueDate())
     ) + (isPaid() ? ("|" + getPaymentDate()) : "");
   }
