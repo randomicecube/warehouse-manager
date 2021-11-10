@@ -41,6 +41,8 @@ public class Warehouse implements Serializable {
 
   private Map<Integer, Transaction> _transactions = new LinkedHashMap<Integer, Transaction>();
 
+  private Map<Product, Double> _biggestKnownPrices = new HashMap<Product, Double>();
+
   /**
    * @param txtfile filename to be loaded.
    * @throws IOException
@@ -175,9 +177,17 @@ public class Warehouse implements Serializable {
         _products.put(productKey, product);
       }
 
+      // TODO - is it supposed to be > or <?
       if (parsedPrice > product.getProductPrice()) {
         product.updatePrice(parsedPrice);
       }
+
+      Double biggestPrice = _biggestKnownPrices.get(product);
+
+      if (biggestPrice == null || parsedPrice > biggestPrice) {
+        _biggestKnownPrices.put(product, parsedPrice);
+      }
+
       try {
         Partner partner = getPartner(partnerKey);
         Batch batch = new Batch(product, parsedStock, parsedPrice, partner);
@@ -235,8 +245,15 @@ public class Warehouse implements Serializable {
         _products.put(productKey, batchProduct);
       }
 
+      // TODO - is it supposed to be > or <?
       if (parsedPrice > batchProduct.getProductPrice()) {
         batchProduct.updatePrice(parsedPrice);
+      }
+
+      Double biggestPrice = _biggestKnownPrices.get(batchProduct);
+
+      if (biggestPrice == null || parsedPrice > biggestPrice) {
+        _biggestKnownPrices.put(batchProduct, parsedPrice);
       }
 
       try {
@@ -287,8 +304,8 @@ public class Warehouse implements Serializable {
   public Collection<Notification> readPartnerNotifications(String key) 
     throws NoSuchPartnerKeyException {
       Partner partner = getPartner(key);
-      Collection<Notification> notifications = partner.getNotifications();
-      partner.getNotifications().clear();
+      List<Notification> notifications = new ArrayList<Notification>(partner.getNotifications());
+      partner.clearNotifications();
       return notifications;
   }
 
@@ -516,13 +533,26 @@ public class Warehouse implements Serializable {
       _products.put(productKey, product);
   }
 
+  /** registers a sale transaction */
+  // public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
+    // throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
+      // Partner partner = getPartner(partnerKey);
+      // Product product = getProduct(productKey);
+      // int currentDate = getDate();
+      // if (product.getStock() < amount) {
+        // throw new NotEnoughStockException(productKey, amount, product.getStock());
+      // }
+      // product.updateStock(-amount);
+      // double price = product.getPrice();
+      // Transaction sale = new Sale(partner, deadline, productKey, amount, price, currentDate);
+      // partner.addNewSale(sale);
+      // updateBalanceSale(price);
+      // addTransaction(sale);
+  // }
+
   public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
-      Partner partner = getPartner(partnerKey);
-      Product product = getProduct(productKey);
-      // TODO implement
-      // Don't forget -> Sale and Transaction need to account for
-      // creating new BreakdownProducts (and their prices)
+      // TODO implement 
   }
 
   public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
@@ -532,15 +562,56 @@ public class Warehouse implements Serializable {
       Acquisition acquisition = new Acquisition(_nextTransactionKey++, partner, product, getDate(), amount, price);
       partner.addNewAcquisition(acquisition);
       product.updatePrice(price);
+      if (price > _biggestKnownPrices.get(product)) {
+        _biggestKnownPrices.put(product, price);
+      }
       updateBalanceAcquisition(price);
       addTransaction(acquisition);
   }
 
+  // public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
+    // throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
+      // Partner partner = getPartner(partnerKey);
+      // Product product = getProduct(productKey);
+      // TODO implement
+  // }
+
+  /** Registers a breakdown transaction */
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       Partner partner = getPartner(partnerKey);
       Product product = getProduct(productKey);
-      // TODO implement
+      if (product.getStock() < amount) {
+        throw new NotEnoughStockException(productKey, amount, product.getStock());
+      }
+      if (!product.hasRecipe()) {
+        return;
+      }
+      BreakdownProduct breakdownProduct = (BreakdownProduct) product;
+      Recipe recipe = breakdownProduct.getRecipe();
+      double productPrice = breakdownProduct.getStock() == 0 ? _biggestKnownPrices.get(product) : product.getProductPrice();
+      productPrice *= amount; // TODO - not sure if needed to include alpha here
+      double transactionCost = breakdownProcedure(breakdownProduct, amount, productPrice);
+      int currentDate = getDate();
+      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionCost, currentDate, recipe);
+      partner.addNewSale(breakdown);
+      updateBalanceSale(transactionCost);
+      addTransaction(breakdown);
+  }
+
+  public double breakdownProcedure(BreakdownProduct product, int amount, double price)
+    throws NoSuchProductKeyException {
+    Map<String, Integer> ingredients = product.getRecipe().getIngredients();
+    double ingredientsCost = 0;
+    for (String ingredientKey: ingredients.keySet()) {
+      Product ingredient = getProduct(ingredientKey);
+      int ingredientAmount = ingredients.get(ingredientKey);
+      int totalAmount = ingredientAmount * amount;
+      ingredient.updateStock(totalAmount);
+      ingredientsCost += ingredient.getProductPrice() * totalAmount;
+    }
+    product.updateStock(-amount);
+    return price - ingredientsCost;
   }
 
   public void updateBalanceAcquisition(double money) {

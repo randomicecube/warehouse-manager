@@ -41,9 +41,20 @@ public class BreakdownProduct extends Product implements Serializable {
     return _aggravationFactor;
   }
 
+  // TODO - possibly need to have a different getPrice for breakdown products
+  // @Override
+  // public double getPrice() {
+    // return getPrice() * (1 + _aggravationFactor);
+  // }
+
   @Override
   public int getProductDeadlineDelta() {
     return 5; // 5 for "Breakdown" Products
+  }
+
+  @Override
+  public boolean hasRecipe() {
+    return true;
   }
 
   @Override

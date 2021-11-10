@@ -199,6 +199,10 @@ public class Product implements Serializable {
     return _notifiedPartners;
   }
 
+  public boolean hasRecipe() {
+    return false;
+  }
+
   @Override
   public String toString() {
     return String.join(
