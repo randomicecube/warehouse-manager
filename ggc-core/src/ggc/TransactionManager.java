@@ -21,4 +21,8 @@ public class TransactionManager extends TransactionVisitor implements Serializab
     return 0;
   }
 
+  public double visitBreakdown(Breakdown b, int currentDate) {
+    return 0;
+  }
+
 }

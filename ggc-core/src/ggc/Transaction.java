@@ -68,12 +68,28 @@ public abstract class Transaction implements Serializable {
     _paymentDate = date;
   }
 
+  public double getActualPrice() {
+    return getBasePrice();
+  }
+
   public abstract void updateActualPrice(int currentDate);
 
   public abstract double accept(TransactionVisitor visitor, int date);
 
+  public int getDueDate() {
+    return _paymentDate;
+  }
+
   public boolean hasRecipe() {
     return false;
+  }
+
+  public boolean isPaid() {
+    return true;
+  }
+
+  public void updatePaid(double price) {
+    // do nothing (in general)
   }
 
   @Override

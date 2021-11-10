@@ -15,13 +15,13 @@ public class Recipe implements Serializable {
   private static final long serialVersionUID = 202110252056L;
 
   /** Recipe's ingredients and amount */
-  private Map<String, Integer> _ingredients = new LinkedHashMap<String, Integer>();
+  private Map<Product, Integer> _ingredients = new LinkedHashMap<Product, Integer>();
 
   public Recipe() {
     // create an empty recipe
   }
 
-  public Recipe(Map<String, Integer> ingredients) {
+  public Recipe(Map<Product, Integer> ingredients) {
     _ingredients = ingredients;
   }
 
@@ -32,11 +32,11 @@ public class Recipe implements Serializable {
    * @param amount
    */
   public void addIngredient(Product product, Integer amount) {
-    _ingredients.put(product.getProductKey(), amount);
+    _ingredients.put(product, amount);
   }
 
   /** @return recipe's ingredients */
-  public Map<String, Integer> getIngredients() {
+  public Map<Product, Integer> getIngredients() {
     return _ingredients;
   }
 
@@ -55,7 +55,7 @@ public class Recipe implements Serializable {
     return getIngredients()
       .entrySet()
       .stream()
-      .map(entry -> entry.getKey() + ":" + entry.getValue())
+      .map(entry -> entry.getKey().getProductKey() + ":" + entry.getValue())
       .collect(Collectors.joining("#"));
   }
 

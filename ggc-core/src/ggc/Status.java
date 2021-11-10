@@ -22,7 +22,7 @@ public abstract class Status implements Serializable {
     _partner = partner;
   }
 
-  public abstract void payTransaction(Sale sale, int currentDate);
+  public abstract void payTransaction(Transaction transaction, int currentDate);
 
   public Partner getPartner() {
     return _partner;

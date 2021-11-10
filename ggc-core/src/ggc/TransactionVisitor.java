@@ -19,4 +19,6 @@ public abstract class TransactionVisitor implements Serializable {
    */
   public abstract double visitSale(Sale sale, int currentDate);
 
+  public abstract double visitBreakdown(Breakdown breakdown, int currentDate);
+
 }

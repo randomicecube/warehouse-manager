@@ -509,11 +509,11 @@ public class Warehouse implements Serializable {
       return getPartner(partnerKey).getAcquisitions();
   }
 
-  public Collection<Sale> getPartnerSales(String partnerKey)
+  public Collection<Transaction> getPartnerSales(String partnerKey)
     throws NoSuchPartnerKeyException {
-      Collection<Sale> sales = getPartner(partnerKey).getSales();
+      Collection<Transaction> sales = getPartner(partnerKey).getSales();
       int currentDate = getDate();
-      for (Sale sale: sales) {
+      for (Transaction sale: sales) {
         sale.updateActualPrice(currentDate);
       }
       return sales;
@@ -566,7 +566,12 @@ public class Warehouse implements Serializable {
       } catch (NoSuchProductKeyException e) {
         throw new NoSuchProductKeyException(productKey);
       }
-      Recipe recipe = new Recipe(ingredients);
+      Map<Product, Integer> productIngredients = new LinkedHashMap<Product, Integer>();
+      for (String ingredientKey: ingredients.keySet()) {
+        Product ingredient = getProduct(ingredientKey);
+        productIngredients.put(ingredient, ingredients.get(ingredientKey));
+      }
+      Recipe recipe = new Recipe(productIngredients);
       Product product = new BreakdownProduct(recipe, alpha, productKey, stock);
       _products.put(productKey, product);
   }
@@ -594,7 +599,7 @@ public class Warehouse implements Serializable {
         sale = new Sale(_nextTransactionKey++, partner, product, currentDate, amount, product.getProductPrice() * amount, deadline);
       }
       // transaction "procedures"
-      partner.addNewSale(sale);
+      partner.addNewSaleOrBreakdown(sale);
       addTransaction(sale);
   }
 
@@ -635,11 +640,11 @@ public class Warehouse implements Serializable {
       BreakdownProduct breakdownProduct = (BreakdownProduct) product;
       Recipe recipe = breakdownProduct.getRecipe();
       double productPrice = breakdownProduct.getStock() == 0 ? _biggestKnownPrices.get(product) : product.getProductPrice();
-      productPrice *= amount; // TODO - not sure if needed to include alpha here
+      productPrice *= amount;
       double transactionCost = breakdownProcedure(breakdownProduct, amount, productPrice);
       int currentDate = getDate();
       Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionCost, currentDate, recipe);
-      partner.addNewSale(breakdown);
+      partner.addNewSaleOrBreakdown(breakdown);
       partner.getPartnerStatus().payTransaction(breakdown, currentDate);
       updateBalanceSale(transactionCost);
       breakdown.updatePaid(transactionCost);
@@ -648,11 +653,10 @@ public class Warehouse implements Serializable {
 
   public double breakdownProcedure(BreakdownProduct product, int amount, double price)
     throws NoSuchProductKeyException {
-    Map<String, Integer> ingredients = product.getRecipe().getIngredients();
+    Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
     double ingredientsCost = 0;
-    for (String ingredientKey: ingredients.keySet()) {
-      Product ingredient = getProduct(ingredientKey);
-      int ingredientAmount = ingredients.get(ingredientKey);
+    for (Product ingredient: ingredients.keySet()) {
+      int ingredientAmount = ingredients.get(ingredient);
       int totalAmount = ingredientAmount * amount;
       ingredient.updateStock(totalAmount);
       ingredientsCost += ingredient.getProductPrice() * totalAmount;
@@ -679,17 +683,16 @@ public class Warehouse implements Serializable {
 
   public void checkIngredientsStock(BreakdownProduct product, int amount)
     throws NotEnoughStockException, NoSuchProductKeyException {
-      Map<String, Integer> ingredients = product.getRecipe().getIngredients();
-      for (String ingredientKey: ingredients.keySet()) {
-        Product ingredient = getProduct(ingredientKey);
-        int ingredientAmount = ingredients.get(ingredientKey);
+      Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
+      for (Product ingredient: ingredients.keySet()) {
+        int ingredientAmount = ingredients.get(ingredient);
         int totalAmount = ingredientAmount * (amount - product.getStock());
         if (ingredient.getStock() < totalAmount) {
           if (ingredient.hasRecipe()) {
             BreakdownProduct breakdownProduct = (BreakdownProduct) ingredient;
             checkIngredientsStock(breakdownProduct, totalAmount);
           } else {
-            throw new NotEnoughStockException(ingredientKey, totalAmount, ingredient.getStock());
+            throw new NotEnoughStockException(ingredient.getProductKey(), totalAmount, ingredient.getStock());
           }
         }
       }
@@ -697,10 +700,10 @@ public class Warehouse implements Serializable {
 
   public void makeBreakdown(BreakdownProduct product, int amount)
     throws NotEnoughStockException, NoSuchProductKeyException {
-      Map<String, Integer> ingredients = product.getRecipe().getIngredients();
-      for (String ingredientKey: ingredients.keySet()) {
-        Product ingredient = getProduct(ingredientKey);
-        int ingredientAmount = ingredients.get(ingredientKey);
+      Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
+      for (Product ingredient: ingredients.keySet()) {
+        String ingredientKey = ingredient.getProductKey();
+        int ingredientAmount = ingredients.get(ingredient);
         int totalAmount = ingredientAmount * amount;
         if (ingredient.getStock() < totalAmount) {
           // necessarily a breakdownproduct - checked in checkIngredientsStock

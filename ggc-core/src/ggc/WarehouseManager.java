@@ -221,7 +221,7 @@ public class WarehouseManager {
       return _warehouse.getPartnerAcquisitions(partnerKey);
   }
 
-  public Collection<Sale> getPartnerSales(String partnerKey)
+  public Collection<Transaction> getPartnerSales(String partnerKey)
     throws NoSuchPartnerKeyException {
       return _warehouse.getPartnerSales(partnerKey); 
   }

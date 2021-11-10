@@ -16,12 +16,12 @@ public class EliteStatus extends Status implements Serializable {
     super(partner);
   }
 
-  public void payTransaction(Sale sale, int currentDate) {
-    int dueDate = sale.getDueDate();
+  public void payTransaction(Transaction transaction, int currentDate) {
+    int dueDate = transaction.getDueDate();
     double dayDifference = dueDate - currentDate;
     boolean isLate = dueDate < currentDate;
-    sale.updateActualPrice(currentDate);
-    double price = sale.getActualPrice();
+    transaction.updateActualPrice(currentDate);
+    double price = transaction.getActualPrice();
     Partner partner = getPartner();
     if (isLate) {
       partner.updatePartnerStatus(new SelectionStatus(partner));

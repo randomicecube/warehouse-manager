@@ -31,7 +31,7 @@ public class Partner implements Serializable, Observer {
   /** Partner's transaction history */
   private List<Transaction> _transactionHistory = new ArrayList<Transaction>();
 
-  private List<Sale> _saleHistory = new ArrayList<Sale>();
+  private List<Transaction> _saleBreakdownHistory = new ArrayList<Transaction>();
 
   private List<Acquisition> _acquisitionHistory = new ArrayList<Acquisition>();
 
@@ -100,8 +100,8 @@ public class Partner implements Serializable, Observer {
     return _transactionHistory;
   }
 
-  public List<Sale> getSales() {
-    return _saleHistory;
+  public List<Transaction> getSales() {
+    return _saleBreakdownHistory;
   }
 
   public List<Acquisition> getAcquisitions() {
@@ -145,9 +145,9 @@ public class Partner implements Serializable, Observer {
     _notificationMethod = method;
   }
 
-  public void addNewSale(Sale sale) {
-    _saleHistory.add(sale);
-    _transactionHistory.add(sale);
+  public void addNewSaleOrBreakdown(Transaction t) {
+    _saleBreakdownHistory.add(t);
+    _transactionHistory.add(t);
   }
 
   public void addNewAcquisition(Acquisition acquisition) {
@@ -177,7 +177,7 @@ public class Partner implements Serializable, Observer {
     return getSales()
       .stream()
       .filter(s -> !s.hasRecipe())
-      .map(Sale::getActualPrice)
+      .map(Transaction::getActualPrice)
       .reduce(Double::sum)
       .orElse(0.0);
   }
@@ -186,7 +186,7 @@ public class Partner implements Serializable, Observer {
     return getSales()
       .stream()
       .filter(s -> !s.hasRecipe() && s.isPaid())
-      .map(Sale::getActualPrice)
+      .map(Transaction::getActualPrice)
       .reduce(Double::sum)
       .orElse(0.0);
   }

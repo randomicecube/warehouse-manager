@@ -7,15 +7,18 @@ import java.util.Map;
 /**
  * Class representing a specific Transaction - a Product Breakdown
  */
-public class Breakdown extends Sale implements Serializable {
+public class Breakdown extends Transaction implements Serializable {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252103L;
 
   private Recipe _recipe;
 
+  private int _dueDate;
+
   public Breakdown(int transactionKey, Partner partner, BreakdownProduct product, int baseDate, int amount, double basePrice, int dueDate, Recipe recipe) {
-    super(transactionKey, partner, product, baseDate, amount, basePrice, dueDate);
+    super(transactionKey, partner, product, baseDate, amount, basePrice);
+    _dueDate = dueDate;
     _recipe = recipe;
   }
 
@@ -28,28 +31,39 @@ public class Breakdown extends Sale implements Serializable {
     return true;
   }
 
+  public int getDueDate() {
+    return _dueDate;
+  }
+
   @Override
   public BreakdownProduct getProduct() {
     return (BreakdownProduct) super.getProduct();
   }
 
-  @Override
+  public double accept(TransactionVisitor visitor, int date) {
+    return visitor.visitBreakdown(this, date);
+  }
+
   public void updateActualPrice(int currentDate) { }
 
   @Override
   public String toString() {
     String recipeString = "";
-    Map<String, Integer> recipe = getRecipe().getIngredients();
-    for (String ingredientKey : recipe.keySet()){
-      int ingredientAmount = getAmount() * recipe.get(ingredientKey);
-      double ingredientCost = getBasePrice();
+    Map<Product, Integer> recipe = getRecipe().getIngredients();
+    for (Product ingredient : recipe.keySet()){
+      String ingredientKey = ingredient.getProductKey(); 
+      int ingredientAmount = getAmount() * recipe.get(ingredient);
+      long ingredientCost = Math.round(ingredient.getProductPrice() * ingredientAmount);
       recipeString += ingredientKey + ":" + ingredientAmount + ":" + ingredientCost + "#";
     }
-    recipeString.substring(0, recipeString.length() - 1);
+    recipeString = recipeString.substring(0, recipeString.length() - 1);
     return String.join(
       "|",
       "DESAGREGAÇÃO",
-      super.toString().substring(6), // removing "VENDA|"
+      super.toString(),
+      String.valueOf(Math.round(getBasePrice())),
+      String.valueOf(Math.round(getActualPrice())),
+      String.valueOf(getDueDate()),
       recipeString
     );
   }
