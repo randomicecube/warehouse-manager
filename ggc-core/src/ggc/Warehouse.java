@@ -582,15 +582,31 @@ public class Warehouse implements Serializable {
       Product product = getProduct(productKey);
       int currentDate = getDate();
       Sale sale;
+      double transactionPrice = 0;
       if (product.getStock() < amount) {
         if (!product.hasRecipe()) {
           throw new NotEnoughStockException(productKey, amount, product.getStock());
         }
         BreakdownProduct breakdownProduct = (BreakdownProduct) product;
         // if product has a recipe, try to make a breakdown
+        int neededAmount = amount - product.getStock();
         checkIngredientsStock(breakdownProduct, amount);
-        makeBreakdown(breakdownProduct, amount);
-        sale = new Sale(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, breakdownProduct.getProductPrice() * amount, deadline);
+        transactionPrice = (breakdownProduct.getProductPrice() * breakdownProduct.getStock());
+        double aggregationCost = makeAggregation(breakdownProduct, neededAmount) * (1 + breakdownProduct.getAggravationFactor());
+        transactionPrice += aggregationCost * (neededAmount);
+        Batch batch = new Batch(breakdownProduct, amount, breakdownProduct.getProductPrice(), partner);
+        partner.addBatch(batch);
+        sale = new Sale(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionPrice, deadline);
+        Double biggestKnownPrice = _biggestKnownPrices.get(breakdownProduct);
+        Double smallestWarehousePrice = _smallestWarehousePrices.get(breakdownProduct);
+        if (biggestKnownPrice == null) {
+          _biggestKnownPrices.put(breakdownProduct, aggregationCost);
+          _smallestWarehousePrices.put(breakdownProduct, aggregationCost);
+        } else if (aggregationCost > biggestKnownPrice) {
+          _biggestKnownPrices.put(breakdownProduct, aggregationCost);
+        } else if (aggregationCost < smallestWarehousePrice) {
+          _smallestWarehousePrices.put(breakdownProduct, aggregationCost);
+        }
       } else {
         // if we get here, we have stock anyway, so it's a regular sale
         product.updateStock(-amount);
@@ -690,7 +706,11 @@ public class Warehouse implements Serializable {
         if (ingredient.getStock() < totalAmount) {
           if (ingredient.hasRecipe()) {
             BreakdownProduct breakdownProduct = (BreakdownProduct) ingredient;
-            checkIngredientsStock(breakdownProduct, totalAmount);
+            try {
+              checkIngredientsStock(breakdownProduct, totalAmount);
+            } catch (NotEnoughStockException e) {
+              throw new NotEnoughStockException(breakdownProduct.getProductKey(), amount, breakdownProduct.getStock());
+            }
           } else {
             throw new NotEnoughStockException(ingredient.getProductKey(), totalAmount, ingredient.getStock());
           }
@@ -698,21 +718,25 @@ public class Warehouse implements Serializable {
       }
   }
 
-  public void makeBreakdown(BreakdownProduct product, int amount)
+  public double makeAggregation(BreakdownProduct product, int amount)
     throws NotEnoughStockException, NoSuchProductKeyException {
       Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
+      double cost = 0;
       for (Product ingredient: ingredients.keySet()) {
         String ingredientKey = ingredient.getProductKey();
         int ingredientAmount = ingredients.get(ingredient);
-        int totalAmount = ingredientAmount * amount;
-        if (ingredient.getStock() < totalAmount) {
-          // necessarily a breakdownproduct - checked in checkIngredientsStock
+        int ingredientStock = ingredient.getStock();
+        if (ingredientStock < ingredientAmount * amount) {
+          // necessarily a breakdownProduct - checked in checkIngredientsStock
           BreakdownProduct breakdownProduct = (BreakdownProduct) getProduct(ingredientKey);
-          makeBreakdown(breakdownProduct, totalAmount);
+          cost += makeAggregation(breakdownProduct, ingredientAmount);
+        } else {
+          cost += ingredient.getProductPrice() * ingredientAmount;
+          ingredient.updateStock(-(ingredientAmount * amount));
         }
-        ingredient.updateStock(-totalAmount);
       }
-      product.updateStock(amount);
+      product.updateStock(-amount);
+      return cost;
   }
 
 }
