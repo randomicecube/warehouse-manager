@@ -74,12 +74,17 @@ public class Product implements Serializable {
    * 
    * @param price
    */
-  public void updatePrice(Double price) {
-    if (price < _productPrice) {
+  public void updatePrice(Double price, Map<Product, Double> smallestPrices) {
+    Double smallestPrice = smallestPrices.get(this);
+    if (smallestPrice == null || price < smallestPrice) {
       notifyPartners(
         new BargainNotification(getProductKey(), price)
       );
     }
+    _productPrice = price;
+  }
+
+  public void setPrice(double price) {
     _productPrice = price;
   }
 
@@ -144,41 +149,7 @@ public class Product implements Serializable {
   public List<Batch> getSortedBatches() {
     List<Batch> sortedBatches = getBatches();
     
-    sortedBatches.sort(
-      new Comparator<Batch>() {
-
-        public int comparePartnerKeys(Batch b1, Batch b2) {
-          String partnerKeyB1 = b1.getPartner().getPartnerKey();
-          String partnerKeyB2 = b2.getPartner().getPartnerKey();
-          return partnerKeyB1.compareTo(partnerKeyB2);
-        }
-        
-        public double comparePrices(Batch b1, Batch b2) {
-          return b1.getPrice() - b2.getPrice();
-        }
-
-        public int compareStocks(Batch b1, Batch b2) {
-          return b1.getAmount() - b2.getAmount();
-        }
-
-        @Override
-        public int compare(Batch b1, Batch b2) {
-          int keyComparator = comparePartnerKeys(b1, b2);
-          if (keyComparator != 0) {
-            return keyComparator;
-          }
-
-          double priceComparator = comparePrices(b1, b2);
-          if (priceComparator != 0) {
-            return (int) priceComparator;
-          }
-
-          return compareStocks(b1, b2);
-        }
-
-      }
-    );
-
+    sortedBatches.sort(new BatchComparator());
     return sortedBatches;
   }
 

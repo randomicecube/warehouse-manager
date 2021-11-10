@@ -44,7 +44,7 @@ public abstract class Notification implements Serializable {
     return String.join(
       "|",
       getProductKey(),
-      String.valueOf(getProductPrice())
+      String.valueOf(Math.round(getProductPrice()))
     );
   }
 

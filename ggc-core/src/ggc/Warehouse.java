@@ -43,6 +43,8 @@ public class Warehouse implements Serializable {
 
   private Map<Product, Double> _biggestKnownPrices = new HashMap<Product, Double>();
 
+  private Map<Product, Double> _smallestWarehousePrices = new HashMap<Product, Double>();
+
   /**
    * @param txtfile filename to be loaded.
    * @throws IOException
@@ -148,7 +150,11 @@ public class Warehouse implements Serializable {
           throw new PartnerKeyAlreadyUsedException(key);
         }
       }
-      _partners.put(key, new Partner(key, name, address));
+      Partner partner = new Partner(key, name, address);
+      _partners.put(key, partner);
+      for (Product p: _products.values()) {
+        p.partnerNowObserving(partner);
+      }
   }
 
   /**
@@ -168,6 +174,7 @@ public class Warehouse implements Serializable {
       Double parsedPrice = Double.parseDouble(price);
 
       Product product;
+      Partner partner;
 
       try {
         product = getProduct(productKey);
@@ -179,22 +186,32 @@ public class Warehouse implements Serializable {
 
       // TODO - is it supposed to be > or <?
       if (parsedPrice > product.getProductPrice()) {
-        product.updatePrice(parsedPrice);
+        product.updatePrice(parsedPrice, _smallestWarehousePrices);
       }
 
       Double biggestPrice = _biggestKnownPrices.get(product);
+      Double smallestPrice = _smallestWarehousePrices.get(product);
 
-      if (biggestPrice == null || parsedPrice > biggestPrice) {
+      if (biggestPrice == null) {
         _biggestKnownPrices.put(product, parsedPrice);
+        _smallestWarehousePrices.put(product, parsedPrice);
+      } else if (parsedPrice > biggestPrice) {
+        _biggestKnownPrices.put(product, parsedPrice);
+      } else if (parsedPrice < smallestPrice) {
+        _smallestWarehousePrices.put(product, parsedPrice);
       }
 
       try {
-        Partner partner = getPartner(partnerKey);
+        partner = getPartner(partnerKey);
         Batch batch = new Batch(product, parsedStock, parsedPrice, partner);
         partner.addBatch(batch);
         product.addBatch(batch);
       } catch (NoSuchPartnerKeyException e) {
         throw new NoSuchPartnerKeyException(e.getKey());
+      }
+
+      for (Partner p: _partners.values()) {
+        product.partnerNowObserving(p);
       }
 
   }
@@ -219,6 +236,9 @@ public class Warehouse implements Serializable {
       Double parsedPrice = Double.parseDouble(price);
       Double parsedAggravationFactor = Double.parseDouble(aggravationFactor);
 
+      Product batchProduct;
+      Partner partner;
+
       String[] ingredients = recipe.split("\\#");
 
       Recipe productRecipe = new Recipe();
@@ -234,8 +254,6 @@ public class Warehouse implements Serializable {
         }
       }
 
-      Product batchProduct;
-
       try {
         batchProduct = getProduct(productKey);
         batchProduct.updateStock(parsedStock);
@@ -247,22 +265,32 @@ public class Warehouse implements Serializable {
 
       // TODO - is it supposed to be > or <?
       if (parsedPrice > batchProduct.getProductPrice()) {
-        batchProduct.updatePrice(parsedPrice);
+        batchProduct.updatePrice(parsedPrice, _smallestWarehousePrices);
       }
 
       Double biggestPrice = _biggestKnownPrices.get(batchProduct);
+      Double smallestPrice = _smallestWarehousePrices.get(batchProduct);
 
-      if (biggestPrice == null || parsedPrice > biggestPrice) {
+      if (biggestPrice == null) {
         _biggestKnownPrices.put(batchProduct, parsedPrice);
+        _smallestWarehousePrices.put(batchProduct, parsedPrice);
+      } else if (parsedPrice > biggestPrice) { 
+        _biggestKnownPrices.put(batchProduct, parsedPrice);
+      } else if (parsedPrice < smallestPrice) {
+        _smallestWarehousePrices.put(batchProduct, parsedPrice);
       }
 
       try {
-        Partner partner = getPartner(partnerKey);
+        partner = getPartner(partnerKey);
         Batch batch = new Batch(batchProduct, parsedStock, parsedPrice, partner);
         partner.addBatch(batch);
         batchProduct.addBatch(batch);
       } catch (NoSuchPartnerKeyException e) {
         throw new NoSuchPartnerKeyException(e.getKey());
+      }
+
+      for (Partner p: _partners.values()) {
+        batchProduct.partnerNowObserving(p);
       }
 
   }
@@ -325,6 +353,11 @@ public class Warehouse implements Serializable {
 
   /** @return a Collection with all the products associated with the warehouse */
   public Collection<String> getProductsCollection() {
+    getProducts()
+      .values()
+      .stream()
+      .forEach(p -> p.setPrice(_biggestKnownPrices.get(p)));
+    
     List<String> productKeys = getProducts()
       .values()
       .stream()
@@ -366,7 +399,7 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * @return a Collection with all the batches (in toStrinf form)
+   * @return a Collection with all the batches (in toString form)
    * with partners associated with the warehouse
    */
   public Collection<String> getBatchesCollection() {
@@ -496,10 +529,11 @@ public class Warehouse implements Serializable {
 
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
     Collection<Batch> availableBatches = getBatches();
-    return availableBatches
+    availableBatches
       .stream()
       .filter(batch -> batch.getPrice() < priceCap)
-      .collect(Collectors.toList());    
+      .collect(Collectors.toList()).sort(new BatchComparator());
+    return availableBatches; 
   }
 
   public void receivePayment(int transactionKey)
@@ -570,12 +604,20 @@ public class Warehouse implements Serializable {
       Product product = getProduct(productKey);
       Acquisition acquisition = new Acquisition(_nextTransactionKey++, partner, product, getDate(), amount, price * amount);
       partner.addNewAcquisition(acquisition);
-      product.updatePrice(price);
+      product.updatePrice(price, _smallestWarehousePrices);
+      product.updateStock(amount);
       Double biggestKnownPrice = _biggestKnownPrices.get(product);
-      if (biggestKnownPrice == null || price > biggestKnownPrice) {
+      Double smallestWarehousePrice = _smallestWarehousePrices.get(product);
+      if (biggestKnownPrice == null) {
         _biggestKnownPrices.put(product, price);
+        _smallestWarehousePrices.put(product, price);
+      } else if (price > biggestKnownPrice) {
+        _biggestKnownPrices.put(product, price);
+      } else if (price < smallestWarehousePrice) {
+        _smallestWarehousePrices.put(product, price);
       }
-      updateBalanceAcquisition(price);
+      product.addBatch(new Batch(product, amount, price, partner));
+      updateBalanceAcquisition(price * amount);
       addTransaction(acquisition);
   }
 
@@ -596,10 +638,11 @@ public class Warehouse implements Serializable {
       productPrice *= amount; // TODO - not sure if needed to include alpha here
       double transactionCost = breakdownProcedure(breakdownProduct, amount, productPrice);
       int currentDate = getDate();
-      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionCost * amount, currentDate, recipe);
+      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionCost, currentDate, recipe);
       partner.addNewSale(breakdown);
       partner.getPartnerStatus().payTransaction(breakdown, currentDate);
       updateBalanceSale(transactionCost);
+      breakdown.updatePaid(transactionCost);
       addTransaction(breakdown);
   }
 
@@ -640,7 +683,7 @@ public class Warehouse implements Serializable {
       for (String ingredientKey: ingredients.keySet()) {
         Product ingredient = getProduct(ingredientKey);
         int ingredientAmount = ingredients.get(ingredientKey);
-        int totalAmount = ingredientAmount * amount;
+        int totalAmount = ingredientAmount * (amount - product.getStock());
         if (ingredient.getStock() < totalAmount) {
           if (ingredient.hasRecipe()) {
             BreakdownProduct breakdownProduct = (BreakdownProduct) ingredient;

@@ -55,6 +55,10 @@ public abstract class Transaction implements Serializable {
     return _partner;
   }
 
+  public int getAmount() {
+    return _amount;
+  }
+
   /** Used only in Sales and Breakdown Transactions
    *  updates the previously set "due date" to a given one
    * 
@@ -79,7 +83,7 @@ public abstract class Transaction implements Serializable {
       String.valueOf(_transactionKey),
       _partner.getPartnerKey(),
       _product.getProductKey(),
-      String.valueOf(_amount)
+      String.valueOf(getAmount())
     );
   }
 
