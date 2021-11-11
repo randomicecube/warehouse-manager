@@ -204,9 +204,10 @@ public class Partner implements Serializable, Observer {
    */
   public Double getOverallSalePrices(int date) {
     getSales().stream().forEach(s -> s.updateActualPrice(date));
+    TransactionChecker checker = new BreakdownChecker();
     return getSales()
       .stream()
-      .filter(s -> !s.hasRecipe())
+      .filter(s -> !s.accept(checker))
       .map(Transaction::getActualPrice)
       .reduce(Double::sum)
       .orElse(0.0);

@@ -240,9 +240,14 @@ public class Product implements Serializable {
     return _notifiedPartners;
   }
 
-  /** @return whether the product has a recipe or not */
-  public boolean hasRecipe() {
-    return !getRecipe().getIngredients().isEmpty();
+  /**
+   * Accepts a product checker (a type visitor)
+   * 
+   * @param checker
+   * @return checker's visit
+   */
+  public boolean accept(ProductChecker checker) {
+    return checker.visitSimple(this);
   }
 
   @Override

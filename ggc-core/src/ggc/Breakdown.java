@@ -43,14 +43,6 @@ public class Breakdown extends Transaction implements Serializable {
   }
 
   /**
-   * @return whether the Breakdown has a recipe associated or not - it always does
-   */
-  @Override
-  public boolean hasRecipe() {
-    return true;
-  }
-
-  /**
    * 
    * @return _dueDate
    */
@@ -67,6 +59,16 @@ public class Breakdown extends Transaction implements Serializable {
    */
   public double accept(TransactionVisitor visitor, int date) {
     return visitor.visitBreakdown(this, date);
+  }
+
+  /**
+   * Accept transaction checker (a visitor)
+   * 
+   * @param checker
+   * @return visitor's visit
+   */
+  public boolean accept(TransactionChecker checker) {
+    return checker.visitBreakdown(this);
   }
 
   @Override

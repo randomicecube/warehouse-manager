@@ -31,8 +31,9 @@ public class NormalStatus extends Status implements Serializable {
     transaction.updateActualPrice(currentDate);
     double price = transaction.getActualPrice();
     Partner partner = getPartner();
+    TransactionChecker checker = new BreakdownChecker();
     if (isLate) {
-      if (!transaction.hasRecipe()) { // accounting only for sales
+      if (!transaction.accept(checker)) { // accounting only for sales
         partner.clearPartnerPoints();
       }
     } else {

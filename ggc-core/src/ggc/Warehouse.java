@@ -699,12 +699,13 @@ public class Warehouse implements Serializable {
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
       Transaction sale = getTransaction(transactionKey);
+      TransactionChecker checker = new BreakdownChecker();
       if (sale.isPaid()) {
         return;
       }
       int currentDate = getDate();
       sale.updatePaymentDate(currentDate);
-      if (!sale.hasRecipe()) {
+      if (!sale.accept(checker)) {
         sale.updateActualPrice(currentDate);
       }
       double pricePaid = sale.getActualPrice();
@@ -731,8 +732,9 @@ public class Warehouse implements Serializable {
       int currentDate = getDate();
       Sale sale;
       double transactionPrice = 0;
+      BreakdownProductChecker checker = new BreakdownProductChecker();
       if (product.getStock() < amount) {
-        if (!product.hasRecipe()) {
+        if (!product.accept(checker)) {
           throw new NotEnoughStockException(productKey, amount, product.getStock());
         }
         // if product has a recipe, try to make a breakdown
@@ -805,10 +807,11 @@ public class Warehouse implements Serializable {
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       Partner partner = getPartner(partnerKey);
       Product product = getProduct(productKey);
+      BreakdownProductChecker checker = new BreakdownProductChecker();
       if (product.getStock() < amount) {
         throw new NotEnoughStockException(productKey, amount, product.getStock());
       }
-      if (!product.hasRecipe()) {
+      if (!product.accept(checker)) {
         return;
       }
       Recipe recipe = product.getRecipe();
@@ -874,11 +877,12 @@ public class Warehouse implements Serializable {
   public void checkIngredientsStock(Product product, int amount, Map<Product, Integer> accountedFor)
     throws NotEnoughStockException, NoSuchProductKeyException {
       Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
+      BreakdownProductChecker checker = new BreakdownProductChecker();
       for (Product ingredient: ingredients.keySet()) {
         int ingredientAmount = ingredients.get(ingredient);
         int totalAmount = ingredientAmount * (amount - product.getStock());
         if (ingredient.getStock() < totalAmount) {
-          if (ingredient.hasRecipe()) {
+          if (ingredient.accept(checker)) {
             try {
               checkIngredientsStock(ingredient, totalAmount, accountedFor);
             } catch (NotEnoughStockException e) {

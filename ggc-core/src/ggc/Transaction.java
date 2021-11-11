@@ -113,7 +113,7 @@ public abstract class Transaction implements Serializable {
   public void updateActualPrice(int currentDate) { };
 
   /**
-   * Accepts visitor
+   * Accepts transaction visitor
    * @param visitor
    * @param date
    * @return
@@ -121,19 +121,18 @@ public abstract class Transaction implements Serializable {
   public abstract double accept(TransactionVisitor visitor, int date);
 
   /**
+   * Accepts transaction type checker
+   * @param checker
+   * @return
+   */
+  public abstract boolean accept(TransactionChecker checker);
+
+  /**
    * 
    * @return payment date
    */
   public int getDueDate() {
     return _paymentDate;
-  }
-
-  /**
-   * 
-   * @return falsae
-   */
-  public boolean hasRecipe() {
-    return false;
   }
 
   /**

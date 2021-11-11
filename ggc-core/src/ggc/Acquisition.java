@@ -35,6 +35,15 @@ public class Acquisition extends Transaction implements Serializable {
     return visitor.visitAcquisition(this, date);
   }
 
+  /**
+   * Accepts a transaction visitor (a type checker)
+   * @param checker
+   * @return
+   */
+  public boolean accept(TransactionChecker checker) {
+    return checker.visitAcquisition(this);
+  }
+
   @Override
   public String toString() {
     return String.join(

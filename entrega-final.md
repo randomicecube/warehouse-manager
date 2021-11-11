@@ -45,8 +45,8 @@
 - [DONE] Update points no breakdown -> importante, dá update aos pontos só, sem contar com multas
 - [DONE] Rever FIXME's e TODO's no código
 - [DONE] Unmodifiable collections/cópias -> importante
-- Diamond recursion na verificação da desagregação
-- Visitor em vez de HasRecipe
+- [DONE] Diamond recursion na verificação da desagregação
+- [DONE] Visitor em vez de HasRecipe
 - [DONE] getPaymentsByPartner (WH) -> o partner não tem já um método com isso?
 - [DONE] Confirmar se todos os métodos são utilizados
 - [DONE] Alterar a ordem dos métodos, para ser mais consistente (e de acesso mais intuitivo)

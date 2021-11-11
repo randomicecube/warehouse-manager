@@ -97,6 +97,16 @@ public class Sale extends Transaction implements Serializable {
     return visitor.visitSale(this, date);
   }
 
+  /**
+   * Accept transaction checker (a visitor)
+   * 
+   * @param checker
+   * @return visitor's visit
+   */
+  public boolean accept(TransactionChecker checker) {
+    return checker.visitSale(this);
+  }
+
   @Override
   public String toString() {
     return String.join(

@@ -34,8 +34,9 @@ public class EliteStatus extends Status implements Serializable {
     transaction.updateActualPrice(currentDate);
     double price = transaction.getActualPrice();
     Partner partner = getPartner();
+    TransactionChecker checker = new BreakdownChecker();
     if (isLate) {
-      if (!transaction.hasRecipe()) { // accounting only for sales
+      if (!transaction.accept(checker)) { // accounting only for sales
         partner.updatePartnerStatus(new SelectionStatus(partner));
         if (dayDifference < LOSE_POINTS_GAP) {
           partner.updatePartnerPoints(-0.75 * partner.getPartnerPoints());

@@ -67,6 +67,17 @@ public class BreakdownProduct extends Product implements Serializable {
     return 5; // 5 for "Breakdown" Products
   }
 
+  /**
+   * Accepts a product checker (a type visitor)
+   * 
+   * @param checker
+   * @return checker's visit
+   */
+  @Override
+  public boolean accept(ProductChecker checker) {
+    return checker.visitBreakdownProduct(this);
+  }
+
   @Override
   public String toString() {
     return String.join(
