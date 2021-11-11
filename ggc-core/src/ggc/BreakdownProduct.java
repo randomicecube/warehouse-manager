@@ -49,12 +49,14 @@ public class BreakdownProduct extends Product implements Serializable {
   }
 
   /** @return product's recipe */
+  @Override
   public Recipe getRecipe() {
     return _recipe;
   }
 
   /** @return product's aggravation factor */
-  public Double getAggravationFactor() {
+  @Override
+  public double getAggravationFactor() {
     return _aggravationFactor;
   }
 

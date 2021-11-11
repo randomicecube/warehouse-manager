@@ -47,4 +47,5 @@
 - getPaymentsByPartner (WH) -> o partner não tem já um método com isso?
 - Confirmar se todos os métodos são utilizados
 - Alterar a ordem dos métodos, para ser mais consistente (e de acesso mais intuitivo)
-- Remover o máximo de casts possível
+- [DONE] Remover o máximo de casts possível
+- Dividir linhas muito longas

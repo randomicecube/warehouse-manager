@@ -372,7 +372,6 @@ public class Warehouse implements Serializable {
     }
 
     return stringedProducts;
-
   }
 
   /**
@@ -400,7 +399,6 @@ public class Warehouse implements Serializable {
 
   /**
    * @return a Collection with all the batches (in toString form)
-   * with partners associated with the warehouse
    */
   public Collection<String> getBatchesCollection() {
     List<String> productKeys = getProducts()
@@ -586,7 +584,7 @@ public class Warehouse implements Serializable {
    */
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
-      Sale sale = (Sale) getTransaction(transactionKey);
+      Transaction sale = getTransaction(transactionKey);
       if (sale.isPaid()) {
         return;
       }
@@ -656,17 +654,16 @@ public class Warehouse implements Serializable {
         if (!product.hasRecipe()) {
           throw new NotEnoughStockException(productKey, amount, product.getStock());
         }
-        BreakdownProduct breakdownProduct = (BreakdownProduct) product;
         // if product has a recipe, try to make a breakdown
         int neededAmount = amount - product.getStock();
-        checkIngredientsStock(breakdownProduct, amount);
-        transactionPrice = (breakdownProduct.getProductPrice() * breakdownProduct.getStock());
-        double aggregationCost = makeAggregation(breakdownProduct, neededAmount) * (1 + breakdownProduct.getAggravationFactor());
+        checkIngredientsStock(product, amount);
+        transactionPrice = (product.getProductPrice() * product.getStock());
+        double aggregationCost = makeAggregation(product, neededAmount) * (1 + product.getAggravationFactor());
         transactionPrice += aggregationCost * (neededAmount);
-        Batch batch = new Batch(breakdownProduct, amount, breakdownProduct.getProductPrice(), partner);
+        Batch batch = new Batch(product, amount, product.getProductPrice(), partner);
         partner.addBatch(batch);
-        sale = new Sale(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionPrice, deadline);
-        updateSmallestBiggestPrices(breakdownProduct, aggregationCost);
+        sale = new Sale(_nextTransactionKey++, partner, product, currentDate, amount, transactionPrice, deadline);
+        updateSmallestBiggestPrices(product, aggregationCost);
       } else {
         // if we get here, we have stock anyway, so it's a regular sale
         product.updateStock(-amount);
@@ -724,13 +721,12 @@ public class Warehouse implements Serializable {
       if (!product.hasRecipe()) {
         return;
       }
-      BreakdownProduct breakdownProduct = (BreakdownProduct) product;
-      Recipe recipe = breakdownProduct.getRecipe();
-      double productPrice = breakdownProduct.getStock() == 0 ? _biggestKnownPrices.get(product) : product.getProductPrice();
+      Recipe recipe = product.getRecipe();
+      double productPrice = product.getStock() == 0 ? _biggestKnownPrices.get(product) : product.getProductPrice();
       productPrice *= amount;
-      double transactionCost = breakdownProcedure(breakdownProduct, amount, productPrice);
+      double transactionCost = breakdownProcedure(product, amount, productPrice);
       int currentDate = getDate();
-      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionCost, currentDate, recipe);
+      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, product, currentDate, amount, transactionCost, currentDate, recipe);
       partner.addNewSaleOrBreakdown(breakdown);
       partner.getPartnerStatus().payTransaction(breakdown, currentDate);
       updateBalanceSale(transactionCost);
@@ -746,7 +742,7 @@ public class Warehouse implements Serializable {
    * @return the breakdown's cost
    * @throws NoSuchProductKeyException
    */
-  public double breakdownProcedure(BreakdownProduct product, int amount, double price)
+  public double breakdownProcedure(Product product, int amount, double price)
     throws NoSuchProductKeyException {
     Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
     double ingredientsCost = 0;
@@ -791,7 +787,7 @@ public class Warehouse implements Serializable {
    * @throws NotEnoughStockException
    * @throws NoSuchProductKeyException
    */
-  public void checkIngredientsStock(BreakdownProduct product, int amount)
+  public void checkIngredientsStock(Product product, int amount)
     throws NotEnoughStockException, NoSuchProductKeyException {
       Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
       for (Product ingredient: ingredients.keySet()) {
@@ -799,11 +795,10 @@ public class Warehouse implements Serializable {
         int totalAmount = ingredientAmount * (amount - product.getStock());
         if (ingredient.getStock() < totalAmount) {
           if (ingredient.hasRecipe()) {
-            BreakdownProduct breakdownProduct = (BreakdownProduct) ingredient;
             try {
-              checkIngredientsStock(breakdownProduct, totalAmount);
+              checkIngredientsStock(ingredient, totalAmount);
             } catch (NotEnoughStockException e) {
-              throw new NotEnoughStockException(breakdownProduct.getProductKey(), amount, breakdownProduct.getStock());
+              throw new NotEnoughStockException(ingredient.getProductKey(), amount, ingredient.getStock());
             }
           } else {
             throw new NotEnoughStockException(ingredient.getProductKey(), totalAmount, ingredient.getStock());
@@ -820,7 +815,7 @@ public class Warehouse implements Serializable {
    * @throws NotEnoughStockException
    * @throws NoSuchProductKeyException
    */
-  public double makeAggregation(BreakdownProduct product, int amount)
+  public double makeAggregation(Product product, int amount)
     throws NotEnoughStockException, NoSuchProductKeyException {
       Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
       double cost = 0;
@@ -830,7 +825,7 @@ public class Warehouse implements Serializable {
         int ingredientStock = ingredient.getStock();
         if (ingredientStock < ingredientAmount * amount) {
           // necessarily a breakdownProduct - checked in checkIngredientsStock
-          BreakdownProduct breakdownProduct = (BreakdownProduct) getProduct(ingredientKey);
+          Product breakdownProduct = getProduct(ingredientKey);
           cost += makeAggregation(breakdownProduct, ingredientAmount);
         } else {
           cost += ingredient.getProductPrice() * ingredientAmount;

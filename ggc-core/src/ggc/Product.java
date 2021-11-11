@@ -191,6 +191,14 @@ public class Product implements Serializable {
     return _productPrice;
   }
 
+  public double getAggravationFactor() {
+    return 0.0;
+  }
+
+  public Recipe getRecipe() {
+    return new Recipe(new HashMap<Product, Integer>());
+  }
+
   /**
    * 
    * @return productBatches

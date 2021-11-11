@@ -27,7 +27,7 @@ public class Breakdown extends Transaction implements Serializable {
    * @param dueDate
    * @param recipe
    */
-  public Breakdown(int transactionKey, Partner partner, BreakdownProduct product, int baseDate, int amount, double basePrice, int dueDate, Recipe recipe) {
+  public Breakdown(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice, int dueDate, Recipe recipe) {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
     _dueDate = dueDate;
     _recipe = recipe;
@@ -54,15 +54,6 @@ public class Breakdown extends Transaction implements Serializable {
    */
   public int getDueDate() {
     return _dueDate;
-  }
-
-  /**
-   * 
-   * @return a breakdown product
-   */
-  @Override
-  public BreakdownProduct getProduct() {
-    return (BreakdownProduct) super.getProduct();
   }
 
   /**
