@@ -590,11 +590,13 @@ public class Warehouse implements Serializable {
       }
       int currentDate = getDate();
       sale.updatePaymentDate(currentDate);
-      sale.updateActualPrice(currentDate);
+      if (!sale.hasRecipe()) {
+        sale.updateActualPrice(currentDate);
+      }
       double pricePaid = sale.getActualPrice();
       sale.updatePaid(pricePaid);
       sale.getPartner().getPartnerStatus().payTransaction(sale, currentDate);
-      updateBalanceSale(pricePaid);
+      updateBalanceSaleOrBreakdown(pricePaid);
   }
 
   /**
@@ -728,10 +730,13 @@ public class Warehouse implements Serializable {
       int currentDate = getDate();
       Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, product, currentDate, amount, transactionCost, currentDate, recipe);
       partner.addNewSaleOrBreakdown(breakdown);
-      partner.getPartnerStatus().payTransaction(breakdown, currentDate);
-      updateBalanceSale(transactionCost);
-      breakdown.updatePaid(transactionCost);
       addTransactionToWarehouse(breakdown);
+      try {
+        receivePayment(_nextTransactionKey - 1);
+      } catch (NoSuchTransactionKeyException e) {
+        // will never happen
+        e.printStackTrace();
+      }
   }
 
   /**
@@ -751,8 +756,10 @@ public class Warehouse implements Serializable {
       int totalAmount = ingredientAmount * amount;
       ingredient.updateStock(totalAmount);
       ingredientsCost += ingredient.getProductPrice() * totalAmount;
+      removeOutOfStockWarehouseBatches(ingredient, totalAmount);
     }
     product.updateStock(-amount);
+    removeOutOfStockWarehouseBatches(product, amount);
     return price - ingredientsCost;
   }
 
@@ -768,7 +775,7 @@ public class Warehouse implements Serializable {
    * updates balance due to a sale
    * @param money
    */
-  public void updateBalanceSale(double money) {
+  public void updateBalanceSaleOrBreakdown(double money) {
     _availableBalance += money;
   }
 

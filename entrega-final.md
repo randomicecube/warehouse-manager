@@ -24,28 +24,32 @@
 - [DONE] Produtos com preço abaixo de limite
 - [DONE] Faturas pagas por parceiro
 
+## Coisas que faltam fazer
+
 - [DONE] - falta a lógica de dar update aos Status (e a lógica de dar update aos pontos) também
 - [DONE] - tratar dos métodos do saldo -> apresentar accounting balance e etc
 - [DONE] - delivery methods de notificações -> strategy
 - [DONE] - mudar pontos de int para double
 
-## TODO LIST FINAL
+# TODO LIST FINAL
 
 - [DONE] Ver se os imports estão bem (nada importado a mais)
 - [DONE] Adicionar constantes de serialização a tudo o que ainda não as tem
-- Confirmar se "vendas pagas" inclui desagregação (no Partner)
+- [KINDA?] Confirmar se "vendas pagas" inclui desagregação (no Partner)
 - [DONE] Verificar se é mesmo preciso addProduct e/ou addTransaction (Warehouse)
-- UpdateBalanceSale -> preciso? Como é que está o da Breakdown?
-- Confirmar se as batches estão a ser removidas na desagregação
+- [DONE] UpdateBalanceSale -> preciso? Como é que está o da Breakdown?
+- [DONE] Confirmar se as batches estão a ser removidas na desagregação -> adicionado na breakdownProcedure
 - Comment cleanup -> principalmente WHM e Exceptions
 - [DONE] Cleanup smallest e biggest, transformar numa função
 - General code cleanup
-- Update points no breakdown -> importante, dá update aos pontos só, sem contar com multas
+- [DONE] Update points no breakdown -> importante, dá update aos pontos só, sem contar com multas
 - [DONE] Rever FIXME's e TODO's no código
 - [DONE] Unmodifiable collections/cópias -> importante
 - Diamond recursion na verificação da desagregação
 - getPaymentsByPartner (WH) -> o partner não tem já um método com isso?
 - Confirmar se todos os métodos são utilizados
 - Alterar a ordem dos métodos, para ser mais consistente (e de acesso mais intuitivo)
-- [DONE] Remover o máximo de casts possível
+- [DONE] Remover o máximo de casts possível -> removeu-se todos pog
 - Dividir linhas muito longas
+- [DONE] Verificar se no WHM tudo tem a saveFlag
+- COMMIT NO CVS!!!!!

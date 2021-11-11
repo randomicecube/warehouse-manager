@@ -33,9 +33,11 @@ public class SelectionStatus extends Status implements Serializable {
     double price = transaction.getActualPrice();
     Partner partner = getPartner();
     if (isLate) {
-      partner.updatePartnerStatus(new NormalStatus(partner));
-      if (dayDifference < LOSE_POINTS_GAP) {
-        partner.updatePartnerPoints(-0.9 * partner.getPartnerPoints());
+      if (!transaction.hasRecipe()) {
+        partner.updatePartnerStatus(new NormalStatus(partner));
+        if (dayDifference < LOSE_POINTS_GAP) {
+          partner.updatePartnerPoints(-0.9 * partner.getPartnerPoints());
+        }
       }
     } else {
       partner.updatePartnerPoints(10 * price);
