@@ -39,7 +39,7 @@
 - [DONE] Verificar se é mesmo preciso addProduct e/ou addTransaction (Warehouse)
 - [DONE] UpdateBalanceSale -> preciso? Como é que está o da Breakdown?
 - [DONE] Confirmar se as batches estão a ser removidas na desagregação -> adicionado na breakdownProcedure
-- Comment cleanup -> principalmente WHM e Exceptions
+- [DONE] Comment cleanup -> principalmente WHM e Exceptions
 - [DONE] Cleanup smallest e biggest, transformar numa função
 - General code cleanup
 - [DONE] Update points no breakdown -> importante, dá update aos pontos só, sem contar com multas
