@@ -54,54 +54,54 @@ public class Warehouse implements Serializable {
    * @throws IOException
    * @throws BadEntryException
    */
-  void importFile(String txtfile)
-      throws IOException, BadEntryException, NoSuchPartnerKeyException, NoSuchProductKeyException {
-    try (BufferedReader in = new BufferedReader(new FileReader(txtfile))) {
-      String s;
-      while ((s = in.readLine()) != null) {
-        String line = new String(s.getBytes(), "UTF-8");
+  void importFile(String txtfile) throws IOException, BadEntryException,
+    NoSuchPartnerKeyException, NoSuchProductKeyException {
+      try (BufferedReader in = new BufferedReader(new FileReader(txtfile))) {
+        String s;
+        while ((s = in.readLine()) != null) {
+          String line = new String(s.getBytes(), "UTF-8");
 
-        String[] fields = line.split("\\|");
+          String[] fields = line.split("\\|");
 
-        switch (fields[0]) {
-          case "PARTNER" -> registerPartner(
-            fields[1],
-            fields[2],
-            fields[3]
-          );
+          switch (fields[0]) {
+            case "PARTNER" -> registerPartner(
+              fields[1],
+              fields[2],
+              fields[3]
+            );
 
-          case "BATCH_S" -> registerBatch(
-            fields[1],
-            fields[2],
-            fields[3],
-            fields[4]
-          );
+            case "BATCH_S" -> registerBatch(
+              fields[1],
+              fields[2],
+              fields[3],
+              fields[4]
+            );
 
-          case "BATCH_M" -> registerBatch(
-            fields[1],
-            fields[2],
-            fields[3],
-            fields[4],
-            fields[5],
-            fields[6]
-          );
+            case "BATCH_M" -> registerBatch(
+              fields[1],
+              fields[2],
+              fields[3],
+              fields[4],
+              fields[5],
+              fields[6]
+            );
 
-          default -> throw new BadEntryException(fields[0]);
+            default -> throw new BadEntryException(fields[0]);
+          }
         }
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (BadEntryException e) {
+        e.printStackTrace();
+      } catch (PartnerKeyAlreadyUsedException e) {
+        e.printStackTrace();
+      } catch (NoSuchPartnerKeyException e) {
+        e.printStackTrace();
+      } catch (NoSuchProductKeyException e) {
+        e.printStackTrace();
       }
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (BadEntryException e) {
-      e.printStackTrace();
-    } catch (PartnerKeyAlreadyUsedException e) {
-      e.printStackTrace();
-    } catch (NoSuchPartnerKeyException e) {
-      e.printStackTrace();
-    } catch (NoSuchProductKeyException e) {
-      e.printStackTrace();
-    }
   }
 
   /** #######################
@@ -233,7 +233,9 @@ public class Warehouse implements Serializable {
   public Collection<Notification> readPartnerNotifications(String key) 
     throws NoSuchPartnerKeyException {
       Partner partner = getPartner(key);
-      List<Notification> notifications = new ArrayList<Notification>(partner.getNotifications());
+      List<Notification> notifications = new ArrayList<Notification>(
+        partner.getNotifications()
+      );
       partner.clearNotifications();
       return notifications;
   }
@@ -335,7 +337,7 @@ public class Warehouse implements Serializable {
    * @throws NoSuchPartnerKeyException
    */
   public void registerBatch(String productKey, String partnerKey, String price, 
-                            String stock, String aggravationFactor, String recipe) 
+    String stock, String aggravationFactor, String recipe)
     throws NoSuchProductKeyException, NoSuchPartnerKeyException {
 
       Integer parsedStock = Integer.parseInt(stock);
@@ -534,7 +536,11 @@ public class Warehouse implements Serializable {
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
     List<Batch> availableBatches = getBatches()
       .stream()
-      .filter(batch -> batch.getPrice() < priceCap && batch.getProductType().getStock() > 0)
+      .filter(
+        batch ->
+        batch.getPrice() < priceCap &&
+        batch.getProductType().getStock() > 0
+      )
       .collect(Collectors.toList());
     
     availableBatches.sort(new BatchComparatorByProduct());
@@ -559,8 +565,8 @@ public class Warehouse implements Serializable {
    * @param alpha product's aggravation factor
    * @throws NoSuchProductKeyException
    */
-  public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
-    throws NoSuchProductKeyException {
+  public void registerProduct(String productKey, Map<String, Integer> ingredients, 
+    double alpha) throws NoSuchProductKeyException {
       // check if all ingredients are registered
       try {
         for (String key: ingredients.keySet()) {
@@ -733,18 +739,23 @@ public class Warehouse implements Serializable {
         int neededAmount = amount - product.getStock();
         checkIngredientsStock(product, amount);
         transactionPrice = (product.getProductPrice() * product.getStock());
-        double aggregationCost = makeAggregation(product, neededAmount) * (1 + product.getAggravationFactor());
-        transactionPrice += aggregationCost * (neededAmount);
+        double aggregationCost = 
+          makeAggregation(product, neededAmount) * (1 + product.getAggravationFactor());
+        transactionPrice += aggregationCost * neededAmount;
         Batch batch = new Batch(product, amount, product.getProductPrice(), partner);
         partner.addBatch(batch);
-        sale = new Sale(_nextTransactionKey++, partner, product, currentDate, amount, transactionPrice, deadline);
+        sale = new Sale(_nextTransactionKey++, partner, product, currentDate,
+          amount, transactionPrice, deadline
+        );
         updateSmallestBiggestPrices(product, aggregationCost);
       } else {
         // if we get here, we have stock anyway, so it's a regular sale
         product.updateStock(-amount);
         Batch batch = new Batch(product, amount, product.getProductPrice(), partner);
         partner.addBatch(batch);
-        sale = new Sale(_nextTransactionKey++, partner, product, currentDate, amount, product.getProductPrice() * amount, deadline);
+        sale = new Sale(_nextTransactionKey++, partner, product, currentDate,
+          amount, product.getProductPrice() * amount, deadline
+        );
       }
       // transaction "procedures"
       removeOutOfStockWarehouseBatches(product, amount);
@@ -762,11 +773,13 @@ public class Warehouse implements Serializable {
    * @throws NoSuchPartnerKeyException
    * @throws NoSuchProductKeyException
    */
-  public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
-    throws NoSuchPartnerKeyException, NoSuchProductKeyException {
+  public void registerAcquisitionTransaction(String partnerKey, String productKey,
+    double price, int amount) throws NoSuchPartnerKeyException, NoSuchProductKeyException {
       Partner partner = getPartner(partnerKey);
       Product product = getProduct(productKey);
-      Acquisition acquisition = new Acquisition(_nextTransactionKey++, partner, product, getDate(), amount, price * amount);
+      Acquisition acquisition = new Acquisition(_nextTransactionKey++, partner, product,
+        getDate(), amount, price * amount
+      );
       partner.addNewAcquisition(acquisition);
       product.updatePrice(price, _smallestWarehousePrices);
       product.updateStock(amount);
@@ -799,11 +812,14 @@ public class Warehouse implements Serializable {
         return;
       }
       Recipe recipe = product.getRecipe();
-      double productPrice = product.getStock() == 0 ? _biggestKnownPrices.get(product) : product.getProductPrice();
+      double productPrice = product.getStock() == 0 ? 
+        _biggestKnownPrices.get(product) : product.getProductPrice();
       productPrice *= amount;
       double transactionCost = breakdownProcedure(product, amount, productPrice);
       int currentDate = getDate();
-      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, product, currentDate, amount, transactionCost, currentDate, recipe);
+      Breakdown breakdown = new Breakdown(_nextTransactionKey++, partner, product, currentDate,
+        amount, transactionCost, currentDate, recipe
+      );
       partner.addNewSaleOrBreakdown(breakdown);
       addTransactionToWarehouse(breakdown);
       try {
@@ -866,10 +882,18 @@ public class Warehouse implements Serializable {
             try {
               checkIngredientsStock(ingredient, totalAmount);
             } catch (NotEnoughStockException e) {
-              throw new NotEnoughStockException(ingredient.getProductKey(), amount, ingredient.getStock());
+              throw new NotEnoughStockException(
+                ingredient.getProductKey(),
+                amount,
+                ingredient.getStock()
+              );
             }
           } else {
-            throw new NotEnoughStockException(ingredient.getProductKey(), totalAmount, ingredient.getStock());
+            throw new NotEnoughStockException(
+              ingredient.getProductKey(),
+              totalAmount,
+              ingredient.getStock()
+            );
           }
         }
       }

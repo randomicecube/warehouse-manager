@@ -26,8 +26,8 @@ public class BreakdownProduct extends Product implements Serializable {
    * @param stock
    * @param price
    */
-  public BreakdownProduct(Recipe recipe, Double aggravationFactor, 
-                          String productKey, Integer stock, Double price) {
+  public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey,
+    Integer stock, Double price) {
     super(productKey, stock, price);
     _recipe = recipe;
     _aggravationFactor = aggravationFactor;
@@ -41,8 +41,7 @@ public class BreakdownProduct extends Product implements Serializable {
    * @param productKey
    * @param stock
    */
-  public BreakdownProduct(Recipe recipe, Double aggravationFactor, 
-                          String productKey, Integer stock) {
+  public BreakdownProduct(Recipe recipe, Double aggravationFactor, String productKey, Integer stock) {
     super(productKey, stock);
     _recipe = recipe;
     _aggravationFactor = aggravationFactor;

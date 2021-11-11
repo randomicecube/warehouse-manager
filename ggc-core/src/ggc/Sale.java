@@ -29,7 +29,8 @@ public class Sale extends Transaction implements Serializable {
    * @param basePrice
    * @param dueDate
    */
-  public Sale(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice, int dueDate) {
+  public Sale(int transactionKey, Partner partner, Product product, int baseDate,
+    int amount, double basePrice, int dueDate) {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
     _dueDate = dueDate;
   }

@@ -335,8 +335,8 @@ public class WarehouseManager {
    * @throws NoSuchPartnerKeyException
    * @throws NoSuchProductKeyException
    */
-  public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
-    throws NoSuchPartnerKeyException, NoSuchProductKeyException {
+  public void registerAcquisitionTransaction(String partnerKey, String productKey, 
+    double price, int amount) throws NoSuchPartnerKeyException, NoSuchProductKeyException {
       _warehouse.registerAcquisitionTransaction(partnerKey, productKey, price, amount);
       _saveFlag = false;
     }

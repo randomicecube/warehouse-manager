@@ -37,7 +37,8 @@ public abstract class Transaction implements Serializable {
    * @param amount
    * @param basePrice
    */
-  public Transaction(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice) {
+  public Transaction(int transactionKey, Partner partner, Product product, int baseDate,
+    int amount, double basePrice) {
     _transactionKey = transactionKey;
     _partner = partner;
     _product = product;

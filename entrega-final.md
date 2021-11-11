@@ -47,8 +47,8 @@
 - [DONE] Unmodifiable collections/cópias -> importante
 - Diamond recursion na verificação da desagregação
 - getPaymentsByPartner (WH) -> o partner não tem já um método com isso?
-- Confirmar se todos os métodos são utilizados
-- Alterar a ordem dos métodos, para ser mais consistente (e de acesso mais intuitivo)
+- [DONE] Confirmar se todos os métodos são utilizados
+- [DONE] Alterar a ordem dos métodos, para ser mais consistente (e de acesso mais intuitivo)
 - [DONE] Remover o máximo de casts possível -> removeu-se todos pog
 - Dividir linhas muito longas
 - [DONE] Verificar se no WHM tudo tem a saveFlag

@@ -20,7 +20,8 @@ public class Acquisition extends Transaction implements Serializable {
    * @param amount
    * @param basePrice
    */
-  public Acquisition(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice) {
+  public Acquisition(int transactionKey, Partner partner, Product product, 
+    int baseDate, int amount, double basePrice) {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
   }
 
