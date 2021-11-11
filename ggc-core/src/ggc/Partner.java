@@ -228,7 +228,7 @@ public class Partner implements Serializable, Observer {
   public Double getPaidSalePrices() {
     return getSales()
       .stream()
-      .filter(s -> !s.hasRecipe() && s.isPaid())
+      .filter(s -> s.isPaid())
       .map(Transaction::getActualPrice)
       .reduce(Double::sum)
       .orElse(0.0);

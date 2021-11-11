@@ -9,13 +9,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
-
-import java.util.Comparator;
 
 import java.text.Collator;
 import java.util.Locale;
@@ -195,17 +192,7 @@ public class Warehouse implements Serializable {
         product.updatePrice(parsedPrice, _smallestWarehousePrices);
       }
 
-      Double biggestPrice = _biggestKnownPrices.get(product);
-      Double smallestPrice = _smallestWarehousePrices.get(product);
-
-      if (biggestPrice == null) {
-        _biggestKnownPrices.put(product, parsedPrice);
-        _smallestWarehousePrices.put(product, parsedPrice);
-      } else if (parsedPrice > biggestPrice) {
-        _biggestKnownPrices.put(product, parsedPrice);
-      } else if (parsedPrice < smallestPrice) {
-        _smallestWarehousePrices.put(product, parsedPrice);
-      }
+      updateSmallestBiggestPrices(product, parsedPrice);
 
       try {
         partner = getPartner(partnerKey);
@@ -273,17 +260,7 @@ public class Warehouse implements Serializable {
         batchProduct.updatePrice(parsedPrice, _smallestWarehousePrices);
       }
 
-      Double biggestPrice = _biggestKnownPrices.get(batchProduct);
-      Double smallestPrice = _smallestWarehousePrices.get(batchProduct);
-
-      if (biggestPrice == null) {
-        _biggestKnownPrices.put(batchProduct, parsedPrice);
-        _smallestWarehousePrices.put(batchProduct, parsedPrice);
-      } else if (parsedPrice > biggestPrice) { 
-        _biggestKnownPrices.put(batchProduct, parsedPrice);
-      } else if (parsedPrice < smallestPrice) {
-        _smallestWarehousePrices.put(batchProduct, parsedPrice);
-      }
+      updateSmallestBiggestPrices(batchProduct, parsedPrice);
 
       try {
         partner = getPartner(partnerKey);
@@ -548,8 +525,10 @@ public class Warehouse implements Serializable {
    */
   public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
     throws NoSuchPartnerKeyException {
-      // TODO - UNMODIFIABLE COLLECTION
-      return getPartner(partnerKey).getAcquisitions();
+      List<Acquisition> acquisitions = new ArrayList<Acquisition>(
+        getPartner(partnerKey).getAcquisitions()
+      );
+      return acquisitions;
   }
 
   /**
@@ -560,7 +539,9 @@ public class Warehouse implements Serializable {
    */
   public Collection<Transaction> getPartnerSales(String partnerKey)
     throws NoSuchPartnerKeyException {
-      Collection<Transaction> sales = getPartner(partnerKey).getSales();
+      Collection<Transaction> sales = new ArrayList<Transaction>(
+        getPartner(partnerKey).getSales()
+      );
       int currentDate = getDate();
       for (Transaction sale: sales) {
         sale.updateActualPrice(currentDate);
@@ -685,16 +666,7 @@ public class Warehouse implements Serializable {
         Batch batch = new Batch(breakdownProduct, amount, breakdownProduct.getProductPrice(), partner);
         partner.addBatch(batch);
         sale = new Sale(_nextTransactionKey++, partner, breakdownProduct, currentDate, amount, transactionPrice, deadline);
-        Double biggestKnownPrice = _biggestKnownPrices.get(breakdownProduct);
-        Double smallestWarehousePrice = _smallestWarehousePrices.get(breakdownProduct);
-        if (biggestKnownPrice == null) {
-          _biggestKnownPrices.put(breakdownProduct, aggregationCost);
-          _smallestWarehousePrices.put(breakdownProduct, aggregationCost);
-        } else if (aggregationCost > biggestKnownPrice) {
-          _biggestKnownPrices.put(breakdownProduct, aggregationCost);
-        } else if (aggregationCost < smallestWarehousePrice) {
-          _smallestWarehousePrices.put(breakdownProduct, aggregationCost);
-        }
+        updateSmallestBiggestPrices(breakdownProduct, aggregationCost);
       } else {
         // if we get here, we have stock anyway, so it's a regular sale
         product.updateStock(-amount);
@@ -705,7 +677,7 @@ public class Warehouse implements Serializable {
       // transaction "procedures"
       removeOutOfStockWarehouseBatches(product, amount);
       partner.addNewSaleOrBreakdown(sale);
-      addTransaction(sale);
+      addTransactionToWarehouse(sale);
   }
 
   /**
@@ -725,20 +697,11 @@ public class Warehouse implements Serializable {
       partner.addNewAcquisition(acquisition);
       product.updatePrice(price, _smallestWarehousePrices);
       product.updateStock(amount);
-      Double biggestKnownPrice = _biggestKnownPrices.get(product);
-      Double smallestWarehousePrice = _smallestWarehousePrices.get(product);
-      if (biggestKnownPrice == null) {
-        _biggestKnownPrices.put(product, price);
-        _smallestWarehousePrices.put(product, price);
-      } else if (price > biggestKnownPrice) {
-        _biggestKnownPrices.put(product, price);
-      } else if (price < smallestWarehousePrice) {
-        _smallestWarehousePrices.put(product, price);
-      }
+      updateSmallestBiggestPrices(product, price);
       Batch batch = new Batch(product, amount, price, partner);
       product.addWarehouseBatch(batch);
       updateBalanceAcquisition(price * amount);
-      addTransaction(acquisition);
+      addTransactionToWarehouse(acquisition);
       removeOutOfStockPartnerBatches(partner, product, amount);
   }
 
@@ -772,7 +735,7 @@ public class Warehouse implements Serializable {
       partner.getPartnerStatus().payTransaction(breakdown, currentDate);
       updateBalanceSale(transactionCost);
       breakdown.updatePaid(transactionCost);
-      addTransaction(breakdown);
+      addTransactionToWarehouse(breakdown);
   }
 
   /**
@@ -814,18 +777,10 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * Adds a product to the warehouse 
-   * @param product
-   */
-  public void addProduct(Product product){
-    _products.put(product.getProductKey(), product);
-  }
-
-  /**
    * Adds a transaction to the warehouse
    * @param transaction
    */
-  public void addTransaction(Transaction transaction) {
+  public void addTransactionToWarehouse(Transaction transaction) {
     _transactions.put(transaction.getTransactionKey(), transaction);
   }
 
@@ -926,6 +881,19 @@ public class Warehouse implements Serializable {
     for (Batch batch: toRemove) {
       partner.removeBatch(batch);
       product.removeBatch(batch);
+    }
+  }
+
+  public void updateSmallestBiggestPrices(Product product, double price) {
+    Double biggestKnownPrice = _biggestKnownPrices.get(product);
+    Double smallestWarehousePrice = _smallestWarehousePrices.get(product);
+    if (biggestKnownPrice == null) {
+      _biggestKnownPrices.put(product, price);
+      _smallestWarehousePrices.put(product, price);
+    } else if (price > biggestKnownPrice) {
+      _biggestKnownPrices.put(product, price);
+    } else if (price < smallestWarehousePrice) {
+      _smallestWarehousePrices.put(product, price);
     }
   }
 

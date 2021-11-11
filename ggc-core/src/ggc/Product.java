@@ -11,11 +11,6 @@ import java.util.PriorityQueue;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import java.text.Collator;
-import java.util.Locale;
-
-import java.util.Comparator;
-
 /**
  * Class representing a Product in the system
  */

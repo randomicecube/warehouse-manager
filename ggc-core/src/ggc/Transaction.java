@@ -16,12 +16,16 @@ public abstract class Transaction implements Serializable {
   /** Transaction's corresponding base date */
   private int _paymentDate;
 
+  /** Transaction's associated partner */
   private Partner _partner;
 
+  /** Transaction's associated "main" product */
   private Product _product;
 
+  /** Transaction's "main" product amount */
   private int _amount;
 
+  /** Transactions base price - if a Sale, doesn't account for taxes/benefits */
   private double _basePrice;
 
   /**

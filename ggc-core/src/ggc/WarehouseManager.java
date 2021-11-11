@@ -6,7 +6,6 @@ import ggc.exceptions.*;
 import java.util.Map;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 /** Façade for access. */
 public class WarehouseManager {

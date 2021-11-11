@@ -6,6 +6,9 @@ import java.io.Serializable;
  * Class representing a Bargain Notification
  */
 public class BargainNotification extends Notification implements Serializable {
+
+  /** Serial number for serialization. */
+  private static final long serialVersionUID = 202111111329L;
   
   /**
    * Main Constructor

@@ -58,7 +58,6 @@ public class DoRegisterAcquisitionTransaction extends Command<WarehouseManager> 
         } catch (NoSuchProductKeyException e) {
           throw new UnknownProductKeyException(e.getKey());
         }
-        // TODO -> IN CORE try -> catch noSuchProductKeyException
       } else {
         _receiver.registerProduct(
           stringField("productKey")

@@ -8,6 +8,9 @@ import java.util.Comparator;
  */
 public class BatchComparator implements Comparator<Batch>, Serializable {
 
+  /** Serial number for serialization. */
+  private static final long serialVersionUID = 202111111328L;
+
   /**
    * Compares two batches' stocks
    * @param b1

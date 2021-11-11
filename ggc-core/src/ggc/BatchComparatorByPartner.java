@@ -4,6 +4,9 @@ package ggc;
  * A class which compares two batches associated with a partner
  */
 public class BatchComparatorByPartner extends BatchComparator {
+
+  /** Serial number for serialization. */
+  private static final long serialVersionUID = 202111111327L;
   
   /**
    * Compares two batch's partnerKeys
