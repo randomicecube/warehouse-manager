@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 public class BatchComparator implements Comparator<Batch>, Serializable {
-
+  
   public int comparePartnerKeys(Batch b1, Batch b2) {
     String partnerKeyB1 = b1.getPartner().getPartnerKey();
     String partnerKeyB2 = b2.getPartner().getPartnerKey();
     return partnerKeyB1.compareTo(partnerKeyB2);
   }
-  
+
   public double comparePrices(Batch b1, Batch b2) {
     return b1.getPrice() - b2.getPrice();
   }

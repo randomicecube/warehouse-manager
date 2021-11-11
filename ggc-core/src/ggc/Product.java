@@ -147,9 +147,8 @@ public class Product implements Serializable {
   }
 
   public List<Batch> getSortedBatches() {
-    List<Batch> sortedBatches = getBatches();
-    
-    sortedBatches.sort(new BatchComparator());
+    List<Batch> sortedBatches = getBatches();  
+    sortedBatches.sort(new BatchComparatorByPartner());
     return sortedBatches;
   }
 

@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import java.util.Comparator;
+
 import java.text.Collator;
 import java.util.Locale;
 
@@ -528,11 +530,13 @@ public class Warehouse implements Serializable {
   }
 
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
-    Collection<Batch> availableBatches = getBatches();
-    availableBatches
+    List<Batch> availableBatches = getBatches()
       .stream()
       .filter(batch -> batch.getPrice() < priceCap)
-      .collect(Collectors.toList()).sort(new BatchComparator());
+      .collect(Collectors.toList());
+    
+    availableBatches.sort(new BatchComparatorByProduct());
+
     return availableBatches; 
   }
 
