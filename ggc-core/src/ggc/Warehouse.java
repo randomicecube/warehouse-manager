@@ -4,6 +4,7 @@ import java.io.*;
 import ggc.exceptions.*;
 
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -186,7 +187,6 @@ public class Warehouse implements Serializable {
         _products.put(productKey, product);
       }
 
-      // TODO - is it supposed to be > or <?
       if (parsedPrice > product.getProductPrice()) {
         product.updatePrice(parsedPrice, _smallestWarehousePrices);
       }
@@ -265,7 +265,6 @@ public class Warehouse implements Serializable {
         _products.put(productKey, batchProduct);
       }
 
-      // TODO - is it supposed to be > or <?
       if (parsedPrice > batchProduct.getProductPrice()) {
         batchProduct.updatePrice(parsedPrice, _smallestWarehousePrices);
       }
@@ -391,9 +390,11 @@ public class Warehouse implements Serializable {
 
     List<Batch> batches = new ArrayList<Batch>();
 
-    for (Product p: products) {
-      for (Batch b: p.getBatches()) {
-        batches.add(b);
+    for (Product product: products) {
+      if (product.getStock() != 0) {
+        for (Batch b: product.getBatches()) {
+          batches.add(b);
+        }
       }
     }
 
@@ -418,8 +419,8 @@ public class Warehouse implements Serializable {
     for (String key: productKeys) {
       try {
         Product product = getProduct(key);
-        for (String batch: product.getBatchStrings()) {
-          batches.add(batch);
+        for (Batch batch: product.getBatchesSorted()) {
+          batches.add(batch.toString());
         }
       } catch (NoSuchProductKeyException e) {
         // will never happen
@@ -477,7 +478,14 @@ public class Warehouse implements Serializable {
    */
   public Collection<String> getBatchesByProduct(String productKey)
     throws NoSuchProductKeyException {
-      return getProduct(productKey).getBatchStrings();
+      List<String> availableInStockBatches = new ArrayList<String>();
+      List<Batch> productBatches = getProduct(productKey).getBatchesSorted();
+      int stock = getProduct(productKey).getStock();
+      for (int i = 0; stock > 0; i++) {
+        availableInStockBatches.add(productBatches.get(i).toString());
+        stock -= productBatches.get(i).getAmount();
+      }
+      return availableInStockBatches;
   }
 
   /**
@@ -532,7 +540,7 @@ public class Warehouse implements Serializable {
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
     List<Batch> availableBatches = getBatches()
       .stream()
-      .filter(batch -> batch.getPrice() < priceCap)
+      .filter(batch -> batch.getPrice() < priceCap && batch.getProductType().getStock() > 0)
       .collect(Collectors.toList());
     
     availableBatches.sort(new BatchComparatorByProduct());
@@ -619,6 +627,7 @@ public class Warehouse implements Serializable {
         sale = new Sale(_nextTransactionKey++, partner, product, currentDate, amount, product.getProductPrice() * amount, deadline);
       }
       // transaction "procedures"
+      removeOutOfStockWarehouseBatches(product, amount);
       partner.addNewSaleOrBreakdown(sale);
       addTransaction(sale);
   }
@@ -641,9 +650,11 @@ public class Warehouse implements Serializable {
       } else if (price < smallestWarehousePrice) {
         _smallestWarehousePrices.put(product, price);
       }
-      product.addBatch(new Batch(product, amount, price, partner));
+      Batch batch = new Batch(product, amount, price, partner);
+      product.addWarehouseBatch(batch);
       updateBalanceAcquisition(price * amount);
       addTransaction(acquisition);
+      removeOutOfStockPartnerBatches(partner, product, amount);
   }
 
   /** Registers a breakdown transaction */
@@ -741,6 +752,38 @@ public class Warehouse implements Serializable {
       }
       product.updateStock(-amount);
       return cost;
+  }
+
+  public void removeOutOfStockWarehouseBatches(Product product, int amount) {
+    PriorityQueue<Batch> batches = product.getWarehouseBatches();
+    int left = amount;
+    for (Batch batch: batches) {
+      if (batch.getAmount() > left) {
+        batch.updateAmount(-left);
+        return;
+      } else {
+        left -= batch.getAmount();
+        product.removeWarehouseBatch(batch);
+      }
+    }
+  }
+
+  public void removeOutOfStockPartnerBatches(Partner partner, Product product, int amount) {
+    PriorityQueue<Batch> batches = partner.getPartnerBatches();
+    List<Batch> toRemove = new ArrayList<Batch>();
+    int left = amount;
+    for (Batch batch: batches) {
+      if (batch.getAmount() > left) {
+        return;
+      } else {
+        left -= batch.getAmount();
+        toRemove.add(batch);
+      }
+    }
+    for (Batch batch: toRemove) {
+      partner.removeBatch(batch);
+      product.removeBatch(batch);
+    }
   }
 
 }

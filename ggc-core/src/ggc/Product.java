@@ -34,9 +34,9 @@ public class Product implements Serializable {
   private int _stock = 0; // Integer instead of int for consistency's sake with Maps
 
   /** Product's in-stock batches */
-  private PriorityQueue<Batch> _productBatches = new PriorityQueue<Batch>(
-    new BatchComparator()
-  );
+  private PriorityQueue<Batch> _productBatches = new PriorityQueue<Batch>(new BatchComparator());
+
+  private PriorityQueue<Batch> _batchesInWarehouse = new PriorityQueue<Batch>(new BatchComparator());
 
   /** Stores partners' intent to receive notifications about the product
    *  true if they want to, false if they do not
@@ -117,6 +117,20 @@ public class Product implements Serializable {
     _productBatches.add(batch);
   }
 
+  public void removeBatch(Batch batch) {
+    _productBatches.remove(batch);
+  }
+
+  public void addWarehouseBatch(Batch batch) {
+    _batchesInWarehouse.add(batch);
+    addBatch(batch);
+  }
+
+  public void removeWarehouseBatch(Batch batch) {
+    _batchesInWarehouse.remove(batch);
+    removeBatch(batch);
+  }
+
   /**
    * Update product's current stock
    * 
@@ -149,23 +163,24 @@ public class Product implements Serializable {
     return _productBatches;
   }
 
+  public PriorityQueue<Batch> getWarehouseBatches() {
+    return _batchesInWarehouse;
+  }
+
   /** @return product's stock */
   public int getStock() {
     return _stock;
   }
 
-  /** @return product's in-stock batches in toString format */
-  public Collection<String> getBatchStrings() {    
+  /** @return product's in-stock batches (sorted) */
+  public List<Batch> getBatchesSorted() {    
     List<Batch> batches = getBatches()
       .stream()
       .collect(Collectors.toList());
     
     batches.sort(new BatchComparatorByPartner());
 
-    return batches
-      .stream()
-      .map(batch -> batch.toString())
-      .collect(Collectors.toList());
+    return batches;
   }
 
   public Map<Observer, Boolean> getObservingPartners() {

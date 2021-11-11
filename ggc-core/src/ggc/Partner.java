@@ -40,9 +40,7 @@ public class Partner implements Serializable, Observer {
   private List<Notification> _unreadNotifications = new ArrayList<Notification>();
 
   /** Partner's in-stock batches */
-  private PriorityQueue<Batch> _partnerBatches = new PriorityQueue<Batch>(
-    new BatchComparator()
-  );
+  private PriorityQueue<Batch> _partnerBatches = new PriorityQueue<Batch>(new BatchComparator());
 
   /** Partner's desired notification method */
   private DeliveryStrategy _notificationMethod;
@@ -165,6 +163,10 @@ public class Partner implements Serializable, Observer {
    */
   public void addBatch(Batch batch) {
     _partnerBatches.add(batch);
+  }
+
+  public void removeBatch(Batch batch) {
+    _partnerBatches.remove(batch);
   }
 
   public Double getAcquisitionPrices() {
