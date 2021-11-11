@@ -21,6 +21,10 @@ public class Recipe implements Serializable {
     // create an empty recipe
   }
 
+  /**
+   * Main Constructor
+   * @param ingredients
+   */
   public Recipe(Map<Product, Integer> ingredients) {
     _ingredients = ingredients;
   }

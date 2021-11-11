@@ -2,6 +2,9 @@ package ggc;
 
 import java.io.Serializable;
 
+/**
+ * A class representing a transaction visitor
+ */
 public abstract class TransactionVisitor implements Serializable {
   
   /** Serial number for serialization. */
@@ -19,6 +22,11 @@ public abstract class TransactionVisitor implements Serializable {
    */
   public abstract double visitSale(Sale sale, int currentDate);
 
+  /**
+   * Visit a Breakdown transaction
+   * @param breakdown
+   * @param currentDate
+   */
   public abstract double visitBreakdown(Breakdown breakdown, int currentDate);
 
 }

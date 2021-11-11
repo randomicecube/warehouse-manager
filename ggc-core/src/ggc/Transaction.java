@@ -24,6 +24,15 @@ public abstract class Transaction implements Serializable {
 
   private double _basePrice;
 
+  /**
+   * Main Construtor
+   * @param transactionKey
+   * @param partner
+   * @param product
+   * @param baseDate
+   * @param amount
+   * @param basePrice
+   */
   public Transaction(int transactionKey, Partner partner, Product product, int baseDate, int amount, double basePrice) {
     _transactionKey = transactionKey;
     _partner = partner;
@@ -43,18 +52,34 @@ public abstract class Transaction implements Serializable {
     return _paymentDate;
   }
 
+  /**
+   * 
+   * @return base Price
+   */
   public double getBasePrice() {
     return _basePrice;
   }
 
+  /**
+   * 
+   * @return product
+   */
   public Product getProduct() {
     return _product;
   }
   
+  /**
+   * 
+   * @return partner
+   */
   public Partner getPartner() {
     return _partner;
   }
 
+  /**
+   * 
+   * @return amount
+   */
   public int getAmount() {
     return _amount;
   }
@@ -68,26 +93,56 @@ public abstract class Transaction implements Serializable {
     _paymentDate = date;
   }
 
+  /**
+   * 
+   * @return actual price
+   */
   public double getActualPrice() {
     return getBasePrice();
   }
 
+  /**
+   * Updates actual price
+   * @param currentDate
+   */
   public abstract void updateActualPrice(int currentDate);
 
+  /**
+   * Accepts visitor
+   * @param visitor
+   * @param date
+   * @return
+   */
   public abstract double accept(TransactionVisitor visitor, int date);
 
+  /**
+   * 
+   * @return payment date
+   */
   public int getDueDate() {
     return _paymentDate;
   }
 
+  /**
+   * 
+   * @return falsae
+   */
   public boolean hasRecipe() {
     return false;
   }
 
+  /**
+   * 
+   * @return true
+   */
   public boolean isPaid() {
     return true;
   }
 
+  /**
+   * 
+   * @param price
+   */
   public void updatePaid(double price) {
     // do nothing (in general)
   }

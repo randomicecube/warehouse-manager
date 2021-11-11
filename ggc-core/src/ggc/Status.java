@@ -18,24 +18,41 @@ public abstract class Status implements Serializable {
 
   private Partner _partner;
 
+  /**
+   * Main Constructor
+   * @param partner
+   */
   public Status(Partner partner) {
     _partner = partner;
   }
 
+  /**
+   * Status' payment strategy
+   * @param transaction
+   * @param currentDate
+   */
   public abstract void payTransaction(Transaction transaction, int currentDate);
 
+  /**
+   * 
+   * @return
+   */
   public Partner getPartner() {
     return _partner;
   }
 
-  // public boolean changeToNormal() {
-    // return _partner.getPartnerPoints() <= SELECTION_LIMIT;
-  // }
-
+  /**
+   * Check if the Partner's ready to change to selection
+   * @return boolean
+   */
   public boolean changeToSelection() {
     return _partner.getPartnerPoints() > SELECTION_LIMIT && !changeToElite();
   }
 
+  /**
+   * Check if the Partner's ready to change to elite
+   * @return boolean
+   */
   public boolean changeToElite() {
     return _partner.getPartnerPoints() > ELITE_LIMIT;
   }

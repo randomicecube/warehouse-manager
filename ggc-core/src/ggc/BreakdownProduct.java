@@ -17,6 +17,15 @@ public class BreakdownProduct extends Product implements Serializable {
   /** Product's associated aggravation factor */
   private Double _aggravationFactor;
 
+  /**
+   * Main Constructor
+   * 
+   * @param recipe
+   * @param aggravationFactor
+   * @param productKey
+   * @param stock
+   * @param price
+   */
   public BreakdownProduct(Recipe recipe, Double aggravationFactor, 
                           String productKey, Integer stock, Double price) {
     super(productKey, stock, price);
@@ -24,6 +33,14 @@ public class BreakdownProduct extends Product implements Serializable {
     _aggravationFactor = aggravationFactor;
   }
 
+  /**
+   * Secondary Constructor when there's no price associated
+   * 
+   * @param recipe
+   * @param aggravationFactor
+   * @param productKey
+   * @param stock
+   */
   public BreakdownProduct(Recipe recipe, Double aggravationFactor, 
                           String productKey, Integer stock) {
     super(productKey, stock);
@@ -41,17 +58,18 @@ public class BreakdownProduct extends Product implements Serializable {
     return _aggravationFactor;
   }
 
-  // TODO - possibly need to have a different getPrice for breakdown products
-  // @Override
-  // public double getPrice() {
-    // return getPrice() * (1 + _aggravationFactor);
-  // }
-
+  /**
+   * @return 5
+   */
   @Override
   public int getProductDeadlineDelta() {
     return 5; // 5 for "Breakdown" Products
   }
 
+  /**
+   * 
+   * @return true
+   */
   @Override
   public boolean hasRecipe() {
     return true;

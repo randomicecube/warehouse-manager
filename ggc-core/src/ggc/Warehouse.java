@@ -31,6 +31,7 @@ public class Warehouse implements Serializable {
   /** Warehouse's current date */
   private int _date = 0;
 
+  /**The next transaction key */
   private int _nextTransactionKey = 0;
 
   /** Warehouse's current available balance */
@@ -42,10 +43,13 @@ public class Warehouse implements Serializable {
   /** All partners associated with the warehouse */
   private Map<String, Partner> _partners = new HashMap<String, Partner>();
 
+  /**All transactions associated with warehouse */
   private Map<Integer, Transaction> _transactions = new LinkedHashMap<Integer, Transaction>();
 
+  /**Biggest price for each product in the warehouse history */
   private Map<Product, Double> _biggestKnownPrices = new HashMap<Product, Double>();
 
+  /**Smallest price for each product in the warehouse history */
   private Map<Product, Double> _smallestWarehousePrices = new HashMap<Product, Double>();
 
   /**
@@ -330,10 +334,22 @@ public class Warehouse implements Serializable {
     throw new NoSuchPartnerKeyException(key);
   }
 
+  /**
+   * 
+   * @param key
+   * @return a partner's string
+   * @throws NoSuchPartnerKeyException
+   */
   public String getPartnerString(String key) throws NoSuchPartnerKeyException {
     return getPartner(key).partnerStringed(getDate());
   }
 
+  /**
+   * reads partner's notifications
+   * @param key
+   * @return notifications
+   * @throws NoSuchPartnerKeyException
+   */
   public Collection<Notification> readPartnerNotifications(String key) 
     throws NoSuchPartnerKeyException {
       Partner partner = getPartner(key);
@@ -382,6 +398,10 @@ public class Warehouse implements Serializable {
 
   }
 
+  /**
+   * 
+   * @return batches
+   */
   public Collection<Batch> getBatches() {
     List<Product> products = getProducts()
       .values()
@@ -502,6 +522,13 @@ public class Warehouse implements Serializable {
     return t;
   }
 
+  /**
+   * Toggles partner's notifications for a specific product
+   * @param partnerKey
+   * @param productKey
+   * @throws NoSuchProductKeyException
+   * @throws NoSuchPartnerKeyException
+   */
   public void toggleProductNotifications(String partnerKey, String productKey)
     throws NoSuchProductKeyException, NoSuchPartnerKeyException {
       Product product = getProduct(productKey);
@@ -513,12 +540,24 @@ public class Warehouse implements Serializable {
       }
   }
 
+  /**
+   * 
+   * @param partnerKey
+   * @return partner's acquisitions
+   * @throws NoSuchPartnerKeyException
+   */
   public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
     throws NoSuchPartnerKeyException {
       // TODO - UNMODIFIABLE COLLECTION
       return getPartner(partnerKey).getAcquisitions();
   }
 
+  /**
+   * 
+   * @param partnerKey
+   * @return partner's sales
+   * @throws NoSuchPartnerKeyException
+   */
   public Collection<Transaction> getPartnerSales(String partnerKey)
     throws NoSuchPartnerKeyException {
       Collection<Transaction> sales = getPartner(partnerKey).getSales();
@@ -529,6 +568,12 @@ public class Warehouse implements Serializable {
       return sales;
   }
 
+  /**
+   * 
+   * @param partnerKey
+   * @return partner's paid transactions
+   * @throws NoSuchPartnerKeyException
+   */
   public Collection<Transaction> getPaymentsByPartner(String partnerKey)
     throws NoSuchPartnerKeyException {
       return getPartnerSales(partnerKey)
@@ -537,6 +582,11 @@ public class Warehouse implements Serializable {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Searches every batch under a given price
+   * @param priceCap
+   * @return available Batches
+   */
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
     List<Batch> availableBatches = getBatches()
       .stream()
@@ -548,6 +598,11 @@ public class Warehouse implements Serializable {
     return availableBatches; 
   }
 
+  /**
+   * Receives a payment for a sale
+   * @param transactionKey
+   * @throws NoSuchTransactionKeyException
+   */
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
       Sale sale = (Sale) getTransaction(transactionKey);
@@ -563,11 +618,22 @@ public class Warehouse implements Serializable {
       updateBalanceSale(pricePaid);
   }
 
+  /**
+   * Registers a product
+   * @param productKey
+   */
   public void registerProduct(String productKey) {
     Product product = new Product(productKey, 0);
     _products.put(productKey, product);
   }
 
+  /**
+   * Registers a Breakdown product
+   * @param productKey
+   * @param ingredients
+   * @param alpha
+   * @throws NoSuchProductKeyException
+   */
   public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
     throws NoSuchProductKeyException {
       // check if all ingredients are registered
@@ -588,6 +654,16 @@ public class Warehouse implements Serializable {
       _products.put(productKey, product);
   }
 
+  /**
+   * Registers a Sale Transaction
+   * @param partnerKey
+   * @param deadline
+   * @param productKey
+   * @param amount
+   * @throws NoSuchPartnerKeyException
+   * @throws NoSuchProductKeyException
+   * @throws NotEnoughStockException
+   */
   public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       Partner partner = getPartner(partnerKey);
@@ -632,6 +708,15 @@ public class Warehouse implements Serializable {
       addTransaction(sale);
   }
 
+  /**
+   * Registers a Acquisition transaction
+   * @param partnerKey
+   * @param productKey
+   * @param price
+   * @param amount
+   * @throws NoSuchPartnerKeyException
+   * @throws NoSuchProductKeyException
+   */
   public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException {
       Partner partner = getPartner(partnerKey);
@@ -657,7 +742,15 @@ public class Warehouse implements Serializable {
       removeOutOfStockPartnerBatches(partner, product, amount);
   }
 
-  /** Registers a breakdown transaction */
+  /**
+   * Registers a breakdown transaction
+   * @param partnerKey
+   * @param productKey
+   * @param amount
+   * @throws NoSuchPartnerKeyException
+   * @throws NoSuchProductKeyException
+   * @throws NotEnoughStockException
+   */
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       Partner partner = getPartner(partnerKey);
@@ -682,6 +775,14 @@ public class Warehouse implements Serializable {
       addTransaction(breakdown);
   }
 
+  /**
+   * Makes a breakdown
+   * @param product
+   * @param amount
+   * @param price
+   * @return the breakdown's cost
+   * @throws NoSuchProductKeyException
+   */
   public double breakdownProcedure(BreakdownProduct product, int amount, double price)
     throws NoSuchProductKeyException {
     Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
@@ -696,22 +797,45 @@ public class Warehouse implements Serializable {
     return price - ingredientsCost;
   }
 
+  /**
+   * Updates balance due to a acquisition
+   * @param money
+   */
   public void updateBalanceAcquisition(double money) {
     _availableBalance -= money;
   }
 
+  /**
+   * updates balance due to a sale
+   * @param money
+   */
   public void updateBalanceSale(double money) {
     _availableBalance += money;
   }
 
-  public void addProduct(Product p){
-    _products.put(p.getProductKey(), p);
+  /**
+   * Adds a product to the warehouse 
+   * @param product
+   */
+  public void addProduct(Product product){
+    _products.put(product.getProductKey(), product);
   }
 
-  public void addTransaction(Transaction t) {
-    _transactions.put(t.getTransactionKey(), t);
+  /**
+   * Adds a transaction to the warehouse
+   * @param transaction
+   */
+  public void addTransaction(Transaction transaction) {
+    _transactions.put(transaction.getTransactionKey(), transaction);
   }
 
+  /**
+   * Recursive function to check if there's enough ingredients to an aggregation
+   * @param product
+   * @param amount
+   * @throws NotEnoughStockException
+   * @throws NoSuchProductKeyException
+   */
   public void checkIngredientsStock(BreakdownProduct product, int amount)
     throws NotEnoughStockException, NoSuchProductKeyException {
       Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
@@ -733,6 +857,14 @@ public class Warehouse implements Serializable {
       }
   }
 
+  /**
+   * Make an aggregation
+   * @param product
+   * @param amount
+   * @return
+   * @throws NotEnoughStockException
+   * @throws NoSuchProductKeyException
+   */
   public double makeAggregation(BreakdownProduct product, int amount)
     throws NotEnoughStockException, NoSuchProductKeyException {
       Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
@@ -754,6 +886,11 @@ public class Warehouse implements Serializable {
       return cost;
   }
 
+  /**
+   * Removes out of stock warehouse batches
+   * @param product
+   * @param amount
+   */
   public void removeOutOfStockWarehouseBatches(Product product, int amount) {
     PriorityQueue<Batch> batches = product.getWarehouseBatches();
     int left = amount;
@@ -768,6 +905,12 @@ public class Warehouse implements Serializable {
     }
   }
 
+  /**
+   * Removes out of stock partner's batches
+   * @param partner
+   * @param product
+   * @param amount
+   */
   public void removeOutOfStockPartnerBatches(Partner partner, Product product, int amount) {
     PriorityQueue<Batch> batches = partner.getPartnerBatches();
     List<Batch> toRemove = new ArrayList<Batch>();

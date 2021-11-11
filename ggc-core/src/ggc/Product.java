@@ -57,6 +57,11 @@ public class Product implements Serializable {
     _stock += stock;
   }
 
+  /**
+   * Secondary constructor when there's no price associated with the product
+   * @param productKey
+   * @param stock
+   */
   public Product(String productKey, int stock) {
     _productKey = productKey;
     _stock = stock;
@@ -87,18 +92,34 @@ public class Product implements Serializable {
     _productPrice = price;
   }
 
+  /**
+   * 
+   * @param price
+   */
   public void setPrice(double price) {
     _productPrice = price;
   }
 
+  /**
+   * 
+   * @param partner
+   */
   public void partnerNowObserving(Observer partner) {
     _notifiedPartners.put(partner, true);
   }
 
+  /**
+   * 
+   * @param partner
+   */
   public void partnerNoLongerObserving(Observer partner) {
     _notifiedPartners.put(partner, false);
   }
 
+  /**
+   * 
+   * @param notification
+   */
   public void notifyPartners(Notification notification) {
     for (Observer partner : _notifiedPartners.keySet()) {
       if (_notifiedPartners.get(partner)) {
@@ -117,15 +138,27 @@ public class Product implements Serializable {
     _productBatches.add(batch);
   }
 
+  /**
+   * 
+   * @param batch
+   */
   public void removeBatch(Batch batch) {
     _productBatches.remove(batch);
   }
 
+  /**
+   * 
+   * @param batch
+   */
   public void addWarehouseBatch(Batch batch) {
     _batchesInWarehouse.add(batch);
     addBatch(batch);
   }
 
+  /**
+   * 
+   * @param batch
+   */
   public void removeWarehouseBatch(Batch batch) {
     _batchesInWarehouse.remove(batch);
     removeBatch(batch);
@@ -145,6 +178,10 @@ public class Product implements Serializable {
     _stock += stock;
   }
 
+  /**
+   * 
+   * @return
+   */
   public int getProductDeadlineDelta() {
     return 3; // 3 for "Simple" Products
   }
@@ -159,10 +196,18 @@ public class Product implements Serializable {
     return _productPrice;
   }
 
+  /**
+   * 
+   * @return productBatches
+   */
   public PriorityQueue<Batch> getBatches() {
     return _productBatches;
   }
 
+  /**
+   * 
+   * @return batches in the Warehouse
+   */
   public PriorityQueue<Batch> getWarehouseBatches() {
     return _batchesInWarehouse;
   }
@@ -183,10 +228,18 @@ public class Product implements Serializable {
     return batches;
   }
 
+  /**
+   * 
+   * @return notified Partners
+   */
   public Map<Observer, Boolean> getObservingPartners() {
     return _notifiedPartners;
   }
 
+  /**
+   * 
+   * @return false
+   */
   public boolean hasRecipe() {
     return false;
   }

@@ -11,10 +11,20 @@ public class NormalStatus extends Status implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252100L;
 
+  /**
+   * Main constructor
+   * @param partner
+   */
   public NormalStatus(Partner partner) {
     super(partner);
   }
 
+  /**
+   * Normal's payment strategy
+   * 
+   * @param transaction
+   * @param currentDate
+   */
   public void payTransaction(Transaction transaction, int currentDate) {
     int dueDate = transaction.getDueDate();
     boolean isLate = dueDate < currentDate;

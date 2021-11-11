@@ -34,6 +34,14 @@ public class Batch implements Serializable {
     _partner = partner;
   }
 
+  /**
+   * Secondary Constructor
+   * Batch not associated with any partner
+   * 
+   * @param productType
+   * @param amount
+   * @param price
+   */
   public Batch(Product productType, int amount, double price) {
     _productType = productType;
     _amount = amount;
