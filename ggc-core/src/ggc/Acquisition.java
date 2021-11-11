@@ -25,13 +25,7 @@ public class Acquisition extends Transaction implements Serializable {
   }
 
   /**
-   * Updates actual price (Acquisition does nothing)
-   * @param currentDate
-   */
-  public void updateActualPrice(int currentDate) { }
-
-  /**
-   * Accept transaction visitor
+   * Accepts a transaction visitor
    * @param visitor
    * @param date
    * @return

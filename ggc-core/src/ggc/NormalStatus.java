@@ -32,7 +32,7 @@ public class NormalStatus extends Status implements Serializable {
     double price = transaction.getActualPrice();
     Partner partner = getPartner();
     if (isLate) {
-      if (!transaction.hasRecipe()) {
+      if (!transaction.hasRecipe()) { // accounting only for sales
         partner.clearPartnerPoints();
       }
     } else {

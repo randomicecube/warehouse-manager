@@ -10,10 +10,13 @@ public class Sale extends Transaction implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252054L;
 
+  /** Sale's due date */
   private int _dueDate;
 
+  /** Sale's actual price (accounting for taxes/benefits) */
   private double _actualPrice;
 
+  /** Flag corresponding to whether the sale is paid or not */
   private boolean _paid = false;
 
   /**
@@ -31,7 +34,7 @@ public class Sale extends Transaction implements Serializable {
     _dueDate = dueDate;
   }
 
-  /**
+  /** Gets sale's due date
    * 
    * @return dueDate
    */
@@ -39,7 +42,8 @@ public class Sale extends Transaction implements Serializable {
     return _dueDate;
   }
 
-  /**
+  /** Updates sale's actual price (accounting for taxes/benefits)
+   * 
    * Update the to be paid price considering the current date
    * @param currentDate
    */
@@ -60,7 +64,7 @@ public class Sale extends Transaction implements Serializable {
     }
   }
 
-  /**
+  /** Gets sale's actual price
    * 
    * @return actual price
    */
@@ -68,15 +72,12 @@ public class Sale extends Transaction implements Serializable {
     return _actualPrice;
   }
 
-  /**
-   * 
-   * @return paid
-   */
+  /** @return whether the sale is paid or not */
   public boolean isPaid() {
     return _paid;
   }
 
-  /**
+  /** Sets sale's paid status to true, update's its price
    * 
    * @param price
    */

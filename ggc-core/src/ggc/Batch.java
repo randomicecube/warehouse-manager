@@ -3,8 +3,8 @@ package ggc;
 import java.io.Serializable;
 
 /**
- * Class representing Product batches All instances have a product type, a
- * Product amount and the price per product
+ * Class representing Product batches
+ * All instances have a product type, a Product amount and the price per unit
  */
 public class Batch implements Serializable {
 
@@ -20,6 +20,7 @@ public class Batch implements Serializable {
   /** The Batch's per-unit Product price */
   private double _price;
 
+  /** The Batch's associated partner */
   private Partner _partner;
 
   /**
@@ -30,22 +31,10 @@ public class Batch implements Serializable {
    * @param price       batch's per-unit product price
    */
   public Batch(Product productType, int amount, double price, Partner partner) {
-    this(productType, amount, price);
-    _partner = partner;
-  }
-
-  /**
-   * Secondary Constructor
-   * Batch not associated with any partner
-   * 
-   * @param productType
-   * @param amount
-   * @param price
-   */
-  public Batch(Product productType, int amount, double price) {
     _productType = productType;
     _amount = amount;
     _price = price;
+    _partner = partner;
   }
 
   /**

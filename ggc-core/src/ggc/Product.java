@@ -87,7 +87,7 @@ public class Product implements Serializable {
     _productPrice = price;
   }
 
-  /**
+  /** Sets a product's price
    * 
    * @param price
    */
@@ -95,7 +95,7 @@ public class Product implements Serializable {
     _productPrice = price;
   }
 
-  /**
+  /** Puts an observer on the notified partners map
    * 
    * @param partner
    */
@@ -103,7 +103,7 @@ public class Product implements Serializable {
     _notifiedPartners.put(partner, true);
   }
 
-  /**
+  /** Removes an observer from the notified partners map
    * 
    * @param partner
    */
@@ -111,7 +111,7 @@ public class Product implements Serializable {
     _notifiedPartners.put(partner, false);
   }
 
-  /**
+  /** Notifies partners of a product's action
    * 
    * @param notification
    */
@@ -124,7 +124,7 @@ public class Product implements Serializable {
   }
 
   /**
-   * A given batch is associated with a product - now literally
+   * Adds a batch to the product's overall batches list
    * 
    * @param batch to-add batch
    */
@@ -133,7 +133,7 @@ public class Product implements Serializable {
     _productBatches.add(batch);
   }
 
-  /**
+  /** Removes a batch from the product's overall batches list
    * 
    * @param batch
    */
@@ -141,7 +141,7 @@ public class Product implements Serializable {
     _productBatches.remove(batch);
   }
 
-  /**
+  /** Adds a batch to the product's batches in warehouse
    * 
    * @param batch
    */
@@ -150,7 +150,7 @@ public class Product implements Serializable {
     addBatch(batch);
   }
 
-  /**
+  /** Removes a batch from the product's batches in warehouse
    * 
    * @param batch
    */
@@ -159,8 +159,7 @@ public class Product implements Serializable {
     removeBatch(batch);
   }
 
-  /**
-   * Update product's current stock
+  /** Update product's current stock
    * 
    * @param stock
    */
@@ -173,7 +172,7 @@ public class Product implements Serializable {
     _stock += stock;
   }
 
-  /**
+  /** Get the transaction's "N"
    * 
    * @return
    */
@@ -191,10 +190,12 @@ public class Product implements Serializable {
     return _productPrice;
   }
 
+  /** @return product's aggravation factor - 0 for "simple" products */
   public double getAggravationFactor() {
     return 0.0;
   }
 
+  /** @return product's recipe - an empty one for "simple" products */
   public Recipe getRecipe() {
     return new Recipe(new HashMap<Product, Integer>());
   }
@@ -239,12 +240,9 @@ public class Product implements Serializable {
     return _notifiedPartners;
   }
 
-  /**
-   * 
-   * @return false
-   */
+  /** @return whether the product has a recipe or not */
   public boolean hasRecipe() {
-    return false;
+    return !getRecipe().getIngredients().isEmpty();
   }
 
   @Override

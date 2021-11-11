@@ -103,18 +103,12 @@ public class Partner implements Serializable, Observer {
     return _transactionHistory;
   }
 
-  /**
-   * 
-   * @return sale and breakdown history
-   */
+  /** @return sale and breakdown history */
   public List<Transaction> getSales() {
     return _saleBreakdownHistory;
   }
 
-/**
- * 
- * @return acquisition history
- */
+/** @return acquisition history */
   public List<Acquisition> getAcquisitions() {
     return _acquisitionHistory;
   }
@@ -143,9 +137,7 @@ public class Partner implements Serializable, Observer {
     _partnerPoints += points;
   }
 
-  /**
-   * Clears partner's points
-   */
+  /** Clears partner's points */
   public void clearPartnerPoints() {
     _partnerPoints = 0;
   }
@@ -159,7 +151,7 @@ public class Partner implements Serializable, Observer {
     _notificationMethod = method;
   }
 
-  /**
+  /** Adds a new Sale/Breakdown to the partner's history
    * 
    * @param transaction
    */
@@ -168,7 +160,7 @@ public class Partner implements Serializable, Observer {
     _transactionHistory.add(transaction);
   }
 
-  /**
+  /** Adds a new Acquisition to the partner's history
    * 
    * @param acquisition
    */
@@ -177,8 +169,7 @@ public class Partner implements Serializable, Observer {
     _transactionHistory.add(acquisition);
   }
 
-  /**
-   * Add a batch to the partner's in-stock batch collection
+  /** Add a batch to the partner's in-stock batch collection
    * 
    * @param batch
    */
@@ -186,7 +177,7 @@ public class Partner implements Serializable, Observer {
     _partnerBatches.add(batch);
   }
 
-  /**
+  /** Remove a batch from the partner's in-stock batch collection
    * 
    * @param batch
    */
@@ -239,9 +230,7 @@ public class Partner implements Serializable, Observer {
     _unreadNotifications.clear();
   }
 
-  /**
-   * Adds a notification to the partner
-   */
+  /** Adds a notification to the partner */
   public void update(Notification notification) {
     _notificationMethod.deliver(this, notification);
   }

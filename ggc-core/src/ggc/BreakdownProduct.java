@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Class representing a breakdown product, which is a Product consisting of
- * other Products
+ * other Products (has a Recipe)
  */
 public class BreakdownProduct extends Product implements Serializable {
 
@@ -66,15 +66,6 @@ public class BreakdownProduct extends Product implements Serializable {
   @Override
   public int getProductDeadlineDelta() {
     return 5; // 5 for "Breakdown" Products
-  }
-
-  /**
-   * 
-   * @return true
-   */
-  @Override
-  public boolean hasRecipe() {
-    return true;
   }
 
   @Override

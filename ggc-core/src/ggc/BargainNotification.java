@@ -3,7 +3,7 @@ package ggc;
 import java.io.Serializable;
 
 /**
- * Class representing a Bargain Notification
+ * Class representing a "BARGAIN" Notification
  */
 public class BargainNotification extends Notification implements Serializable {
 

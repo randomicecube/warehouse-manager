@@ -2,6 +2,9 @@ package ggc.exceptions;
 
 import java.io.Serializable;
 
+/** Launched when there's not enough stock of a given product
+ *  to perform an operation 
+ */
 public class NotEnoughStockException extends Exception implements Serializable {
 
   /** Serial number for serialization. */

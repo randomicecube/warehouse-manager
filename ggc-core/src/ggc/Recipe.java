@@ -17,6 +17,9 @@ public class Recipe implements Serializable {
   /** Recipe's ingredients and amount */
   private Map<Product, Integer> _ingredients = new LinkedHashMap<Product, Integer>();
 
+  /**
+   * Secondary Constructor - creates an empty recipe
+   */
   public Recipe() {
     // create an empty recipe
   }
@@ -42,16 +45,6 @@ public class Recipe implements Serializable {
   /** @return recipe's ingredients */
   public Map<Product, Integer> getIngredients() {
     return _ingredients;
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (other instanceof Recipe recipe) {
-      if (getIngredients().equals(recipe.getIngredients())) {
-        return true;
-      }
-    }
-    return false;
   }
 
   @Override

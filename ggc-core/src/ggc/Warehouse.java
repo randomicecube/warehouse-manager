@@ -40,13 +40,13 @@ public class Warehouse implements Serializable {
   /** All partners associated with the warehouse */
   private Map<String, Partner> _partners = new HashMap<String, Partner>();
 
-  /**All transactions associated with warehouse */
+  /** All transactions associated with warehouse */
   private Map<Integer, Transaction> _transactions = new LinkedHashMap<Integer, Transaction>();
 
-  /**Biggest price for each product in the warehouse history */
+  /** Biggest price for each product in the warehouse history */
   private Map<Product, Double> _biggestKnownPrices = new HashMap<Product, Double>();
 
-  /**Smallest price for each product in the warehouse history */
+  /** Smallest price for each product in the warehouse history */
   private Map<Product, Double> _smallestWarehousePrices = new HashMap<Product, Double>();
 
   /**
@@ -312,9 +312,10 @@ public class Warehouse implements Serializable {
   }
 
   /**
+   * get a Partner in their String form, given their key
    * 
-   * @param key
-   * @return a partner's string
+   * @param key partner's key
+   * @return partner in String form
    * @throws NoSuchPartnerKeyException
    */
   public String getPartnerString(String key) throws NoSuchPartnerKeyException {
@@ -323,8 +324,9 @@ public class Warehouse implements Serializable {
 
   /**
    * reads partner's notifications
-   * @param key
-   * @return notifications
+   * 
+   * @param key partner's key
+   * @return partner's to-be-read notifications
    * @throws NoSuchPartnerKeyException
    */
   public Collection<Notification> readPartnerNotifications(String key) 
@@ -374,10 +376,7 @@ public class Warehouse implements Serializable {
     return stringedProducts;
   }
 
-  /**
-   * 
-   * @return batches
-   */
+  /** @return all batches associated with everyone, warehouse or partners */
   public Collection<Batch> getBatches() {
     List<Product> products = getProducts()
       .values()
@@ -397,9 +396,9 @@ public class Warehouse implements Serializable {
     return batches;
   }
 
-  /**
-   * @return a Collection with all the batches (in toString form)
-   */
+  /** @return a Collection with all the batches (in toString form) 
+   * sorted by their natural order 
+  */
   public Collection<String> getBatchesCollection() {
     List<String> productKeys = getProducts()
       .values()
@@ -426,7 +425,9 @@ public class Warehouse implements Serializable {
     return batches;
   }
 
-  /** @return a Collection with all partners associated with the warehouse */
+  /** @return a Collection with all partners associated with the warehouse
+   * sorted by their natural order
+   */
   public Collection<String> getPartnersCollection() {
     List<String> partnerKeys = getPartners()
       .values()
@@ -452,7 +453,8 @@ public class Warehouse implements Serializable {
 
   /** 
    * @param partnerKey partner's key
-   * @return a Collection with all batches associated with a given partner  
+   * @return a Collection with all batches associated with a given partner,
+   * sorted by their natural order  
    */
   public Collection<String> getBatchesByPartner(String partnerKey)
     throws NoSuchPartnerKeyException {
@@ -469,7 +471,8 @@ public class Warehouse implements Serializable {
 
   /** 
    * @param productKey product's key
-   * @return a Collection with all batches associated with a given product  
+   * @return a Collection with all batches associated with a given product,
+   * accounting for stock restraints 
    */
   public Collection<String> getBatchesByProduct(String productKey)
     throws NoSuchProductKeyException {
@@ -499,8 +502,8 @@ public class Warehouse implements Serializable {
 
   /**
    * Toggles partner's notifications for a specific product
-   * @param partnerKey
-   * @param productKey
+   * @param partnerKey partner's key
+   * @param productKey product's key
    * @throws NoSuchProductKeyException
    * @throws NoSuchPartnerKeyException
    */
@@ -516,8 +519,9 @@ public class Warehouse implements Serializable {
   }
 
   /**
+   * Gets a given partner's list of acquisition Transactions
    * 
-   * @param partnerKey
+   * @param partnerKey partner's key
    * @return partner's acquisitions
    * @throws NoSuchPartnerKeyException
    */
@@ -530,9 +534,10 @@ public class Warehouse implements Serializable {
   }
 
   /**
+   * Gets a given partner's list of sale and breakdown Transactions
    * 
-   * @param partnerKey
-   * @return partner's sales
+   * @param partnerKey partner's key
+   * @return partner's sales and breakdowns
    * @throws NoSuchPartnerKeyException
    */
   public Collection<Transaction> getPartnerSales(String partnerKey)
@@ -548,13 +553,14 @@ public class Warehouse implements Serializable {
   }
 
   /**
+   * Gets a given partner's list of all paid sales and breakdowns
    * 
-   * @param partnerKey
+   * @param partnerKey partner's key
    * @return partner's paid transactions
    * @throws NoSuchPartnerKeyException
    */
   public Collection<Transaction> getPaymentsByPartner(String partnerKey)
-    throws NoSuchPartnerKeyException {
+    throws NoSuchPartnerKeyException {      
       return getPartnerSales(partnerKey)
         .stream()
         .filter(sale -> sale.isPaid())
@@ -562,8 +568,9 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * Searches every batch under a given price
-   * @param priceCap
+   * Gets every batch under a given price
+   * 
+   * @param priceCap maximum price
    * @return available Batches
    */
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
@@ -579,7 +586,8 @@ public class Warehouse implements Serializable {
 
   /**
    * Receives a payment for a sale
-   * @param transactionKey
+   * 
+   * @param transactionKey transaction's key
    * @throws NoSuchTransactionKeyException
    */
   public void receivePayment(int transactionKey)
@@ -600,8 +608,9 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * Registers a product
-   * @param productKey
+   * Registers a (simple) product in the warehouse's history
+   * 
+   * @param productKey product's key
    */
   public void registerProduct(String productKey) {
     Product product = new Product(productKey, 0);
@@ -609,10 +618,10 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * Registers a Breakdown product
-   * @param productKey
-   * @param ingredients
-   * @param alpha
+   * Registers a Breakdown product in the warehouse's history
+   * @param productKey product's key
+   * @param ingredients product's ingredients
+   * @param alpha product's aggravation factor
    * @throws NoSuchProductKeyException
    */
   public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
@@ -637,10 +646,11 @@ public class Warehouse implements Serializable {
 
   /**
    * Registers a Sale Transaction
-   * @param partnerKey
-   * @param deadline
-   * @param productKey
-   * @param amount
+   * 
+   * @param partnerKey partner's key
+   * @param deadline transaction's deadline
+   * @param productKey product's key
+   * @param amount amount of product to be sold
    * @throws NoSuchPartnerKeyException
    * @throws NoSuchProductKeyException
    * @throws NotEnoughStockException
@@ -681,10 +691,11 @@ public class Warehouse implements Serializable {
 
   /**
    * Registers a Acquisition transaction
-   * @param partnerKey
-   * @param productKey
-   * @param price
-   * @param amount
+   * 
+   * @param partnerKey partner's key
+   * @param productKey product's key
+   * @param price product's price
+   * @param amount amount of product to be acquired
    * @throws NoSuchPartnerKeyException
    * @throws NoSuchProductKeyException
    */
@@ -706,9 +717,10 @@ public class Warehouse implements Serializable {
 
   /**
    * Registers a breakdown transaction
-   * @param partnerKey
-   * @param productKey
-   * @param amount
+   * 
+   * @param partnerKey partner's key
+   * @param productKey product's key
+   * @param amount amount of product to be broken down
    * @throws NoSuchPartnerKeyException
    * @throws NoSuchProductKeyException
    * @throws NotEnoughStockException
@@ -741,9 +753,10 @@ public class Warehouse implements Serializable {
 
   /**
    * Makes a breakdown
-   * @param product
-   * @param amount
-   * @param price
+   * 
+   * @param product product to be broken down
+   * @param amount amount of product to be broken down
+   * @param price product's price
    * @return the breakdown's cost
    * @throws NoSuchProductKeyException
    */
@@ -764,16 +777,18 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * Updates balance due to a acquisition
-   * @param money
+   * Updates balance due to an acquisition
+   * 
+   * @param money amount of money to be added from the balance
    */
   public void updateBalanceAcquisition(double money) {
     _availableBalance -= money;
   }
 
   /**
-   * updates balance due to a sale
-   * @param money
+   * Updates balance due to a sale
+   * 
+   * @param money amount of money to be subtracted from the balance
    */
   public void updateBalanceSaleOrBreakdown(double money) {
     _availableBalance += money;
@@ -781,16 +796,17 @@ public class Warehouse implements Serializable {
 
   /**
    * Adds a transaction to the warehouse
-   * @param transaction
+   * 
+   * @param transaction transaction to be added
    */
   public void addTransactionToWarehouse(Transaction transaction) {
     _transactions.put(transaction.getTransactionKey(), transaction);
   }
 
   /**
-   * Recursive function to check if there's enough ingredients to an aggregation
-   * @param product
-   * @param amount
+   * Recursive function to check if there's enough ingredients to do an aggregation
+   * @param product product to be aggregated
+   * @param amount amount of product to be aggregated
    * @throws NotEnoughStockException
    * @throws NoSuchProductKeyException
    */
@@ -816,9 +832,9 @@ public class Warehouse implements Serializable {
 
   /**
    * Make an aggregation
-   * @param product
-   * @param amount
-   * @return
+   * @param product product to be aggregated
+   * @param amount amount of product to be aggregated
+   * @return aggregation's cost
    * @throws NotEnoughStockException
    * @throws NoSuchProductKeyException
    */
@@ -845,8 +861,9 @@ public class Warehouse implements Serializable {
 
   /**
    * Removes out of stock warehouse batches
-   * @param product
-   * @param amount
+   * 
+   * @param product product to be checked
+   * @param amount amount of product to be checked
    */
   public void removeOutOfStockWarehouseBatches(Product product, int amount) {
     PriorityQueue<Batch> batches = product.getWarehouseBatches();
@@ -864,9 +881,10 @@ public class Warehouse implements Serializable {
 
   /**
    * Removes out of stock partner's batches
-   * @param partner
-   * @param product
-   * @param amount
+   * 
+   * @param partner partner to be checked
+   * @param product product to be checked
+   * @param amount amount of product to be checked
    */
   public void removeOutOfStockPartnerBatches(Partner partner, Product product, int amount) {
     PriorityQueue<Batch> batches = partner.getPartnerBatches();
@@ -886,6 +904,12 @@ public class Warehouse implements Serializable {
     }
   }
 
+  /**
+   * Updates biggest/smallest price of a product in the warehouse's history
+   * 
+   * @param product product to be updated
+   * @param price price to be updated
+   */
   public void updateSmallestBiggestPrices(Product product, double price) {
     Double biggestKnownPrice = _biggestKnownPrices.get(product);
     Double smallestWarehousePrice = _smallestWarehousePrices.get(product);

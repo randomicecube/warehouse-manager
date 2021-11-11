@@ -10,6 +10,7 @@ public class EliteStatus extends Status implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252101L;
 
+  /** Day gap for partner to lose points */
   private static final int LOSE_POINTS_GAP = -15;
 
   /**

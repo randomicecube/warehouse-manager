@@ -109,7 +109,7 @@ public abstract class Transaction implements Serializable {
    * Updates actual price
    * @param currentDate
    */
-  public abstract void updateActualPrice(int currentDate);
+  public void updateActualPrice(int currentDate) { };
 
   /**
    * Accepts visitor

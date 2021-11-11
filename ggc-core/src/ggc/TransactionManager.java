@@ -44,6 +44,7 @@ public class TransactionManager extends TransactionVisitor implements Serializab
    * @return 0
    */
   public double visitBreakdown(Breakdown b, int currentDate) {
+    // breakdowns are already accounted for in the available balance
     return 0;
   }
 

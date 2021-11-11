@@ -10,6 +10,7 @@ public class SelectionStatus extends Status implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252055L;
 
+  /** Day gap for partner to lose points */
   private static final int LOSE_POINTS_GAP = -2;
 
   /**
@@ -33,7 +34,7 @@ public class SelectionStatus extends Status implements Serializable {
     double price = transaction.getActualPrice();
     Partner partner = getPartner();
     if (isLate) {
-      if (!transaction.hasRecipe()) {
+      if (!transaction.hasRecipe()) { // accounting only for sales
         partner.updatePartnerStatus(new NormalStatus(partner));
         if (dayDifference < LOSE_POINTS_GAP) {
           partner.updatePartnerPoints(-0.9 * partner.getPartnerPoints());

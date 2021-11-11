@@ -16,6 +16,7 @@ public abstract class Status implements Serializable {
   /** The "border" between Selection and Elite Status is 25000 points */
   private final static double ELITE_LIMIT = 25000.0;
 
+  /** Partner associated with the status */
   private Partner _partner;
 
   /**
@@ -33,26 +34,17 @@ public abstract class Status implements Serializable {
    */
   public abstract void payTransaction(Transaction transaction, int currentDate);
 
-  /**
-   * 
-   * @return
-   */
+  /** @return partner associated with the status */
   public Partner getPartner() {
     return _partner;
   }
 
-  /**
-   * Check if the Partner's ready to change to selection
-   * @return boolean
-   */
+  /** @return whether the Partner's ready to change to selection */
   public boolean changeToSelection() {
     return _partner.getPartnerPoints() > SELECTION_LIMIT && !changeToElite();
   }
 
-  /**
-   * Check if the Partner's ready to change to elite
-   * @return boolean
-   */
+  /** @return whether the Partner's ready to change to elite */
   public boolean changeToElite() {
     return _partner.getPartnerPoints() > ELITE_LIMIT;
   }

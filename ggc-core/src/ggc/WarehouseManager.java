@@ -122,8 +122,9 @@ public class WarehouseManager {
   }
 
   /**
-   * update current warehouse date
-   * @param days
+   * Update current warehouse date
+   * 
+   * @param days number of days to add to current date
    * @throws NoSuchDateException
    */
   public void updateDate(int days) throws NoSuchDateException {
@@ -142,9 +143,10 @@ public class WarehouseManager {
   }
 
   /**
-   * register a partner to be associated with the warehouse
-   * @param key     partner's key
-   * @param name    partner's name
+   * Register a partner to be associated with the warehouse
+   * 
+   * @param key partner's key
+   * @param name partner's name
    * @param address partner's address
    * @throws PartnerKeyAlreadyUsedException
    */
@@ -155,8 +157,9 @@ public class WarehouseManager {
   }
 
   /**
-   * get a partner, given their key
-   * @param key
+   * Get a partner in String form, given their key
+   * 
+   * @param key partner's key
    * @return desired partner
    * @throws NoSuchPartnerKeyException
    */
@@ -211,8 +214,9 @@ public class WarehouseManager {
 
   /**
    * Toggles partner's notifications for a specific product 
-   * @param partnerKey
-   * @param productKey
+   * 
+   * @param partnerKey partner's key
+   * @param productKey product's key
    * @throws NoSuchProductKeyException
    * @throws NoSuchPartnerKeyException
    */
@@ -223,9 +227,10 @@ public class WarehouseManager {
   }
 
   /**
+   * Gets a given partner's acquisitions
    * 
-   * @param partnerKey
-   * @return
+   * @param partnerKey partner's key
+   * @return a Collection with all acquisitions associated with a given partner
    * @throws NoSuchPartnerKeyException
    */
   public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
@@ -234,9 +239,10 @@ public class WarehouseManager {
   }
 
   /**
+   * Gets a given partner's sales and breakdowns
    * 
-   * @param partnerKey
-   * @return
+   * @param partnerKey partner's key
+   * @return a Collection with all sales and breakdowns associated with a given partner
    * @throws NoSuchPartnerKeyException
    */
   public Collection<Transaction> getPartnerSales(String partnerKey)
@@ -245,9 +251,10 @@ public class WarehouseManager {
   }
 
   /**
+   * Gets a given partner's collection of paid transactions
    * 
-   * @param partnerKey
-   * @return
+   * @param partnerKey partner's key
+   * @return a Collection with all paid transactions associated with a given partner
    * @throws NoSuchPartnerKeyException
    */
   public Collection<Transaction> getPaymentsByPartner(String partnerKey)
@@ -257,8 +264,9 @@ public class WarehouseManager {
 
   /**
    * Gets product batches under given price
-   * @param priceCap
-   * @return
+   * 
+   * @param priceCap price to be used as a maximum
+   * @return a Collection with all batches under given price
    */
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
     return _warehouse.getProductBatchesUnderGivenPrice(priceCap);
@@ -266,7 +274,8 @@ public class WarehouseManager {
 
   /**
    * Receives a payment for a sale
-   * @param transactionKey
+   * 
+   * @param transactionKey transaction's key
    * @throws NoSuchTransactionKeyException
    */
   public void receivePayment(int transactionKey)
@@ -277,7 +286,8 @@ public class WarehouseManager {
 
   /**
    * Registers a product
-   * @param productKey
+   * 
+   * @param productKey product's key
    */
   public void registerProduct(String productKey) {
     _warehouse.registerProduct(productKey);
@@ -286,9 +296,10 @@ public class WarehouseManager {
 
   /**
    * Registers a Breakdown product
-   * @param productKey
-   * @param ingredients
-   * @param alpha
+   * 
+   * @param productKey product's key
+   * @param ingredients ingredients of the product
+   * @param alpha aggravation factor of the product
    * @throws NoSuchProductKeyException
    */
   public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
@@ -299,10 +310,11 @@ public class WarehouseManager {
 
   /**
    * Registers Sale transaction
-   * @param partnerKey
-   * @param deadline
-   * @param productKey
-   * @param amount
+   * 
+   * @param partnerKey partner's key
+   * @param deadline deadline of the transaction
+   * @param productKey product's key
+   * @param amount amount of product to be sold in the transaction
    * @throws NoSuchPartnerKeyException
    * @throws NoSuchProductKeyException
    * @throws NotEnoughStockException
@@ -315,10 +327,11 @@ public class WarehouseManager {
 
   /**
    * Registers acquisition transaction
-   * @param partnerKey
-   * @param productKey
-   * @param price
-   * @param amount
+   * 
+   * @param partnerKey partner's key
+   * @param productKey product's key
+   * @param price price of the product
+   * @param amount amount of product to be acquired in the transaction
    * @throws NoSuchPartnerKeyException
    * @throws NoSuchProductKeyException
    */
@@ -330,9 +343,10 @@ public class WarehouseManager {
 
   /**
     * Registers Breakdown Transaction
-    * @param partnerKey
-    * @param productKey
-    * @param amount
+
+    * @param partnerKey partner's key
+    * @param productKey product's key
+    * @param amount amount of product to be broken down in the transaction
     * @throws NoSuchPartnerKeyException
     * @throws NoSuchProductKeyException
     * @throws NotEnoughStockException
@@ -344,9 +358,10 @@ public class WarehouseManager {
     }
 
   /**
-   * reads partner's notifications
-   * @param key
-   * @return
+   * Reads partner's notifications
+   * 
+   * @param key partner's key
+   * @return a Collection with all notifications associated with a given partner
    * @throws NoSuchPartnerKeyException
    */
   public Collection<Notification> readPartnerNotifications(String key) 

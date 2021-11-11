@@ -12,8 +12,10 @@ public class Breakdown extends Transaction implements Serializable {
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202110252103L;
 
+  /** Recipe of the BreakdownProduct associated with the Breakdown */
   private Recipe _recipe;
 
+  /** Transaction's due date */
   private int _dueDate;
 
   /**
@@ -41,7 +43,7 @@ public class Breakdown extends Transaction implements Serializable {
   }
 
   /**
-   * @return true
+   * @return whether the Breakdown has a recipe associated or not - it always does
    */
   @Override
   public boolean hasRecipe() {
@@ -66,12 +68,6 @@ public class Breakdown extends Transaction implements Serializable {
   public double accept(TransactionVisitor visitor, int date) {
     return visitor.visitBreakdown(this, date);
   }
-
-  /**
-   * Updates actual price (Breakdown does nothing)
-   * @param currentDate
-   */
-  public void updateActualPrice(int currentDate) { }
 
   @Override
   public String toString() {
