@@ -52,7 +52,6 @@ public class DoRegisterAcquisitionTransaction extends Command<WarehouseManager> 
         try {
           _receiver.registerProduct(
             stringField("productKey"),
-            integerField("amount"),
             ingredients,
             alpha
           );
@@ -62,8 +61,7 @@ public class DoRegisterAcquisitionTransaction extends Command<WarehouseManager> 
         // TODO -> IN CORE try -> catch noSuchProductKeyException
       } else {
         _receiver.registerProduct(
-          stringField("productKey"),
-          integerField("amount")
+          stringField("productKey")
         );
       }
 

@@ -241,14 +241,14 @@ public class WarehouseManager {
       _saveFlag = false;
   }
 
-  public void registerProduct(String productKey, int stock) {
-    _warehouse.registerProduct(productKey, stock);
+  public void registerProduct(String productKey) {
+    _warehouse.registerProduct(productKey);
     _saveFlag = false;
   }
 
-  public void registerProduct(String productKey, int stock, Map<String, Integer> ingredients, double alpha)
+  public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
     throws NoSuchProductKeyException {
-    _warehouse.registerProduct(productKey, stock, ingredients, alpha);
+    _warehouse.registerProduct(productKey, ingredients, alpha);
     _saveFlag = false;
   }
 

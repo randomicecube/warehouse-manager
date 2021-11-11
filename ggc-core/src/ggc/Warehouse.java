@@ -555,12 +555,12 @@ public class Warehouse implements Serializable {
       updateBalanceSale(pricePaid);
   }
 
-  public void registerProduct(String productKey, int stock) {
-    Product product = new Product(productKey, stock);
+  public void registerProduct(String productKey) {
+    Product product = new Product(productKey, 0);
     _products.put(productKey, product);
   }
 
-  public void registerProduct(String productKey, int stock, Map<String, Integer> ingredients, double alpha)
+  public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
     throws NoSuchProductKeyException {
       // check if all ingredients are registered
       try {
@@ -576,7 +576,7 @@ public class Warehouse implements Serializable {
         productIngredients.put(ingredient, ingredients.get(ingredientKey));
       }
       Recipe recipe = new Recipe(productIngredients);
-      Product product = new BreakdownProduct(recipe, alpha, productKey, stock);
+      Product product = new BreakdownProduct(recipe, alpha, productKey, 0);
       _products.put(productKey, product);
   }
 
