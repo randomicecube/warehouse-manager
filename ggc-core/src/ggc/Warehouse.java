@@ -104,6 +104,11 @@ public class Warehouse implements Serializable {
     }
   }
 
+  /** #######################
+   *   DATE RELATED METHODS
+   * #######################
+  */
+
   /** @return current warehouse date */
   public int getDate() {
     return _date;
@@ -122,6 +127,12 @@ public class Warehouse implements Serializable {
     _date += days;
   }
 
+
+  /** ##########################
+   *   BALANCE RELATED METHODS
+   * ##########################
+  */
+
   /** @return warehouse available balance */
   public double getAvailableBalance() {
     return _availableBalance;
@@ -137,6 +148,29 @@ public class Warehouse implements Serializable {
     }
     return accountingBalance;
   }
+
+  /**
+   * Updates balance due to an acquisition
+   * 
+   * @param money amount of money to be added from the balance
+   */
+  public void updateBalanceAcquisition(double money) {
+    _availableBalance -= money;
+  }
+
+  /**
+   * Updates balance due to a sale
+   * 
+   * @param money amount of money to be subtracted from the balance
+   */
+  public void updateBalanceSaleOrBreakdown(double money) {
+    _availableBalance += money;
+  }
+
+  /** ##########################
+   *   PARTNER RELATED METHODS
+   * ##########################
+  */
 
   /**
    * register a partner to be associated with the warehouse
@@ -160,6 +194,85 @@ public class Warehouse implements Serializable {
         p.partnerNowObserving(partner);
       }
   }
+
+  /**
+   * get a partner, given their key
+   * 
+   * @param key partner's key
+   * @return desired partner
+   * @throws NoSuchPartnerKeyException
+   */
+  public Partner getPartner(String key) throws NoSuchPartnerKeyException {
+    String lowerCasePartnerKey = key.toLowerCase();
+    for (String mapKey : _partners.keySet()) {
+      if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
+        return _partners.get(mapKey);
+      }
+    }
+    throw new NoSuchPartnerKeyException(key);
+  }
+
+  /**
+   * get a Partner in their String form, given their key
+   * 
+   * @param key partner's key
+   * @return partner in String form
+   * @throws NoSuchPartnerKeyException
+   */
+  public String getPartnerString(String key) throws NoSuchPartnerKeyException {
+    return getPartner(key).partnerStringed(getDate());
+  }
+
+  /**
+   * reads partner's notifications
+   * 
+   * @param key partner's key
+   * @return partner's to-be-read notifications
+   * @throws NoSuchPartnerKeyException
+   */
+  public Collection<Notification> readPartnerNotifications(String key) 
+    throws NoSuchPartnerKeyException {
+      Partner partner = getPartner(key);
+      List<Notification> notifications = new ArrayList<Notification>(partner.getNotifications());
+      partner.clearNotifications();
+      return notifications;
+  }
+
+  /** @return all partners associated with the warehouse */
+  public Map<String, Partner> getPartners() {
+    return _partners;
+  }
+
+  /** @return a Collection with all partners associated with the warehouse
+   * sorted by their natural order
+   */
+  public Collection<String> getPartnersCollection() {
+    List<String> partnerKeys = getPartners()
+      .values()
+      .stream()
+      .map(partner -> partner.getPartnerKey())
+      .collect(Collectors.toList());
+
+    Collections.sort(partnerKeys, Collator.getInstance(Locale.getDefault()));
+
+    List<String> stringedPartners = new ArrayList<String>();
+
+    for (String partner: partnerKeys) {
+      try {
+        stringedPartners.add(getPartner(partner).partnerStringed(getDate()));
+      } catch (NoSuchPartnerKeyException e) {
+        // will never happen
+        e.printStackTrace();
+      }
+    }
+
+    return stringedPartners;
+  }
+
+  /** ####################################
+   *   PRODUCT AND BATCH RELATED METHODS
+   * ####################################
+  */
 
   /**
    * registers a batch to a given partner - applies to simple products
@@ -294,54 +407,6 @@ public class Warehouse implements Serializable {
     throw new NoSuchProductKeyException(key);
   }
 
-  /**
-   * get a partner, given their key
-   * 
-   * @param key partner's key
-   * @return desired partner
-   * @throws NoSuchPartnerKeyException
-   */
-  public Partner getPartner(String key) throws NoSuchPartnerKeyException {
-    String lowerCasePartnerKey = key.toLowerCase();
-    for (String mapKey : _partners.keySet()) {
-      if (mapKey.toLowerCase().equals(lowerCasePartnerKey)) {
-        return _partners.get(mapKey);
-      }
-    }
-    throw new NoSuchPartnerKeyException(key);
-  }
-
-  /**
-   * get a Partner in their String form, given their key
-   * 
-   * @param key partner's key
-   * @return partner in String form
-   * @throws NoSuchPartnerKeyException
-   */
-  public String getPartnerString(String key) throws NoSuchPartnerKeyException {
-    return getPartner(key).partnerStringed(getDate());
-  }
-
-  /**
-   * reads partner's notifications
-   * 
-   * @param key partner's key
-   * @return partner's to-be-read notifications
-   * @throws NoSuchPartnerKeyException
-   */
-  public Collection<Notification> readPartnerNotifications(String key) 
-    throws NoSuchPartnerKeyException {
-      Partner partner = getPartner(key);
-      List<Notification> notifications = new ArrayList<Notification>(partner.getNotifications());
-      partner.clearNotifications();
-      return notifications;
-  }
-
-  /** @return all partners associated with the warehouse */
-  public Map<String, Partner> getPartners() {
-    return _partners;
-  }
-
   /** @return all products associated with the warehouse */
   public Map<String, Product> getProducts() {
     return _products;
@@ -425,32 +490,6 @@ public class Warehouse implements Serializable {
     return batches;
   }
 
-  /** @return a Collection with all partners associated with the warehouse
-   * sorted by their natural order
-   */
-  public Collection<String> getPartnersCollection() {
-    List<String> partnerKeys = getPartners()
-      .values()
-      .stream()
-      .map(partner -> partner.getPartnerKey())
-      .collect(Collectors.toList());
-
-    Collections.sort(partnerKeys, Collator.getInstance(Locale.getDefault()));
-
-    List<String> stringedPartners = new ArrayList<String>();
-
-    for (String partner: partnerKeys) {
-      try {
-        stringedPartners.add(getPartner(partner).partnerStringed(getDate()));
-      } catch (NoSuchPartnerKeyException e) {
-        // will never happen
-        e.printStackTrace();
-      }
-    }
-
-    return stringedPartners;
-  }
-
   /** 
    * @param partnerKey partner's key
    * @return a Collection with all batches associated with a given partner,
@@ -487,17 +526,57 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * @param transactionKey transaction's key
-   * @return transaction with the given key
+   * Gets every batch under a given price
+   * 
+   * @param priceCap maximum price
+   * @return available Batches
    */
-  public Transaction getTransaction(int transactionKey) 
-    throws NoSuchTransactionKeyException {
-    Transaction t = _transactions.get(transactionKey);
-    if (t == null) {
-      throw new NoSuchTransactionKeyException(transactionKey);
-    }
-    t.updateActualPrice(getDate());
-    return t;
+  public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
+    List<Batch> availableBatches = getBatches()
+      .stream()
+      .filter(batch -> batch.getPrice() < priceCap && batch.getProductType().getStock() > 0)
+      .collect(Collectors.toList());
+    
+    availableBatches.sort(new BatchComparatorByProduct());
+
+    return availableBatches; 
+  }
+
+  /**
+   * Registers a (simple) product in the warehouse's history
+   * 
+   * @param productKey product's key
+   */
+  public void registerProduct(String productKey) {
+    Product product = new Product(productKey, 0);
+    _products.put(productKey, product);
+  }
+
+  /**
+   * Registers a Breakdown product in the warehouse's history
+   * @param productKey product's key
+   * @param ingredients product's ingredients
+   * @param alpha product's aggravation factor
+   * @throws NoSuchProductKeyException
+   */
+  public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
+    throws NoSuchProductKeyException {
+      // check if all ingredients are registered
+      try {
+        for (String key: ingredients.keySet()) {
+          getProduct(key);
+        }
+      } catch (NoSuchProductKeyException e) {
+        throw new NoSuchProductKeyException(productKey);
+      }
+      Map<Product, Integer> productIngredients = new LinkedHashMap<Product, Integer>();
+      for (String ingredientKey: ingredients.keySet()) {
+        Product ingredient = getProduct(ingredientKey);
+        productIngredients.put(ingredient, ingredients.get(ingredientKey));
+      }
+      Recipe recipe = new Recipe(productIngredients);
+      Product product = new BreakdownProduct(recipe, alpha, productKey, 0);
+      _products.put(productKey, product);
   }
 
   /**
@@ -516,6 +595,44 @@ public class Warehouse implements Serializable {
       } else {
         product.partnerNoLongerObserving(partner);
       }
+  }
+
+  /**
+   * Updates biggest/smallest price of a product in the warehouse's history
+   * 
+   * @param product product to be updated
+   * @param price price to be updated
+   */
+  public void updateSmallestBiggestPrices(Product product, double price) {
+    Double biggestKnownPrice = _biggestKnownPrices.get(product);
+    Double smallestWarehousePrice = _smallestWarehousePrices.get(product);
+    if (biggestKnownPrice == null) {
+      _biggestKnownPrices.put(product, price);
+      _smallestWarehousePrices.put(product, price);
+    } else if (price > biggestKnownPrice) {
+      _biggestKnownPrices.put(product, price);
+    } else if (price < smallestWarehousePrice) {
+      _smallestWarehousePrices.put(product, price);
+    }
+  }
+
+  /** ##############################
+   *   TRANSACTION RELATED METHODS
+   * ##############################
+  */
+
+  /**
+   * @param transactionKey transaction's key
+   * @return transaction with the given key
+   */
+  public Transaction getTransaction(int transactionKey) 
+    throws NoSuchTransactionKeyException {
+    Transaction t = _transactions.get(transactionKey);
+    if (t == null) {
+      throw new NoSuchTransactionKeyException(transactionKey);
+    }
+    t.updateActualPrice(getDate());
+    return t;
   }
 
   /**
@@ -568,23 +685,6 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * Gets every batch under a given price
-   * 
-   * @param priceCap maximum price
-   * @return available Batches
-   */
-  public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
-    List<Batch> availableBatches = getBatches()
-      .stream()
-      .filter(batch -> batch.getPrice() < priceCap && batch.getProductType().getStock() > 0)
-      .collect(Collectors.toList());
-    
-    availableBatches.sort(new BatchComparatorByProduct());
-
-    return availableBatches; 
-  }
-
-  /**
    * Receives a payment for a sale
    * 
    * @param transactionKey transaction's key
@@ -605,43 +705,6 @@ public class Warehouse implements Serializable {
       sale.updatePaid(pricePaid);
       sale.getPartner().getPartnerStatus().payTransaction(sale, currentDate);
       updateBalanceSaleOrBreakdown(pricePaid);
-  }
-
-  /**
-   * Registers a (simple) product in the warehouse's history
-   * 
-   * @param productKey product's key
-   */
-  public void registerProduct(String productKey) {
-    Product product = new Product(productKey, 0);
-    _products.put(productKey, product);
-  }
-
-  /**
-   * Registers a Breakdown product in the warehouse's history
-   * @param productKey product's key
-   * @param ingredients product's ingredients
-   * @param alpha product's aggravation factor
-   * @throws NoSuchProductKeyException
-   */
-  public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
-    throws NoSuchProductKeyException {
-      // check if all ingredients are registered
-      try {
-        for (String key: ingredients.keySet()) {
-          getProduct(key);
-        }
-      } catch (NoSuchProductKeyException e) {
-        throw new NoSuchProductKeyException(productKey);
-      }
-      Map<Product, Integer> productIngredients = new LinkedHashMap<Product, Integer>();
-      for (String ingredientKey: ingredients.keySet()) {
-        Product ingredient = getProduct(ingredientKey);
-        productIngredients.put(ingredient, ingredients.get(ingredientKey));
-      }
-      Recipe recipe = new Recipe(productIngredients);
-      Product product = new BreakdownProduct(recipe, alpha, productKey, 0);
-      _products.put(productKey, product);
   }
 
   /**
@@ -777,24 +840,6 @@ public class Warehouse implements Serializable {
   }
 
   /**
-   * Updates balance due to an acquisition
-   * 
-   * @param money amount of money to be added from the balance
-   */
-  public void updateBalanceAcquisition(double money) {
-    _availableBalance -= money;
-  }
-
-  /**
-   * Updates balance due to a sale
-   * 
-   * @param money amount of money to be subtracted from the balance
-   */
-  public void updateBalanceSaleOrBreakdown(double money) {
-    _availableBalance += money;
-  }
-
-  /**
    * Adds a transaction to the warehouse
    * 
    * @param transaction transaction to be added
@@ -901,25 +946,6 @@ public class Warehouse implements Serializable {
     for (Batch batch: toRemove) {
       partner.removeBatch(batch);
       product.removeBatch(batch);
-    }
-  }
-
-  /**
-   * Updates biggest/smallest price of a product in the warehouse's history
-   * 
-   * @param product product to be updated
-   * @param price price to be updated
-   */
-  public void updateSmallestBiggestPrices(Product product, double price) {
-    Double biggestKnownPrice = _biggestKnownPrices.get(product);
-    Double smallestWarehousePrice = _smallestWarehousePrices.get(product);
-    if (biggestKnownPrice == null) {
-      _biggestKnownPrices.put(product, price);
-      _smallestWarehousePrices.put(product, price);
-    } else if (price > biggestKnownPrice) {
-      _biggestKnownPrices.put(product, price);
-    } else if (price < smallestWarehousePrice) {
-      _smallestWarehousePrices.put(product, price);
     }
   }
 
