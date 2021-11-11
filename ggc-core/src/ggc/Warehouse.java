@@ -737,7 +737,7 @@ public class Warehouse implements Serializable {
         }
         // if product has a recipe, try to make a breakdown
         int neededAmount = amount - product.getStock();
-        checkIngredientsStock(product, amount);
+        checkIngredientsStock(product, amount, new HashMap<Product, Integer>());
         transactionPrice = (product.getProductPrice() * product.getStock());
         double aggregationCost = 
           makeAggregation(product, neededAmount) * (1 + product.getAggravationFactor());
@@ -871,7 +871,7 @@ public class Warehouse implements Serializable {
    * @throws NotEnoughStockException
    * @throws NoSuchProductKeyException
    */
-  public void checkIngredientsStock(Product product, int amount)
+  public void checkIngredientsStock(Product product, int amount, Map<Product, Integer> accountedFor)
     throws NotEnoughStockException, NoSuchProductKeyException {
       Map<Product, Integer> ingredients = product.getRecipe().getIngredients();
       for (Product ingredient: ingredients.keySet()) {
@@ -880,7 +880,7 @@ public class Warehouse implements Serializable {
         if (ingredient.getStock() < totalAmount) {
           if (ingredient.hasRecipe()) {
             try {
-              checkIngredientsStock(ingredient, totalAmount);
+              checkIngredientsStock(ingredient, totalAmount, accountedFor);
             } catch (NotEnoughStockException e) {
               throw new NotEnoughStockException(
                 ingredient.getProductKey(),
@@ -895,6 +895,14 @@ public class Warehouse implements Serializable {
               ingredient.getStock()
             );
           }
+        }
+        accountedFor.put(ingredient, totalAmount);
+        if (accountedFor.get(ingredient) > totalAmount) {
+          throw new NotEnoughStockException(
+              ingredient.getProductKey(),
+              totalAmount,
+              ingredient.getStock()
+            );
         }
       }
   }

@@ -41,15 +41,16 @@
 - [DONE] Confirmar se as batches estão a ser removidas na desagregação -> adicionado na breakdownProcedure
 - [DONE] Comment cleanup -> principalmente WHM e Exceptions
 - [DONE] Cleanup smallest e biggest, transformar numa função
-- General code cleanup
+- [DONE] General code cleanup
 - [DONE] Update points no breakdown -> importante, dá update aos pontos só, sem contar com multas
 - [DONE] Rever FIXME's e TODO's no código
 - [DONE] Unmodifiable collections/cópias -> importante
 - Diamond recursion na verificação da desagregação
-- getPaymentsByPartner (WH) -> o partner não tem já um método com isso?
+- Visitor em vez de HasRecipe
+- [DONE] getPaymentsByPartner (WH) -> o partner não tem já um método com isso?
 - [DONE] Confirmar se todos os métodos são utilizados
 - [DONE] Alterar a ordem dos métodos, para ser mais consistente (e de acesso mais intuitivo)
 - [DONE] Remover o máximo de casts possível -> removeu-se todos pog
-- Dividir linhas muito longas
+- [DONE] Dividir linhas muito longas
 - [DONE] Verificar se no WHM tudo tem a saveFlag
-- COMMIT NO CVS!!!!!
+- [DONE] COMMIT NO CVS!!!!!
