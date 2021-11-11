@@ -1,6 +1,6 @@
 package ggc;
 
-public class BatchComparatorByProduct extends BatchComparator {
+public class BatchComparatorByProduct extends BatchComparatorByPartner {
   
   public int compareProductKeys(Batch b1, Batch b2) {
     String productKeyB1 = b1.getProductType().getProductKey();

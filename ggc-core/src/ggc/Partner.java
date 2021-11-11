@@ -1,6 +1,7 @@
 package ggc;
 
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.ArrayList;
 
 import java.io.Serializable;
@@ -39,7 +40,9 @@ public class Partner implements Serializable, Observer {
   private List<Notification> _unreadNotifications = new ArrayList<Notification>();
 
   /** Partner's in-stock batches */
-  private List<Batch> _partnerBatches = new ArrayList<Batch>();
+  private PriorityQueue<Batch> _partnerBatches = new PriorityQueue<Batch>(
+    new BatchComparator()
+  );
 
   /** Partner's desired notification method */
   private DeliveryStrategy _notificationMethod;
@@ -109,7 +112,7 @@ public class Partner implements Serializable, Observer {
   }
 
   /** @return partner's batches */
-  public List<Batch> getPartnerBatches() {
+  public PriorityQueue<Batch> getPartnerBatches() {
     return _partnerBatches;
   }
 

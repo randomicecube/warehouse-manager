@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,9 @@ public class Product implements Serializable {
   private int _stock = 0; // Integer instead of int for consistency's sake with Maps
 
   /** Product's in-stock batches */
-  private List<Batch> _productBatches = new ArrayList<Batch>();
+  private PriorityQueue<Batch> _productBatches = new PriorityQueue<Batch>(
+    new BatchComparator()
+  );
 
   /** Stores partners' intent to receive notifications about the product
    *  true if they want to, false if they do not
@@ -142,14 +145,8 @@ public class Product implements Serializable {
     return _productPrice;
   }
 
-  public List<Batch> getBatches() {
+  public PriorityQueue<Batch> getBatches() {
     return _productBatches;
-  }
-
-  public List<Batch> getSortedBatches() {
-    List<Batch> sortedBatches = getBatches();  
-    sortedBatches.sort(new BatchComparatorByPartner());
-    return sortedBatches;
   }
 
   /** @return product's stock */
@@ -159,7 +156,13 @@ public class Product implements Serializable {
 
   /** @return product's in-stock batches in toString format */
   public Collection<String> getBatchStrings() {    
-    return getSortedBatches()
+    List<Batch> batches = getBatches()
+      .stream()
+      .collect(Collectors.toList());
+    
+    batches.sort(new BatchComparatorByPartner());
+
+    return batches
       .stream()
       .map(batch -> batch.toString())
       .collect(Collectors.toList());
