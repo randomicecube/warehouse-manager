@@ -16,34 +16,70 @@ public class Breakdown extends Transaction implements Serializable {
 
   private int _dueDate;
 
+  /**
+   * Main Constructor
+   * @param transactionKey
+   * @param partner
+   * @param product
+   * @param baseDate
+   * @param amount
+   * @param basePrice
+   * @param dueDate
+   * @param recipe
+   */
   public Breakdown(int transactionKey, Partner partner, BreakdownProduct product, int baseDate, int amount, double basePrice, int dueDate, Recipe recipe) {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
     _dueDate = dueDate;
     _recipe = recipe;
   }
 
+  /**
+   * @return recipe
+   */
   public Recipe getRecipe() {
     return _recipe;
   }
 
+  /**
+   * @return true
+   */
   @Override
   public boolean hasRecipe() {
     return true;
   }
 
+  /**
+   * 
+   * @return _dueDate
+   */
   public int getDueDate() {
     return _dueDate;
   }
 
+  /**
+   * 
+   * @return a breakdown product
+   */
   @Override
   public BreakdownProduct getProduct() {
     return (BreakdownProduct) super.getProduct();
   }
 
+  /**
+   * Accept transaction visitor
+   * 
+   * @param visitor
+   * @param date
+   * @return visitor's visit
+   */
   public double accept(TransactionVisitor visitor, int date) {
     return visitor.visitBreakdown(this, date);
   }
 
+  /**
+   * Updates actual price (Breakdown does nothing)
+   * @param currentDate
+   */
   public void updateActualPrice(int currentDate) { }
 
   @Override

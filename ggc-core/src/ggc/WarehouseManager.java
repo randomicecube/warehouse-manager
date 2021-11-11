@@ -210,66 +210,146 @@ public class WarehouseManager {
       return _warehouse.getTransaction(transactionKey);
   }
 
+  /**
+   * Toggles partner's notifications for a specific product 
+   * @param partnerKey
+   * @param productKey
+   * @throws NoSuchProductKeyException
+   * @throws NoSuchPartnerKeyException
+   */
   public void toggleProductNotifications(String partnerKey, String productKey)
     throws NoSuchProductKeyException, NoSuchPartnerKeyException {
       _warehouse.toggleProductNotifications(partnerKey, productKey);
       _saveFlag = false;
   }
 
+  /**
+   * 
+   * @param partnerKey
+   * @return
+   * @throws NoSuchPartnerKeyException
+   */
   public Collection<Acquisition> getPartnerAcquisitions(String partnerKey)
     throws NoSuchPartnerKeyException {
       return _warehouse.getPartnerAcquisitions(partnerKey);
   }
 
+  /**
+   * 
+   * @param partnerKey
+   * @return
+   * @throws NoSuchPartnerKeyException
+   */
   public Collection<Transaction> getPartnerSales(String partnerKey)
     throws NoSuchPartnerKeyException {
       return _warehouse.getPartnerSales(partnerKey); 
   }
 
+  /**
+   * 
+   * @param partnerKey
+   * @return
+   * @throws NoSuchPartnerKeyException
+   */
   public Collection<Transaction> getPaymentsByPartner(String partnerKey)
     throws NoSuchPartnerKeyException {
       return _warehouse.getPaymentsByPartner(partnerKey);
   }
 
+  /**
+   * Gets product batches under given price
+   * @param priceCap
+   * @return
+   */
   public Collection<Batch> getProductBatchesUnderGivenPrice(double priceCap) {
     return _warehouse.getProductBatchesUnderGivenPrice(priceCap);
   }
 
+  /**
+   * Receives a payment for a sale
+   * @param transactionKey
+   * @throws NoSuchTransactionKeyException
+   */
   public void receivePayment(int transactionKey)
     throws NoSuchTransactionKeyException {
       _warehouse.receivePayment(transactionKey);
       _saveFlag = false;
   }
 
+  /**
+   * Registers a product
+   * @param productKey
+   */
   public void registerProduct(String productKey) {
     _warehouse.registerProduct(productKey);
     _saveFlag = false;
   }
 
+  /**
+   * Registers a Breakdown product
+   * @param productKey
+   * @param ingredients
+   * @param alpha
+   * @throws NoSuchProductKeyException
+   */
   public void registerProduct(String productKey, Map<String, Integer> ingredients, double alpha)
     throws NoSuchProductKeyException {
     _warehouse.registerProduct(productKey, ingredients, alpha);
     _saveFlag = false;
   }
 
+  /**
+   * Registers Sale transaction
+   * @param partnerKey
+   * @param deadline
+   * @param productKey
+   * @param amount
+   * @throws NoSuchPartnerKeyException
+   * @throws NoSuchProductKeyException
+   * @throws NotEnoughStockException
+   */
   public void registerSaleTransaction(String partnerKey, int deadline, String productKey, int amount)
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       _warehouse.registerSaleTransaction(partnerKey, deadline, productKey, amount);
       _saveFlag = false;
   }
 
+  /**
+   * Registers acquisition transaction
+   * @param partnerKey
+   * @param productKey
+   * @param price
+   * @param amount
+   * @throws NoSuchPartnerKeyException
+   * @throws NoSuchProductKeyException
+   */
   public void registerAcquisitionTransaction(String partnerKey, String productKey, double price, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException {
       _warehouse.registerAcquisitionTransaction(partnerKey, productKey, price, amount);
       _saveFlag = false;
     }
 
+  /**
+    * Registers Breakdown Transaction
+    * @param partnerKey
+    * @param productKey
+    * @param amount
+    * @throws NoSuchPartnerKeyException
+    * @throws NoSuchProductKeyException
+    * @throws NotEnoughStockException
+    */
   public void registerBreakdownTransaction(String partnerKey, String productKey, int amount) 
     throws NoSuchPartnerKeyException, NoSuchProductKeyException, NotEnoughStockException {
       _warehouse.registerBreakdownTransaction(partnerKey, productKey, amount);
       _saveFlag = false;
     }
 
+  /**
+   * reads partner's notifications
+   * @param key
+   * @return
+   * @throws NoSuchPartnerKeyException
+   */
   public Collection<Notification> readPartnerNotifications(String key) 
     throws NoSuchPartnerKeyException {
       _saveFlag = false;

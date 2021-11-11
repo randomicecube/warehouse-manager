@@ -32,8 +32,10 @@ public class Partner implements Serializable, Observer {
   /** Partner's transaction history */
   private List<Transaction> _transactionHistory = new ArrayList<Transaction>();
 
+  /** Partner's Sale and Breakdown History */
   private List<Transaction> _saleBreakdownHistory = new ArrayList<Transaction>();
 
+  /** Partner's Acquisition History */
   private List<Acquisition> _acquisitionHistory = new ArrayList<Acquisition>();
 
   /** Partner's unread notifications */
@@ -101,10 +103,18 @@ public class Partner implements Serializable, Observer {
     return _transactionHistory;
   }
 
+  /**
+   * 
+   * @return sale and breakdown history
+   */
   public List<Transaction> getSales() {
     return _saleBreakdownHistory;
   }
 
+/**
+ * 
+ * @return acquisition history
+ */
   public List<Acquisition> getAcquisitions() {
     return _acquisitionHistory;
   }
@@ -133,6 +143,9 @@ public class Partner implements Serializable, Observer {
     _partnerPoints += points;
   }
 
+  /**
+   * Clears partner's points
+   */
   public void clearPartnerPoints() {
     _partnerPoints = 0;
   }
@@ -146,11 +159,19 @@ public class Partner implements Serializable, Observer {
     _notificationMethod = method;
   }
 
-  public void addNewSaleOrBreakdown(Transaction t) {
-    _saleBreakdownHistory.add(t);
-    _transactionHistory.add(t);
+  /**
+   * 
+   * @param transaction
+   */
+  public void addNewSaleOrBreakdown(Transaction transaction) {
+    _saleBreakdownHistory.add(transaction);
+    _transactionHistory.add(transaction);
   }
 
+  /**
+   * 
+   * @param acquisition
+   */
   public void addNewAcquisition(Acquisition acquisition) {
     _acquisitionHistory.add(acquisition);
     _transactionHistory.add(acquisition);
@@ -165,10 +186,18 @@ public class Partner implements Serializable, Observer {
     _partnerBatches.add(batch);
   }
 
+  /**
+   * 
+   * @param batch
+   */
   public void removeBatch(Batch batch) {
     _partnerBatches.remove(batch);
   }
 
+  /**
+   * 
+   * @return acquisitions total prices
+   */
   public Double getAcquisitionPrices() {
     return getAcquisitions()
       .stream()
@@ -177,6 +206,11 @@ public class Partner implements Serializable, Observer {
       .orElse(0.0);
   }
 
+  /**
+   * 
+   * @param date
+   * @return sales overall prices
+   */
   public Double getOverallSalePrices(int date) {
     getSales().stream().forEach(s -> s.updateActualPrice(date));
     return getSales()
@@ -187,6 +221,10 @@ public class Partner implements Serializable, Observer {
       .orElse(0.0);
   }
 
+  /**
+   * 
+   * @return paid sales prices
+   */
   public Double getPaidSalePrices() {
     return getSales()
       .stream()
@@ -201,10 +239,18 @@ public class Partner implements Serializable, Observer {
     _unreadNotifications.clear();
   }
 
+  /**
+   * Adds a notification to the partner
+   */
   public void update(Notification notification) {
     _notificationMethod.deliver(this, notification);
   }
 
+  /**
+   * Special toString
+   * @param date
+   * @return a partner in string format
+   */
   public String partnerStringed(int date) {
     return String.join(
       "|",

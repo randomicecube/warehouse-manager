@@ -12,10 +12,19 @@ public class SelectionStatus extends Status implements Serializable {
 
   private static final int LOSE_POINTS_GAP = -2;
 
+  /**
+   * Main Constructor
+   * @param partner
+   */
   public SelectionStatus(Partner partner) {
     super(partner);
   }
 
+  /**
+   * Selection's payment strategy
+   * @param transaction
+   * @param currentDate
+   */
   public void payTransaction(Transaction transaction, int currentDate) {
     int dueDate = transaction.getDueDate();
     double dayDifference = dueDate - currentDate;
