@@ -18,6 +18,8 @@ public class Breakdown extends Transaction implements Serializable {
   /** Transaction's due date */
   private int _dueDate;
 
+  private double _actualPrice;
+
   /**
    * Main Constructor
    * @param transactionKey
@@ -33,6 +35,7 @@ public class Breakdown extends Transaction implements Serializable {
     super(transactionKey, partner, product, baseDate, amount, basePrice);
     _dueDate = dueDate;
     _recipe = recipe;
+    _actualPrice = basePrice >= 0 ? basePrice : 0;
   }
 
   /**
@@ -48,6 +51,10 @@ public class Breakdown extends Transaction implements Serializable {
    */
   public int getDueDate() {
     return _dueDate;
+  }
+
+  public double getActualPrice() {
+    return _actualPrice;
   }
 
   /**

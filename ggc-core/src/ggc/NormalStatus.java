@@ -20,6 +20,26 @@ public class NormalStatus extends Status implements Serializable {
   }
 
   /**
+   * Returns the modifier of this Status, depending on the days to the deadline
+   * @return modifier
+   */
+  public double getModifier(int delta, int currentDate, int limitDate) {
+
+    int daysToDeadline = limitDate - currentDate;
+    if (daysToDeadline >= delta) {
+      return 0.9;
+    } else if (daysToDeadline >= 0) {
+      return 1.0;
+    } else if (daysToDeadline >= -delta) {
+      return 1.0 + (-daysToDeadline) * 0.05;
+    } else {
+      return 1.0 + (-daysToDeadline) * 0.10;
+    }
+
+  }
+
+
+  /**
    * Normal's payment strategy
    * 
    * @param transaction
@@ -40,21 +60,6 @@ public class NormalStatus extends Status implements Serializable {
         partner.updatePartnerStatus(new SelectionStatus(partner));
       }
     }
-  }
-
-  /** @return Normal Status price modifiers for P2 */
-  public double getModifierP2(int currentDate, int limitDate) {
-    return 1.0;
-  }
-
-  /** @return Normal Status price modifiers for P3 */
-  public double getModifierP3(int currentDate, int limitDate) {
-    return 1.0 + (currentDate - limitDate) * 0.05;
-  }
-
-  /** @return Normal Status price modifiers for P4 */
-  public double getModifierP4(int currentDate, int limitDate) {
-    return 1.0 + (currentDate - limitDate) * 0.10;
   }
 
   @Override

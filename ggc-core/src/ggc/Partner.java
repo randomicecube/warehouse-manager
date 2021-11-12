@@ -208,7 +208,7 @@ public class Partner implements Serializable, Observer {
     return getSales()
       .stream()
       .filter(s -> !s.accept(checker))
-      .map(Transaction::getActualPrice)
+      .map(Transaction::getBasePrice)
       .reduce(Double::sum)
       .orElse(0.0);
   }

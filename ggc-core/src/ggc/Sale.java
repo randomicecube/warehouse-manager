@@ -54,18 +54,8 @@ public class Sale extends Transaction implements Serializable {
     }
     int delta = getProduct().getProductDeadlineDelta();
     int deadline = getDueDate();
-    int daysToDeadline = deadline - currentDate;
     Status partnerStatus = getPartner().getPartnerStatus();
-
-    if (daysToDeadline >= delta) {
-      _actualPrice = getBasePrice() * partnerStatus.getModifierP1();
-    } else if (daysToDeadline >= 0) {
-      _actualPrice = getBasePrice() * partnerStatus.getModifierP2(currentDate, deadline);
-    } else if (daysToDeadline >= -delta) {
-      _actualPrice = getBasePrice() * partnerStatus.getModifierP3(currentDate, deadline);
-    } else {
-      _actualPrice = getBasePrice() * partnerStatus.getModifierP4(currentDate, deadline);
-    }
+    _actualPrice = getBasePrice() * partnerStatus.getModifier(delta, currentDate, deadline);
   }
 
   /** Gets sale's actual price

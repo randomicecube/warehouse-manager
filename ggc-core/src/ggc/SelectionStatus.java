@@ -22,6 +22,26 @@ public class SelectionStatus extends Status implements Serializable {
   }
 
   /**
+   * Returns the modifier of this Status, depending on the days to the deadline
+   * @return modifier
+   */
+  public double getModifier(int delta, int currentDate, int limitDate) {
+
+    int daysToDeadline = limitDate - currentDate;
+    if (daysToDeadline >= delta) {
+      return 0.9;
+    } else if (daysToDeadline >= 0) {
+      return daysToDeadline >= 2 ? 0.95 : 1.0;
+    } else if (daysToDeadline >= -delta) {
+      int gap = currentDate - limitDate;
+      return gap > 1 ? 1.0 + gap * 0.02 : 1.0;
+    } else {
+      return 1.0 + (-daysToDeadline) * 0.05;
+    }
+
+  }
+
+  /**
    * Selection's payment strategy
    * @param transaction
    * @param currentDate
@@ -43,22 +63,6 @@ public class SelectionStatus extends Status implements Serializable {
         partner.updatePartnerStatus(new EliteStatus(partner));
       }
     }
-  }
-
-  /** @return Selection Status price modifiers for P2 */
-  public double getModifierP2(int currentDate, int limitDate) {
-    return limitDate - currentDate >= 2 ? 0.95 : 1.0;
-  }
-
-  /** @return Selection Status price modifiers for P3 */
-  public double getModifierP3(int currentDate, int limitDate) {
-    int gap = currentDate - limitDate;
-    return gap > 1 ? 1.0 + gap * 0.02 : 1.0;
-  }
-
-  /** @return Selection Status price modifiers for P4 */
-  public double getModifierP4(int currentDate, int limitDate) {
-    return 1.0 + (currentDate - limitDate) * 0.05;
   }
 
   @Override

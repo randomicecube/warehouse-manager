@@ -49,30 +49,10 @@ public abstract class Status implements Serializable {
     return _partner.getPartnerPoints() > ELITE_LIMIT;
   }
 
-  /** @return Status price modifiers for P1 */
-  public double getModifierP1() {
-    return 0.9;
-  }
-
   /**
-   * @param currentDate
-   * @param limitDate
-   * @return Status price modifiers for P2
+   * Returns the modifier of a Status, depending on the days to the deadline
+   * @return modifier
    */
-  public abstract double getModifierP2(int currentDate, int limitDate);
+  public abstract double getModifier(int delta, int currentDate, int limitDate);
 
-  /**
-   * @param currentDate
-   * @param limitDate
-   * @return Status price modifiers for P3
-   */
-  public abstract double getModifierP3(int currentDate, int limitDate);
-
-  /**
-   * @param currentDate
-   * @param limitDate
-   * @return Status price modifiers for P4
-   */
-  public abstract double getModifierP4(int currentDate, int limitDate);
-  
 }
