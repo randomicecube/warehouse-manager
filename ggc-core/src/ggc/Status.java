@@ -41,7 +41,7 @@ public abstract class Status implements Serializable {
 
   /** @return whether the Partner's ready to change to selection */
   public boolean changeToSelection() {
-    return _partner.getPartnerPoints() > SELECTION_LIMIT && !changeToElite();
+    return _partner.getPartnerPoints() > SELECTION_LIMIT;
   }
 
   /** @return whether the Partner's ready to change to elite */

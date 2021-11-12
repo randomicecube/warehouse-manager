@@ -28,20 +28,16 @@ public class NormalStatus extends Status implements Serializable {
   public void payTransaction(Transaction transaction, int currentDate) {
     int dueDate = transaction.getDueDate();
     boolean isLate = dueDate < currentDate;
-    transaction.updateActualPrice(currentDate);
     double price = transaction.getActualPrice();
     Partner partner = getPartner();
-    TransactionChecker checker = new BreakdownChecker();
     if (isLate) {
-      if (!transaction.accept(checker)) { // accounting only for sales
-        partner.clearPartnerPoints();
-      }
+      partner.clearPartnerPoints();
     } else {
       partner.updatePartnerPoints(10 * price);
-      if (changeToSelection()) {
-        partner.updatePartnerStatus(new SelectionStatus(partner));
-      } else if (changeToElite()) {
+      if (changeToElite()) {
         partner.updatePartnerStatus(new EliteStatus(partner));
+      } else if (changeToSelection()) {
+        partner.updatePartnerStatus(new SelectionStatus(partner));
       }
     }
   }

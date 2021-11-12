@@ -31,16 +31,12 @@ public class EliteStatus extends Status implements Serializable {
     int dueDate = transaction.getDueDate();
     double dayDifference = dueDate - currentDate;
     boolean isLate = dueDate < currentDate;
-    transaction.updateActualPrice(currentDate);
     double price = transaction.getActualPrice();
     Partner partner = getPartner();
-    TransactionChecker checker = new BreakdownChecker();
     if (isLate) {
-      if (!transaction.accept(checker)) { // accounting only for sales
+      if (dayDifference < LOSE_POINTS_GAP) {
+        partner.updatePartnerPoints(-0.75 * partner.getPartnerPoints());
         partner.updatePartnerStatus(new SelectionStatus(partner));
-        if (dayDifference < LOSE_POINTS_GAP) {
-          partner.updatePartnerPoints(-0.75 * partner.getPartnerPoints());
-        }
       }
     } else {
       partner.updatePartnerPoints(10 * price);

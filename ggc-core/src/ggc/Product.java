@@ -177,7 +177,7 @@ public class Product implements Serializable {
    * @return
    */
   public int getProductDeadlineDelta() {
-    return 3; // 3 for "Simple" Products
+    return 5; // 5 for "Simple" Products
   }
 
   /** @return product's identification key */

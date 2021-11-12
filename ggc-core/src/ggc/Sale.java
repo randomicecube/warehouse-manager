@@ -49,6 +49,9 @@ public class Sale extends Transaction implements Serializable {
    * @param currentDate
    */
   public void updateActualPrice(int currentDate) {
+    if (isPaid()) {
+      return;
+    }
     int delta = getProduct().getProductDeadlineDelta();
     int deadline = getDueDate();
     int daysToDeadline = deadline - currentDate;

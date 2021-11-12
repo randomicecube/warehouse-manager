@@ -218,9 +218,10 @@ public class Partner implements Serializable, Observer {
    * @return paid sales prices
    */
   public Double getPaidSalePrices() {
+    TransactionChecker checker = new BreakdownChecker();
     return getSales()
       .stream()
-      .filter(s -> s.isPaid())
+      .filter(s -> !s.accept(checker) && s.isPaid())
       .map(Transaction::getActualPrice)
       .reduce(Double::sum)
       .orElse(0.0);

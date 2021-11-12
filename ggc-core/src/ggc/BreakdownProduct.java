@@ -64,7 +64,7 @@ public class BreakdownProduct extends Product implements Serializable {
    */
   @Override
   public int getProductDeadlineDelta() {
-    return 5; // 5 for "Breakdown" Products
+    return 3; // 3 for "Breakdown" Products
   }
 
   /**

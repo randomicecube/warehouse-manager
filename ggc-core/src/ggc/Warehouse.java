@@ -303,7 +303,7 @@ public class Warehouse implements Serializable {
         _products.put(productKey, product);
       }
 
-      if (parsedPrice > product.getProductPrice()) {
+      if (parsedPrice < product.getProductPrice()) {
         product.updatePrice(parsedPrice, _smallestWarehousePrices);
       }
 
@@ -371,7 +371,7 @@ public class Warehouse implements Serializable {
         _products.put(productKey, batchProduct);
       }
 
-      if (parsedPrice > batchProduct.getProductPrice()) {
+      if (parsedPrice < batchProduct.getProductPrice()) {
         batchProduct.updatePrice(parsedPrice, _smallestWarehousePrices);
       }
 
@@ -573,7 +573,7 @@ public class Warehouse implements Serializable {
           getProduct(key);
         }
       } catch (NoSuchProductKeyException e) {
-        throw new NoSuchProductKeyException(productKey);
+        throw new NoSuchProductKeyException(e.getKey());
       }
       Map<Product, Integer> productIngredients = new LinkedHashMap<Product, Integer>();
       for (String ingredientKey: ingredients.keySet()) {
@@ -700,9 +700,6 @@ public class Warehouse implements Serializable {
     throws NoSuchTransactionKeyException {
       Transaction sale = getTransaction(transactionKey);
       TransactionChecker checker = new BreakdownChecker();
-      if (sale.isPaid()) {
-        return;
-      }
       int currentDate = getDate();
       sale.updatePaymentDate(currentDate);
       if (!sale.accept(checker)) {
@@ -881,33 +878,20 @@ public class Warehouse implements Serializable {
       for (Product ingredient: ingredients.keySet()) {
         int ingredientAmount = ingredients.get(ingredient);
         int totalAmount = ingredientAmount * (amount - product.getStock());
-        if (ingredient.getStock() < totalAmount) {
+        Integer accountedAmount = accountedFor.get(ingredient);
+        accountedAmount = accountedAmount == null ? 0 : accountedAmount;
+        if (ingredient.getStock() < totalAmount + accountedAmount) {
           if (ingredient.accept(checker)) {
-            try {
-              checkIngredientsStock(ingredient, totalAmount, accountedFor);
-            } catch (NotEnoughStockException e) {
-              throw new NotEnoughStockException(
-                ingredient.getProductKey(),
-                amount,
-                ingredient.getStock()
-              );
-            }
+            checkIngredientsStock(ingredient, totalAmount, accountedFor);
           } else {
             throw new NotEnoughStockException(
               ingredient.getProductKey(),
-              totalAmount,
+              totalAmount + accountedAmount,
               ingredient.getStock()
             );
           }
         }
-        accountedFor.put(ingredient, totalAmount);
-        if (accountedFor.get(ingredient) > totalAmount) {
-          throw new NotEnoughStockException(
-              ingredient.getProductKey(),
-              totalAmount,
-              ingredient.getStock()
-            );
-        }
+        accountedFor.put(ingredient, accountedAmount + totalAmount);
       }
   }
 
