@@ -20,6 +20,8 @@ public class Breakdown extends Transaction implements Serializable {
 
   private double _actualPrice;
 
+  private boolean _paid = false;
+
   /**
    * Main Constructor
    * @param transactionKey
@@ -55,6 +57,15 @@ public class Breakdown extends Transaction implements Serializable {
 
   public double getActualPrice() {
     return _actualPrice;
+  }
+
+  @Override
+  public boolean isPaid() {
+    return _paid;
+  }
+
+  public void updatePaid(double paid) {
+    _paid = true;
   }
 
   /**

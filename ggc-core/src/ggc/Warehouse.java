@@ -700,15 +700,20 @@ public class Warehouse implements Serializable {
     throws NoSuchTransactionKeyException {
       Transaction sale = getTransaction(transactionKey);
       TransactionChecker checker = new BreakdownChecker();
+      if (sale.isPaid() && !sale.accept(checker)) {
+        return;
+      }
       int currentDate = getDate();
       sale.updatePaymentDate(currentDate);
       if (!sale.accept(checker)) {
         sale.updateActualPrice(currentDate);
       }
       double pricePaid = sale.getActualPrice();
-      sale.updatePaid(pricePaid);
-      sale.getPartner().getPartnerStatus().payTransaction(sale, currentDate);
-      updateBalanceSaleOrBreakdown(pricePaid);
+      if (!sale.isPaid()) {
+        sale.updatePaid(pricePaid);
+        sale.getPartner().getPartnerStatus().payTransaction(sale, currentDate);
+        updateBalanceSaleOrBreakdown(pricePaid);
+      }
   }
 
   /**
